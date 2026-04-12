@@ -6,6 +6,14 @@
     { "source": "/((?!api/)(?!_next/)(?!.*\\.).*)", "destination": "/index.html" }
   ],
   "functions": {
+    "api/species-profile.js": {
+      "memory": 512,
+      "maxDuration": 30
+    },
+    "api/recommend.js": {
+      "memory": 256,
+      "maxDuration": 15
+    },
     "api/**/*.js": {
       "memory": 256,
       "maxDuration": 10
