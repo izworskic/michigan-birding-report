@@ -1,18 +1,17 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "api/**/*.js", "use": "@vercel/node" },
-    { "src": "public/**", "use": "@vercel/static" }
-  ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/saginaw-bay", "dest": "/public/saginaw-bay.html" },
-    { "src": "/species/(.*)", "dest": "/public/species.html" },
-    { "src": "/region/(.*)", "dest": "/public/region.html" },
     { "src": "/migration", "dest": "/public/migration.html" },
     { "src": "/(.*\\.(css|js|png|jpg|svg|ico|webp))", "dest": "/public/$1" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/public/index.html" }
   ],
+  "functions": {
+    "api/**/*.js": {
+      "memory": 256,
+      "maxDuration": 10
+    }
+  },
   "headers": [
     {
       "source": "/api/(.*)",
