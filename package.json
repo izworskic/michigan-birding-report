@@ -1,0 +1,9 @@
+{
+  "name": "michigan-birding-report",
+  "version": "1.0.0",
+  "description": "Real-time birding intelligence for Michigan",
+  "private": true,
+  "dependencies": {
+    "@upstash/redis": "^1.28.0"
+  }
+}

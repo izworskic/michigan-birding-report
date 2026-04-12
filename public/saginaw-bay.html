@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saginaw Bay Birding Hub — Michigan Birding Report</title>
+  <meta name="description" content="Real-time bird sightings at Saginaw Bay's top hotspots: Tobico Marsh, Bay City SRA, Nayanquing Point, Fish Point, and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .bay-page-hero {
+      padding: 8rem 2rem 4rem;
+      background: linear-gradient(165deg, var(--forest-deep) 0%, #0d1f12 50%, var(--forest) 100%);
+      text-align: center;
+    }
+    .bay-page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .bay-page-hero .lead {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--cream-dark);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .hotspot-section { padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .hotspot-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .hotspot-section > p {
+      color: var(--cream-dark);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .species-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .species-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.75rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(212,160,60,0.08);
+      border-radius: 3px;
+    }
+    .species-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 3px;
+      object-fit: cover;
+      background: var(--forest-mid);
+      flex-shrink: 0;
+    }
+    .species-info .sp-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--cream);
+    }
+    .species-info .sp-meta {
+      font-size: 0.75rem;
+      color: var(--cream-dark);
+    }
+    .species-info .sp-loc {
+      font-size: 0.7rem;
+      color: var(--gold-dim);
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: var(--gold-light);
+    }
+    .dashboard-embed {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--forest);
+      border: 1px solid rgba(212,160,60,0.1);
+      border-radius: 4px;
+      text-align: center;
+    }
+    .dashboard-embed h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .dashboard-embed p {
+      font-size: 0.9rem;
+      color: var(--cream-dark);
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/" class="nav-logo">MBR</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/saginaw-bay" style="color:var(--gold)">Saginaw Bay</a>
+      <a href="/migration">Migration</a>
+    </div>
+  </nav>
+
+  <div class="bay-page-hero">
+    <a href="/" class="back-link">← Back to Michigan Birding Report</a>
+    <h1>Saginaw Bay<br>Birding Hub</h1>
+    <p class="lead">One of the Great Lakes' most important staging areas for waterfowl, shorebirds, and migrating songbirds. Eight premier hotspots, real-time sightings, and seasonal intelligence.</p>
+  </div>
+
+  <section class="hotspot-section">
+    <h2>What's Being Seen Now</h2>
+    <p>Recent species reported across all Saginaw Bay hotspots, updated from eBird every 15 minutes.</p>
+    <div class="species-list" id="baySpecies">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading Saginaw Bay sightings...</p>
+      </div>
+    </div>
+
+    <div class="dashboard-embed">
+      <h3>Migration Radar: Bay County</h3>
+      <p>Nocturnal migration traffic, flight direction, speed, and expected species from BirdCast.</p>
+      <a href="https://dashboard.birdcast.org/region/US-MI-017" target="_blank" rel="noopener" class="btn btn-outline">Open Bay County Dashboard →</a>
+    </div>
+
+    <h2>Featured Hotspots</h2>
+    <p>The core locations that make Saginaw Bay a destination for birders across the Midwest.</p>
+    <div id="hotspotDetails"></div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Michigan Birding Report</h3>
+        <p>Built by <a href="https://chrisizworski.com" target="_blank">Chris Izworski</a>. Data from <a href="https://ebird.org" target="_blank">eBird</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const HOTSPOT_INFO = [
+        { locId:'L208963', name:'Bay City State Recreation Area', desc:'Wetlands and beach along Saginaw Bay. Excellent for waterfowl, shorebirds, and migrating passerines. The Tobico Marsh boardwalk is a highlight.' },
+        { locId:'L282752', name:'Tobico Marsh', desc:'A 1,700-acre coastal wetland with two observation towers. One of the best birding spots in the Saginaw Bay watershed.' },
+        { locId:'L148895', name:'Nayanquing Point SWA', desc:'Managed marshes and dikes along the bay. Outstanding for rails, bitterns, and marsh wrens in summer; waterfowl staging in spring and fall.' },
+        { locId:'L148835', name:'Fish Point SWA', desc:'Large cattail marsh at the southern end of Saginaw Bay. Breeding habitat for Black Terns, Least Bitterns, and Yellow-headed Blackbirds.' },
+        { locId:'L820964', name:'Quanicassee SWA', desc:'Managed wetlands and agricultural fields. Shorebird magnet when water levels are right, especially during southbound migration.' },
+        { locId:'L285440', name:'Shiawassee NWR', desc:'9,000+ acre refuge at the confluence of four rivers. Hosts tens of thousands of waterfowl during peak migration. Bald Eagles year-round.' },
+        { locId:'L1101197', name:'Tawas Point State Park', desc:'Premier migration trap on the bay. The sandy peninsula concentrates warblers, vireos, and flycatchers during spring and fall waves.' },
+        { locId:'L463424', name:'Wigwam Bay SWA', desc:'Remote coastal marsh on the eastern shore. Excellent for herons, egrets, and nesting Osprey.' },
+      ];
+
+      async function loadBaySpecies() {
+        const container = document.getElementById('baySpecies');
+        try {
+          const res = await fetch('/api/hotspot?mode=saginaw-bay&back=7');
+          if (!res.ok) throw new Error('API error ' + res.status);
+          const data = await res.json();
+
+          if (!data.species || !data.species.length) {
+            container.innerHTML = '<div class="loading-state"><p>No recent sightings available.</p></div>';
+            return;
+          }
+
+          container.innerHTML = data.species.map(sp => {
+            const imgSrc = sp.image?.url || '';
+            const imgHtml = imgSrc
+              ? `<img class="species-thumb" src="${imgSrc}" alt="${sp.comName}" loading="lazy" onerror="this.style.display='none'">`
+              : `<div class="species-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--canopy)">🐦</div>`;
+
+            const d = new Date(sp.obsDt?.replace(' ','T') || '');
+            const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+            return `<div class="species-item">
+              ${imgHtml}
+              <div class="species-info">
+                <div class="sp-name">${sp.comName}</div>
+                <div class="sp-meta">${dateStr}${sp.howMany ? ' · ' + sp.howMany + ' reported' : ''}</div>
+                <div class="sp-loc">${sp.hotspotName || sp.locName || ''}</div>
+              </div>
+            </div>`;
+          }).join('');
+        } catch (err) {
+          container.innerHTML = `<div class="error-state"><p>Unable to load sightings.</p></div>`;
+        }
+      }
+
+      function renderHotspotDetails() {
+        const container = document.getElementById('hotspotDetails');
+        container.innerHTML = '<div class="bay-hotspots">' + HOTSPOT_INFO.map(h => `
+          <div class="bay-hotspot-card">
+            <div class="bay-hotspot-name">${h.name}</div>
+            <div class="bay-hotspot-recent" style="margin-top:0.5rem">${h.desc}</div>
+          </div>
+        `).join('') + '</div>';
+      }
+
+      loadBaySpecies();
+      renderHotspotDetails();
+    })();
+  </script>
+</body>
+</html>
