@@ -1,35 +1,45 @@
 /**
- * api/hotspot.js — Sightings at specific hotspots
- * Supports individual hotspot or Saginaw Bay aggregate
+ * api/hotspot.js — Sightings at Saginaw Bay region or specific locations
+ * Uses county-level queries for reliable data coverage
  */
 
 const { getRecentObservations, SAGINAW_BAY_HOTSPOTS } = require('../lib/ebird');
 const { getBestImage } = require('../lib/media');
 
+// Saginaw Bay watershed counties
+const SAGINAW_BAY_COUNTIES = [
+  'US-MI-017', // Bay
+  'US-MI-011', // Arenac
+  'US-MI-157', // Tuscola
+  'US-MI-063', // Huron
+  'US-MI-145', // Saginaw
+  'US-MI-111', // Midland
+  'US-MI-069', // Iosco (Tawas Point)
+];
+
 module.exports = async (req, res) => {
   try {
     const locId = req.query.locId;
-    const mode = req.query.mode || 'single'; // 'single' or 'saginaw-bay'
-    const back = parseInt(req.query.back) || 7;
+    const mode = req.query.mode || 'single';
+    const back = parseInt(req.query.back) || 14;
 
     let allObs = [];
 
     if (mode === 'saginaw-bay') {
-      // Aggregate observations from all Saginaw Bay hotspots
-      const promises = SAGINAW_BAY_HOTSPOTS.map(h =>
-        getRecentObservations(h.locId, { back, maxResults: 50, hotspot: true })
-          .then(obs => obs.map(o => ({ ...o, hotspotName: h.name })))
+      const promises = SAGINAW_BAY_COUNTIES.map(county =>
+        getRecentObservations(county, { back, maxResults: 200 })
+          .then(obs => obs.map(o => ({ ...o, countyCode: county })))
           .catch(() => [])
       );
       const results = await Promise.all(promises);
       allObs = results.flat();
     } else if (locId) {
-      allObs = await getRecentObservations(locId, { back, maxResults: 100 });
+      allObs = await getRecentObservations(locId, { back, maxResults: 200 });
     } else {
       return res.status(400).json({ error: 'Provide locId or mode=saginaw-bay' });
     }
 
-    // Deduplicate by species, keep most recent
+    // Deduplicate by species, keep most recent observation
     const seen = new Map();
     for (const o of allObs) {
       const key = o.speciesCode;
@@ -40,9 +50,9 @@ module.exports = async (req, res) => {
 
     const unique = Array.from(seen.values())
       .sort((a, b) => new Date(b.obsDt) - new Date(a.obsDt))
-      .slice(0, 50);
+      .slice(0, 80);
 
-    // Attach images to top species
+    // Attach images
     const enriched = await Promise.all(
       unique.map(async (o) => {
         const img = await getBestImage(o.speciesCode, o.comName);
@@ -51,9 +61,9 @@ module.exports = async (req, res) => {
           comName: o.comName,
           sciName: o.sciName,
           locName: o.locName,
-          hotspotName: o.hotspotName || null,
           obsDt: o.obsDt,
           howMany: o.howMany || null,
+          countyCode: o.countyCode || o.subnational2Code || null,
           image: img,
         };
       })
@@ -61,7 +71,8 @@ module.exports = async (req, res) => {
 
     res.status(200).json({
       mode,
-      locId: locId || 'saginaw-bay-aggregate',
+      locId: locId || 'saginaw-bay-counties',
+      counties: mode === 'saginaw-bay' ? SAGINAW_BAY_COUNTIES : undefined,
       hotspots: mode === 'saginaw-bay' ? SAGINAW_BAY_HOTSPOTS : undefined,
       speciesCount: enriched.length,
       totalObservations: allObs.length,

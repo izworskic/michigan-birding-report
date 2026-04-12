@@ -122,35 +122,30 @@
   async function loadBayPreview() {
     const container = document.getElementById('bayHotspots');
     try {
-      const res = await fetch(`${API}/api/hotspot?mode=saginaw-bay&back=7`);
+      const res = await fetch(`${API}/api/hotspot?mode=saginaw-bay&back=14`);
       if (!res.ok) throw new Error('API returned ' + res.status);
       const data = await res.json();
 
-      // Group species by hotspot
-      const hotspotMap = {};
-      for (const hs of (data.hotspots || [])) {
-        hotspotMap[hs.locId] = { name: hs.name, species: [] };
-      }
-      for (const sp of (data.species || [])) {
-        const hsName = sp.hotspotName || sp.locName;
-        for (const hs of Object.values(hotspotMap)) {
-          if (hs.name === hsName) {
-            hs.species.push(sp.comName);
-          }
-        }
+      const species = data.species || [];
+      document.getElementById('statSpecies').textContent = data.speciesCount || species.length || '—';
+
+      if (!species.length) {
+        container.innerHTML = '<div class="loading-state"><p>No recent sightings in the Saginaw Bay region.</p></div>';
+        return;
       }
 
-      container.innerHTML = Object.values(hotspotMap).map(hs => `
-        <div class="bay-hotspot-card">
-          <div class="bay-hotspot-name">${hs.name}</div>
-          <div class="bay-hotspot-species">${hs.species.length} species this week</div>
-          ${hs.species.length ? `<div class="bay-hotspot-recent">${hs.species.slice(0, 4).join(', ')}${hs.species.length > 4 ? '...' : ''}</div>` : ''}
-        </div>
-      `).join('');
-
-      // Update species count stat
-      const uniqueSpecies = new Set(data.species?.map(s => s.speciesCode) || []);
-      document.getElementById('statSpecies').textContent = uniqueSpecies.size || data.speciesCount || '—';
+      // Show top species as cards with images
+      const topSpecies = species.slice(0, 8);
+      container.innerHTML = topSpecies.map(sp => {
+        const imgSrc = sp.image?.url || '';
+        const hasImg = imgSrc && !imgSrc.includes('placeholder');
+        return `<div class="bay-hotspot-card">
+          ${hasImg ? `<img src="${imgSrc}" alt="${sp.comName}" style="width:100%;height:100px;object-fit:cover;border-radius:2px;margin-bottom:0.5rem" loading="lazy" onerror="this.style.display='none'">` : ''}
+          <div class="bay-hotspot-name">${sp.comName}</div>
+          <div class="bay-hotspot-species">${truncate(sp.locName, 35)}</div>
+          <div class="bay-hotspot-recent">${formatDate(sp.obsDt)}${sp.howMany ? ' · ' + sp.howMany + ' reported' : ''}</div>
+        </div>`;
+      }).join('');
 
     } catch (err) {
       container.innerHTML = `<div class="error-state" style="padding:1rem">

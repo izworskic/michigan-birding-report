@@ -166,7 +166,7 @@
       async function loadBaySpecies() {
         const container = document.getElementById('baySpecies');
         try {
-          const res = await fetch('/api/hotspot?mode=saginaw-bay&back=7');
+          const res = await fetch('/api/hotspot?mode=saginaw-bay&back=14');
           if (!res.ok) throw new Error('API error ' + res.status);
           const data = await res.json();
 
