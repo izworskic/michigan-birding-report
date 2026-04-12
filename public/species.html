@@ -304,13 +304,30 @@
               <h1>${d.comName}</h1>
               <div class="species-sci">${d.sciName}</div>
               <span class="status-badge">${d.season} ${new Date().getFullYear()}</span>
-              ${d.cached ? '<span class="status-badge">Cached Profile</span>' : '<span class="status-badge">Fresh Profile</span>'}
               ${d.generatedBy === 'haiku' ? '<span class="status-badge">AI-Enhanced</span>' : ''}
               <div class="right-now-box">
                 <div class="right-now-label">What's Happening Now</div>
                 ${d.rightNow || 'No current activity data available.'}
               </div>
             </div>
+          </div>
+
+          <div class="map-section">
+            <h2>Recent Sightings Across Michigan</h2>
+            ${sightings.length ? `
+              <div id="sightingsMap"></div>
+              <div class="sighting-list">
+                ${sightings.map(s => {
+                  const dt = new Date(s.obsDt?.replace(' ','T') || '');
+                  const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                  return `<div class="sighting-row">
+                    <span class="loc">${(s.locName||'').substring(0, 40)}</span>
+                    <span class="dt">${dateStr}</span>
+                    ${s.howMany ? `<span class="ct">${s.howMany}</span>` : ''}
+                  </div>`;
+                }).join('')}
+              </div>
+            ` : '<p style="color:var(--cream-dark)">No sightings reported in Michigan in the past 14 days.</p>'}
           </div>
 
           <div class="profile-grid">
@@ -342,6 +359,11 @@
 
           ${d.funFact ? `<div class="fun-fact"><div class="fun-fact-box">${d.funFact}</div></div>` : ''}
 
+          <div class="sounds-section">
+            <h2>Listen</h2>
+            <div id="soundsContainer"><div class="loading-state"><div class="loading-spinner"></div></div></div>
+          </div>
+
           ${photos.length ? `
             <div class="map-section">
               <h2>Recent Photos from Michigan</h2>
@@ -352,27 +374,16 @@
             </div>
           ` : ''}
 
-          <div class="sounds-section">
-            <h2>Listen</h2>
-            <div id="soundsContainer"><div class="loading-state"><div class="loading-spinner"></div></div></div>
-          </div>
-
           <div class="map-section">
-            <h2>Recent Sightings in Michigan</h2>
-            ${sightings.length ? `
-              <div id="sightingsMap"></div>
-              <div class="sighting-list">
-                ${sightings.map(s => {
-                  const dt = new Date(s.obsDt?.replace(' ','T') || '');
-                  const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                  return `<div class="sighting-row">
-                    <span class="loc">${(s.locName||'').substring(0, 40)}</span>
-                    <span class="dt">${dateStr}</span>
-                    ${s.howMany ? `<span class="ct">${s.howMany}</span>` : ''}
-                  </div>`;
-                }).join('')}
+            <div style="padding:2rem;background:var(--forest);border:1px solid rgba(212,160,60,0.15);border-radius:4px;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap">
+              <div style="font-size:2.5rem">🔭</div>
+              <div style="flex:1;min-width:200px">
+                <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:var(--gold);margin-bottom:0.3rem">Spot More Birds This Season</div>
+                <p style="font-size:0.9rem;color:var(--cream-dark);line-height:1.5;margin:0">Quality optics make all the difference for field identification. The Nikon Monarch M5 8x42 delivers outstanding clarity for Michigan birding in all conditions.</p>
               </div>
-            ` : '<p style="color:var(--cream-dark)">No sightings reported in Michigan in the past 14 days.</p>'}
+              <a href="https://www.amazon.com/dp/B00KFCP9Q0?tag=michigantrout-20" target="_blank" rel="noopener" class="btn btn-primary" style="white-space:nowrap">View on Amazon →</a>
+            </div>
+            <p style="font-size:0.65rem;color:var(--cream-dark);opacity:0.5;margin-top:0.75rem">As an Amazon Associate I earn from qualifying purchases.</p>
           </div>
         `;
 
