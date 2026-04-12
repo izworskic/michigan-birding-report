@@ -563,6 +563,76 @@ a:hover { color: var(--gold); }
   grid-column: 1 / -1;
 }
 
+/* ---- FORECAST ---- */
+.forecast-card {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,160,60,0.15);
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--cream);
+}
+
+.forecast-card p { margin-bottom: 0.75rem; }
+.forecast-card p:last-child { margin-bottom: 0; }
+
+.forecast-meta {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(212,160,60,0.1);
+  font-size: 0.75rem;
+  color: var(--cream-dark);
+}
+
+/* ---- GEAR ---- */
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.gear-card {
+  display: block;
+  padding: 1.75rem;
+  background: var(--forest);
+  border: 1px solid rgba(212,160,60,0.1);
+  border-radius: 4px;
+  color: var(--cream);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.gear-card:hover {
+  border-color: rgba(212,160,60,0.35);
+  transform: translateY(-2px);
+  color: var(--cream);
+}
+
+.gear-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+
+.gear-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.gear-card p {
+  font-size: 0.85rem;
+  color: var(--cream-dark);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.gear-cta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gold-light);
+}
+
 /* ---- FOOTER ---- */
 .footer {
   padding: 3rem 2rem;

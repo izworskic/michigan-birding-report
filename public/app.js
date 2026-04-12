@@ -194,10 +194,36 @@
   // ---- Init ----
   document.addEventListener('DOMContentLoaded', () => {
     initFilters();
+    loadForecast();
     loadNotable();
     loadBayPreview();
     renderCalendar();
     renderMigrationNote();
   });
+
+  // ---- Weekend Forecast ----
+  async function loadForecast() {
+    const card = document.getElementById('forecastCard');
+    try {
+      const res = await fetch(`${API}/api/recommend`);
+      if (!res.ok) throw new Error('API returned ' + res.status);
+      const data = await res.json();
+
+      const text = data.recommendation || 'No forecast available.';
+      const paragraphs = text.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
+
+      card.innerHTML = `
+        ${paragraphs}
+        <div class="forecast-meta">
+          ${data.speciesCount ? `${data.speciesCount} species reported statewide` : ''}
+          ${data.notableCount ? ` · ${data.notableCount} notable sightings` : ''}
+          ${data.source ? ` · Source: ${data.source}` : ''}
+        </div>
+      `;
+    } catch (err) {
+      card.innerHTML = `<p>April in Michigan means migration is underway. Check Tawas Point and Saginaw Bay for early warblers, shorebirds, and waterfowl staging. Sandhill Cranes are displaying statewide.</p>
+        <div class="forecast-meta">Forecast temporarily unavailable</div>`;
+    }
+  }
 
 })();
