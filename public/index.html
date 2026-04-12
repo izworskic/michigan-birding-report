@@ -135,26 +135,38 @@
   <section class="section section-dark" id="regions">
     <div class="section-header">
       <h2>Explore by Region</h2>
-      <p class="section-sub">Michigan's diverse habitats from the boreal UP to the agricultural south</p>
+      <p class="section-sub">Tap a region to see what's been spotted. Data from eBird, updated every 15 minutes.</p>
     </div>
     <div class="regions-grid">
-      <div class="region-card" data-region="UP">
+      <div class="region-card" data-region="UP" onclick="selectRegion('UP')" style="cursor:pointer">
         <div class="region-icon">🌲</div>
         <h3>Upper Peninsula</h3>
-        <p>Boreal forest, Great Lakes shoreline, and the famed Whitefish Point Bird Observatory. Breeding ground for northern specialties: Spruce Grouse, Black-backed Woodpecker, Gray Jay.</p>
-        <div class="region-recent" id="upRecent"></div>
+        <p>Boreal forest, Great Lakes shoreline, Whitefish Point. Northern specialties: Spruce Grouse, Black-backed Woodpecker, Gray Jay.</p>
+        <div class="region-recent" id="upRecent"><span style="font-size:0.75rem;color:var(--cream-dark)">Loading...</span></div>
+        <div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+          <a href="https://ebird.org/region/US-MI?env.minX=-90.5&env.maxX=-83.5&env.minY=45.5&env.maxY=47.5" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--gold-light)" onclick="event.stopPropagation()">eBird UP →</a>
+          <span style="font-size:0.75rem;color:var(--gold-dim);cursor:pointer" onclick="event.stopPropagation();selectRegion('UP')">View sightings ↑</span>
+        </div>
       </div>
-      <div class="region-card" data-region="NLP">
+      <div class="region-card" data-region="NLP" onclick="selectRegion('NLP')" style="cursor:pointer">
         <div class="region-icon">🌿</div>
         <h3>Northern Lower</h3>
-        <p>Jack pine barrens, the AuSable River corridor, and Sleeping Bear Dunes. The only breeding range of the Kirtland's Warbler. Tawas Point is a premier migration trap.</p>
-        <div class="region-recent" id="nlpRecent"></div>
+        <p>Jack pine barrens, AuSable River, Sleeping Bear Dunes. Only breeding range of the Kirtland's Warbler. Tawas Point is a premier migration trap.</p>
+        <div class="region-recent" id="nlpRecent"><span style="font-size:0.75rem;color:var(--cream-dark)">Loading...</span></div>
+        <div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+          <a href="https://ebird.org/region/US-MI" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--gold-light)" onclick="event.stopPropagation()">eBird MI →</a>
+          <span style="font-size:0.75rem;color:var(--gold-dim);cursor:pointer" onclick="event.stopPropagation();selectRegion('NLP')">View sightings ↑</span>
+        </div>
       </div>
-      <div class="region-card" data-region="SLP">
+      <div class="region-card" data-region="SLP" onclick="selectRegion('SLP')" style="cursor:pointer">
         <div class="region-icon">🏞️</div>
         <h3>Southern Lower</h3>
-        <p>Saginaw Bay marshes, Pointe Mouillee, Erie Metropark, and the Shiawassee NWR. Critical stopover and staging habitat along the Mississippi and Atlantic flyways.</p>
-        <div class="region-recent" id="slpRecent"></div>
+        <p>Saginaw Bay marshes, Pointe Mouillee, Erie Metropark, Shiawassee NWR. Critical stopover habitat along the Mississippi and Atlantic flyways.</p>
+        <div class="region-recent" id="slpRecent"><span style="font-size:0.75rem;color:var(--cream-dark)">Loading...</span></div>
+        <div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+          <a href="https://ebird.org/region/US-MI" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--gold-light)" onclick="event.stopPropagation()">eBird MI →</a>
+          <span style="font-size:0.75rem;color:var(--gold-dim);cursor:pointer" onclick="event.stopPropagation();selectRegion('SLP')">View sightings ↑</span>
+        </div>
       </div>
     </div>
   </section>

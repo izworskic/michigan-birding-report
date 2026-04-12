@@ -42,6 +42,7 @@
 
       document.getElementById('statNotable').textContent = allNotable.length;
       renderNotable(allNotable);
+      populateRegionCards();
     } catch (err) {
       grid.innerHTML = `<div class="error-state">
         <p>Unable to load sightings. eBird API may be temporarily unavailable.</p>
@@ -189,6 +190,44 @@
       note.textContent = 'BirdCast live data is currently active. Check dashboards after sunset for real-time migration radar.';
     } else {
       note.textContent = 'BirdCast live feeds are active March 1 through June 15 and August 1 through November 15. Historical data is available year-round.';
+    }
+  }
+
+  // ---- Region card interaction ----
+  window.selectRegion = function(region) {
+    // Activate the filter button
+    const btns = document.querySelectorAll('.filter-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    const target = document.querySelector(`.filter-btn[data-region="${region}"]`);
+    if (target) target.classList.add('active');
+    currentRegion = region;
+    filterNotable();
+
+    // Scroll to the notable sightings grid
+    const el = document.getElementById('notable');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  function populateRegionCards() {
+    if (!allNotable.length) return;
+
+    const regionData = { UP: [], NLP: [], SLP: [] };
+    for (const s of allNotable) {
+      const r = getRegionForCounty(s.subnational2Code);
+      if (regionData[r]) regionData[r].push(s);
+    }
+
+    const ids = { UP: 'upRecent', NLP: 'nlpRecent', SLP: 'slpRecent' };
+    for (const [region, sightings] of Object.entries(regionData)) {
+      const el = document.getElementById(ids[region]);
+      if (!el) continue;
+      if (sightings.length) {
+        const names = sightings.slice(0, 4).map(s => s.comName);
+        el.innerHTML = `<div style="font-size:0.8rem;color:var(--gold-light);font-weight:500;margin-bottom:0.25rem">${sightings.length} notable species this week</div>
+          <div style="font-size:0.75rem;color:var(--cream-dark)">${names.join(', ')}${sightings.length > 4 ? '...' : ''}</div>`;
+      } else {
+        el.innerHTML = '<span style="font-size:0.75rem;color:var(--cream-dark)">No notable sightings this week</span>';
+      }
     }
   }
 

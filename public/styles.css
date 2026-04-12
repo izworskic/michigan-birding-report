@@ -476,7 +476,8 @@ a:hover { color: var(--gold); }
   transition: border-color 0.2s;
 }
 
-.region-card:hover { border-color: rgba(212,160,60,0.25); }
+.region-card:hover { border-color: rgba(212,160,60,0.25); transform: translateY(-2px); }
+.region-card:active { transform: translateY(0); border-color: var(--gold); }
 
 .region-icon { font-size: 2rem; margin-bottom: 1rem; }
 
