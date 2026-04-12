@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migration Intelligence — Michigan Birding Report</title>
+  <meta name="description" content="Real-time bird migration forecasts, radar maps, and county-level dashboards for Michigan. Powered by BirdCast and NWS weather data.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .mig-hero {
+      padding: 7rem 2rem 3rem;
+      background: linear-gradient(165deg, var(--forest-deep) 0%, #0d1f12 60%, var(--forest) 100%);
+      text-align: center;
+    }
+    .mig-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; margin-bottom: 0.5rem; }
+    .mig-hero .lead { font-size: 1rem; color: var(--cream-dark); max-width: 600px; margin: 0 auto; font-weight: 300; }
+    .mig-content { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+    .mig-content h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--cream); margin-bottom: 0.5rem; }
+    .mig-content > p { color: var(--cream-dark); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .dash-card {
+      display: block;
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(212,160,60,0.1);
+      border-radius: 4px;
+      color: var(--cream);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .dash-card:hover { border-color: rgba(212,160,60,0.3); transform: translateY(-2px); color: var(--cream); }
+    .dash-card h3 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--gold); margin-bottom: 0.4rem; }
+    .dash-card p { font-size: 0.8rem; color: var(--cream-dark); line-height: 1.5; }
+    .dash-card .dash-tag { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold-dim); margin-top: 0.5rem; }
+
+    .season-status {
+      padding: 1.5rem 2rem;
+      background: rgba(212,160,60,0.06);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 2.5rem;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--cream);
+    }
+    .season-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 0.3rem; }
+
+    .mig-timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 3rem;
+    }
+    .mig-timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(212,160,60,0.2);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0.5rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--forest-mid);
+      border: 2px solid var(--gold-dim);
+    }
+    .timeline-item.active::before { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px rgba(212,160,60,0.4); }
+    .timeline-months { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 0.2rem; }
+    .timeline-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--cream); margin-bottom: 0.2rem; }
+    .timeline-desc { font-size: 0.85rem; color: var(--cream-dark); line-height: 1.5; }
+
+    .ext-link { font-size: 0.8rem; color: var(--gold-light); }
+    .ext-link:hover { color: var(--gold); }
+
+    .wx-conditions { margin-bottom: 2.5rem; }
+    .wx-conditions .loading-state { padding: 1rem; }
+
+    @media (max-width: 768px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/" class="nav-logo">MBR</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/saginaw-bay">Saginaw Bay</a>
+      <a href="/predictions">Predictions</a>
+      <a href="/migration" style="color:var(--gold)">Migration</a>
+    </div>
+  </nav>
+
+  <div class="mig-hero">
+    <h1>Migration Intelligence</h1>
+    <p class="lead">Radar data, weather-driven forecasts, and county-level migration dashboards for Michigan. Know when the birds are flying.</p>
+  </div>
+
+  <div class="mig-content">
+
+    <div class="season-status" id="seasonStatus"></div>
+
+    <div class="wx-conditions" id="wxConditions">
+      <div class="loading-state"><div class="loading-spinner"></div></div>
+    </div>
+
+    <h2>BirdCast Migration Dashboards</h2>
+    <p>County-level radar data showing how many birds flew overhead last night, flight direction, speed, altitude, and expected nocturnal migrants. Live during migration season (March 1 through June 15, August 1 through November 15).</p>
+
+    <div class="dashboard-grid">
+      <a href="https://dashboard.birdcast.org/region/US-MI" target="_blank" rel="noopener" class="dash-card">
+        <h3>Michigan Statewide</h3>
+        <p>Full state migration summary with nightly bird counts and seasonal trends across all 83 counties.</p>
+        <div class="dash-tag">State Level →</div>
+      </a>
+      <a href="https://dashboard.birdcast.org/region/US-MI-017" target="_blank" rel="noopener" class="dash-card">
+        <h3>Bay County</h3>
+        <p>Saginaw Bay core. Waterfowl staging, shorebird passage, and songbird migration at the bay's heart.</p>
+        <div class="dash-tag">County Dashboard →</div>
+      </a>
+      <a href="https://dashboard.birdcast.org/region/US-MI-069" target="_blank" rel="noopener" class="dash-card">
+        <h3>Iosco County</h3>
+        <p>Tawas Point, Michigan's premier migration trap. Warbler waves concentrate on the sandy peninsula.</p>
+        <div class="dash-tag">County Dashboard →</div>
+      </a>
+      <a href="https://dashboard.birdcast.org/region/US-MI-145" target="_blank" rel="noopener" class="dash-card">
+        <h3>Saginaw County</h3>
+        <p>Shiawassee NWR and the Saginaw River corridor. Major waterfowl staging and raptor flyway.</p>
+        <div class="dash-tag">County Dashboard →</div>
+      </a>
+      <a href="https://dashboard.birdcast.org/region/US-MI-163" target="_blank" rel="noopener" class="dash-card">
+        <h3>Wayne County</h3>
+        <p>Pointe Mouillee and the western Lake Erie shore. Critical stopover for shorebirds and waterfowl.</p>
+        <div class="dash-tag">County Dashboard →</div>
+      </a>
+      <a href="https://dashboard.birdcast.org/region/US-MI-033" target="_blank" rel="noopener" class="dash-card">
+        <h3>Chippewa County</h3>
+        <p>Whitefish Point Bird Observatory. The UP's legendary migration funnel at the tip of the peninsula.</p>
+        <div class="dash-tag">County Dashboard →</div>
+      </a>
+      <a href="https://dashboard.birdcast.org/region/US-MI-089" target="_blank" rel="noopener" class="dash-card">
+        <h3>Leelanau County</h3>
+        <p>Sleeping Bear Dunes. Lakefront migration corridor along northern Lake Michigan.</p>
+        <div class="dash-tag">County Dashboard →</div>
+      </a>
+      <a href="https://dashboard.birdcast.org/region/US-MI-121" target="_blank" rel="noopener" class="dash-card">
+        <h3>Muskegon County</h3>
+        <p>Muskegon Wastewater and Lake Michigan shoreline. Shorebird and raptor migration hotspot.</p>
+        <div class="dash-tag">County Dashboard →</div>
+      </a>
+    </div>
+
+    <a href="https://birdcast.org/migration-tools/migration-forecast-maps/" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-block;margin-bottom:3rem">View National Forecast Maps →</a>
+
+    <h2>Michigan Migration Timeline</h2>
+    <p>When the major waves hit, from spring waterfowl to winter irruptions.</p>
+
+    <div class="mig-timeline" id="timeline"></div>
+
+    <div style="padding:2rem;background:var(--forest);border:1px solid rgba(212,160,60,0.15);border-radius:4px;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;margin-top:2rem">
+      <div style="font-size:2.5rem">🔭</div>
+      <div style="flex:1;min-width:200px">
+        <div style="font-family:var(--font-display);font-size:1.15rem;font-weight:600;color:var(--gold);margin-bottom:0.3rem">See More During Migration</div>
+        <p style="font-size:0.85rem;color:var(--cream-dark);line-height:1.5;margin:0">A quality spotting scope lets you identify warblers in the canopy and scan distant mudflats for shorebirds. The Vortex Diamondback HD is built for Michigan conditions.</p>
+      </div>
+      <a href="https://www.amazon.com/dp/B00ED9JO1A?tag=michigantrout-20" target="_blank" rel="noopener" class="btn btn-primary" style="white-space:nowrap">View on Amazon →</a>
+    </div>
+    <p style="font-size:0.65rem;color:var(--cream-dark);opacity:0.5;margin-top:0.75rem">As an Amazon Associate I earn from qualifying purchases.</p>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Michigan Birding Report</h3>
+        <p>Built by <a href="https://chrisizworski.com" target="_blank">Chris Izworski</a>. Migration data from <a href="https://birdcast.org" target="_blank">BirdCast</a>. Weather from NWS.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function() {
+    const month = new Date().getMonth() + 1;
+
+    // Season status
+    const statusEl = document.getElementById('seasonStatus');
+    const isSpring = month >= 3 && month <= 6;
+    const isFall = month >= 8 && month <= 11;
+    if (isSpring || isFall) {
+      statusEl.innerHTML = `<div class="season-label">Migration Season Active</div>
+        BirdCast live data feeds are currently active. Check dashboards after sunset for real-time nocturnal migration radar, or in the morning for overnight summaries. ${isSpring ? 'Spring migration peaks mid-April through late May.' : 'Fall migration runs August through November, with hawk flights peaking in September and October.'}`;
+    } else {
+      statusEl.innerHTML = `<div class="season-label">Off-Season</div>
+        BirdCast live feeds run March 1 through June 15 (spring) and August 1 through November 15 (fall). Historical data is available year-round on all dashboards.`;
+    }
+
+    // Weather conditions
+    fetch('/api/predict?mode=forecast&region=saginaw-bay')
+      .then(r => r.json())
+      .then(d => {
+        const el = document.getElementById('wxConditions');
+        const bc = d.birdingConditions || [];
+        if (bc.length) {
+          el.innerHTML = bc.map(c =>
+            `<div class="condition-badge ${c.type}" style="padding:0.75rem 1rem;border-radius:3px;font-size:0.85rem;line-height:1.5;margin-bottom:0.5rem;
+              ${c.type === 'positive' ? 'background:rgba(76,175,80,0.12);border-left:3px solid #4CAF50;color:#a5d6a7' :
+                c.type === 'alert' ? 'background:rgba(244,67,54,0.1);border-left:3px solid #f44336;color:#ef9a9a' :
+                c.type === 'caution' ? 'background:rgba(255,193,7,0.1);border-left:3px solid #FFC107;color:#fff176' :
+                'background:rgba(90,138,156,0.12);border-left:3px solid #5a8a9c;color:#80cbc4'}">${c.text}</div>`
+          ).join('');
+        } else {
+          el.innerHTML = '';
+        }
+      })
+      .catch(() => { document.getElementById('wxConditions').innerHTML = ''; });
+
+    // Timeline
+    const events = [
+      { months: 'Mar', title: 'Waterfowl Return', desc: 'Tundra Swans, pintails, and teal flood Saginaw Bay. Ice-out triggers massive staging.', active: month === 3 },
+      { months: 'Apr', title: 'Shorebird Passage', desc: 'Plovers, yellowlegs, and sandpipers work flooded fields and mudflats.', active: month === 4 },
+      { months: 'Late Apr', title: 'Early Warblers', desc: 'Palm, Yellow-rumped, and Pine Warblers arrive. Kinglets and creepers move through.', active: month === 4 },
+      { months: 'May 1-15', title: 'Warbler Peak', desc: 'The main event. 30+ warbler species in two weeks. Tawas Point, Magee Marsh, and every lakefront park.', active: month === 5 && new Date().getDate() <= 15 },
+      { months: 'May 15-31', title: 'Late Wave', desc: 'Blackpoll, Mourning, and Connecticut Warblers. Flycatchers and vireos peak.', active: month === 5 && new Date().getDate() > 15 },
+      { months: 'Jun', title: 'Breeding Season', desc: "Kirtland's Warbler on territory. Loons on northern lakes. Marsh birds nesting at Saginaw Bay.", active: month === 6 },
+      { months: 'Jul', title: 'Shorebirds Return', desc: 'Southbound adults appear on mudflats. Black Terns at Fish Point. Post-breeding dispersal.', active: month === 7 },
+      { months: 'Aug-Sep', title: 'Fall Migration Builds', desc: 'Shorebird diversity peaks. Warblers in drab plumage. Nighthawk flights at dusk.', active: month === 8 || month === 9 },
+      { months: 'Sep-Oct', title: 'Hawk Flights', desc: 'Broad-wings kettle mid-September. Sharp-shins and Cooper\'s through October. Lake Erie Metropark.', active: month === 9 || month === 10 },
+      { months: 'Oct-Nov', title: 'Waterfowl Staging', desc: 'Tens of thousands of ducks and geese on the Great Lakes. Rare gull season begins.', active: month === 10 || month === 11 },
+      { months: 'Dec-Feb', title: 'Winter Specialties', desc: 'Snowy Owls, winter finch irruptions, Great Gray Owls in the UP. Christmas Bird Counts statewide.', active: month === 12 || month <= 2 },
+    ];
+
+    document.getElementById('timeline').innerHTML = events.map(e =>
+      `<div class="timeline-item ${e.active ? 'active' : ''}">
+        <div class="timeline-months">${e.months}</div>
+        <div class="timeline-title">${e.title}</div>
+        <div class="timeline-desc">${e.desc}</div>
+      </div>`
+    ).join('');
+  })();
+  </script>
+</body>
+</html>
