@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birding Predictions — Michigan Birding Report</title>
+  <meta name="description" content="Weather-driven birding predictions for Michigan. Ask about any bird species and get real-time intelligence on what they're doing right now.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .predict-hero {
+      padding: 7rem 2rem 3rem;
+      background: linear-gradient(165deg, var(--forest-deep) 0%, #0d1f12 60%, var(--forest) 100%);
+      text-align: center;
+    }
+    .predict-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; margin-bottom: 0.5rem; }
+    .predict-hero .lead { font-size: 1rem; color: var(--cream-dark); max-width: 550px; margin: 0 auto; font-weight: 300; }
+
+    .predict-content { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+    /* Region picker */
+    .region-picker { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin: 2rem 0; }
+    .region-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--canopy);
+      background: transparent;
+      color: var(--cream-dark);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .region-btn:hover { border-color: var(--gold-dim); color: var(--cream); }
+    .region-btn.active { background: var(--gold); color: var(--forest-deep); border-color: var(--gold); font-weight: 600; }
+
+    /* Weather bar */
+    .wx-bar {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(212,160,60,0.12);
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .wx-item { text-align: center; }
+    .wx-val { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--gold); }
+    .wx-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cream-dark); }
+    .wx-forecast { flex: 1; min-width: 200px; font-size: 0.9rem; color: var(--cream-mid); }
+
+    /* Conditions badges */
+    .conditions-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; }
+    .condition-badge {
+      padding: 0.75rem 1rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .condition-badge.positive { background: rgba(76,175,80,0.12); border-left: 3px solid #4CAF50; color: #a5d6a7; }
+    .condition-badge.caution { background: rgba(255,193,7,0.1); border-left: 3px solid #FFC107; color: #fff176; }
+    .condition-badge.alert { background: rgba(244,67,54,0.1); border-left: 3px solid #f44336; color: #ef9a9a; }
+    .condition-badge.info { background: rgba(90,138,156,0.12); border-left: 3px solid var(--sky); color: #80cbc4; }
+
+    /* Prediction sections */
+    .predict-card {
+      padding: 2rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(212,160,60,0.1);
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+    }
+    .predict-card h3 { font-family: var(--font-display); font-size: 1.3rem; color: var(--gold); margin-bottom: 0.75rem; }
+    .predict-card p { font-size: 0.95rem; line-height: 1.7; color: var(--cream-mid); }
+    .headline-box {
+      padding: 1.5rem 2rem;
+      background: rgba(212,160,60,0.08);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 2rem;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--cream);
+    }
+
+    /* Ask about a bird */
+    .ask-section {
+      margin-top: 3rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(212,160,60,0.1);
+    }
+    .ask-section h2 { font-family: var(--font-display); font-size: 2rem; color: var(--cream); margin-bottom: 0.5rem; }
+    .ask-section .sub { color: var(--cream-dark); margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .ask-input-row { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .ask-input {
+      flex: 1;
+      padding: 0.85rem 1.2rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(212,160,60,0.2);
+      border-radius: 3px;
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ask-input:focus { border-color: var(--gold); }
+    .ask-input::placeholder { color: var(--cream-dark); opacity: 0.5; }
+    .ask-btn {
+      padding: 0.85rem 1.8rem;
+      background: var(--gold);
+      color: var(--forest-deep);
+      border: none;
+      border-radius: 3px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .ask-btn:hover { background: var(--gold-light); }
+    .ask-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Bird answer */
+    .bird-answer {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: var(--forest);
+      border: 1px solid rgba(212,160,60,0.15);
+      border-radius: 4px;
+      flex-wrap: wrap;
+    }
+    .bird-answer-img {
+      width: 180px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .bird-answer-body { flex: 1; min-width: 250px; }
+    .bird-answer-name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--cream); margin-bottom: 0.5rem; }
+    .bird-answer-status { font-size: 0.95rem; color: var(--gold-light); margin-bottom: 0.75rem; font-weight: 500; }
+    .bird-answer-text { font-size: 0.9rem; line-height: 1.7; color: var(--cream-mid); margin-bottom: 0.5rem; }
+    .bird-likelihood {
+      display: inline-block;
+      padding: 0.25rem 0.8rem;
+      border-radius: 2px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.5rem;
+    }
+    .bird-likelihood.high { background: rgba(76,175,80,0.2); color: #a5d6a7; }
+    .bird-likelihood.medium { background: rgba(255,193,7,0.15); color: #fff176; }
+    .bird-likelihood.low { background: rgba(244,67,54,0.12); color: #ef9a9a; }
+
+    .quick-asks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .quick-ask {
+      padding: 0.4rem 0.8rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(212,160,60,0.1);
+      border-radius: 2px;
+      color: var(--cream-dark);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quick-ask:hover { border-color: var(--gold-dim); color: var(--cream); }
+
+    @media (max-width: 768px) {
+      .wx-bar { flex-direction: column; align-items: flex-start; }
+      .ask-input-row { flex-direction: column; }
+      .bird-answer { flex-direction: column; }
+      .bird-answer-img { width: 100%; height: 180px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/" class="nav-logo">MBR</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/saginaw-bay">Saginaw Bay</a>
+      <a href="/predictions" style="color:var(--gold)">Predictions</a>
+    </div>
+  </nav>
+
+  <div class="predict-hero">
+    <h1>Birding Predictions</h1>
+    <p class="lead">Weather-driven forecasts and real-time intelligence. Ask about any bird to learn what it's doing in Michigan right now.</p>
+  </div>
+
+  <div class="predict-content">
+    <div class="region-picker" id="regionPicker">
+      <button class="region-btn active" data-region="saginaw-bay">Saginaw Bay</button>
+      <button class="region-btn" data-region="southeast">SE Michigan</button>
+      <button class="region-btn" data-region="southwest">SW Michigan</button>
+      <button class="region-btn" data-region="northwest">NW Lower</button>
+      <button class="region-btn" data-region="tawas">Tawas Point</button>
+      <button class="region-btn" data-region="upper-east">Eastern UP</button>
+      <button class="region-btn" data-region="upper-west">Western UP</button>
+    </div>
+
+    <div id="forecastContent">
+      <div class="loading-state"><div class="loading-spinner"></div><p>Loading weather and predictions...</p></div>
+    </div>
+
+    <!-- ASK ABOUT A BIRD -->
+    <div class="ask-section">
+      <h2>Ask About a Bird</h2>
+      <p class="sub">Type any species name and get a prediction of what it's doing in Michigan right now, based on the season, weather, and eBird data.</p>
+
+      <div class="quick-asks" id="quickAsks">
+        <button class="quick-ask" data-bird="Kirtland's Warbler">Kirtland's Warbler</button>
+        <button class="quick-ask" data-bird="Bald Eagle">Bald Eagle</button>
+        <button class="quick-ask" data-bird="Snowy Owl">Snowy Owl</button>
+        <button class="quick-ask" data-bird="Scarlet Tanager">Scarlet Tanager</button>
+        <button class="quick-ask" data-bird="Sandhill Crane">Sandhill Crane</button>
+        <button class="quick-ask" data-bird="Common Loon">Common Loon</button>
+        <button class="quick-ask" data-bird="Piping Plover">Piping Plover</button>
+        <button class="quick-ask" data-bird="Evening Grosbeak">Evening Grosbeak</button>
+      </div>
+
+      <div class="ask-input-row">
+        <input type="text" class="ask-input" id="birdInput" placeholder="e.g. Baltimore Oriole, Red-headed Woodpecker, Prothonotary Warbler...">
+        <button class="ask-btn" id="askBtn" onclick="askAboutBird()">Ask</button>
+      </div>
+
+      <div id="birdAnswer"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Michigan Birding Report</h3>
+        <p>Built by <a href="https://chrisizworski.com" target="_blank">Chris Izworski</a>. Weather from NWS. Sightings from <a href="https://ebird.org" target="_blank">eBird</a>. Predictions by Claude Haiku.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function() {
+    let currentRegion = 'saginaw-bay';
+
+    // Region picker
+    document.querySelectorAll('.region-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentRegion = btn.dataset.region;
+        loadForecast(currentRegion);
+      });
+    });
+
+    // Quick asks
+    document.querySelectorAll('.quick-ask').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('birdInput').value = btn.dataset.bird;
+        askAboutBird();
+      });
+    });
+
+    // Enter key on input
+    document.getElementById('birdInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') askAboutBird();
+    });
+
+    async function loadForecast(region) {
+      const container = document.getElementById('forecastContent');
+      container.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Loading predictions...</p></div>';
+
+      try {
+        const res = await fetch(`/api/predict?mode=forecast&region=${region}`);
+        if (!res.ok) throw new Error('API ' + res.status);
+        const d = await res.json();
+
+        let html = '';
+
+        // Weather bar
+        if (d.weather) {
+          html += `<div class="wx-bar">
+            <div class="wx-item">
+              <div class="wx-val">${d.weather.temp}°</div>
+              <div class="wx-label">Current</div>
+            </div>
+            <div class="wx-item">
+              <div class="wx-val" style="font-size:1.2rem">${d.weather.wind}</div>
+              <div class="wx-label">Wind</div>
+            </div>
+            <div class="wx-forecast">
+              <div style="margin-bottom:0.3rem"><strong>Now:</strong> ${d.weather.forecast}</div>
+              <div><strong>Tonight:</strong> ${d.weather.tonight}</div>
+            </div>
+          </div>`;
+        }
+
+        // Birding conditions
+        if (d.birdingConditions?.length) {
+          html += '<div class="conditions-list">';
+          d.birdingConditions.forEach(c => {
+            html += `<div class="condition-badge ${c.type}">${c.text}</div>`;
+          });
+          html += '</div>';
+        }
+
+        // AI prediction
+        if (d.prediction) {
+          const p = d.prediction;
+          if (p.headline) html += `<div class="headline-box">${p.headline}</div>`;
+          if (p.conditions) html += `<div class="predict-card"><h3>Current Conditions</h3><p>${p.conditions}</p></div>`;
+          if (p.whatToExpect) html += `<div class="predict-card"><h3>What to Expect</h3><p>${p.whatToExpect}</p></div>`;
+          if (p.whereToBe) html += `<div class="predict-card"><h3>Where to Be</h3><p>${p.whereToBe}</p></div>`;
+          if (p.migrationOutlook) html += `<div class="predict-card"><h3>Migration Outlook</h3><p>${p.migrationOutlook}</p></div>`;
+        } else {
+          html += '<div class="predict-card"><h3>Conditions Report</h3><p>Weather-driven prediction will generate shortly. The automated birding conditions assessment is shown above.</p></div>';
+        }
+
+        container.innerHTML = html;
+      } catch (err) {
+        container.innerHTML = `<div class="predict-card"><p style="color:var(--dawn)">Unable to load predictions. ${err.message}</p></div>`;
+      }
+    }
+
+    window.askAboutBird = async function() {
+      const input = document.getElementById('birdInput');
+      const name = input.value.trim();
+      if (!name) return;
+
+      const container = document.getElementById('birdAnswer');
+      const btn = document.getElementById('askBtn');
+      btn.disabled = true;
+      btn.textContent = 'Thinking...';
+      container.innerHTML = '<div class="loading-state" style="padding:1.5rem"><div class="loading-spinner"></div></div>';
+
+      try {
+        const res = await fetch(`/api/predict?mode=bird&name=${encodeURIComponent(name)}`);
+        if (!res.ok) throw new Error('API ' + res.status);
+        const d = await res.json();
+
+        const p = d.prediction || {};
+        const imgSrc = d.image?.url || '/placeholder-bird.svg';
+        const likelihood = (p.likelihood || '').toLowerCase();
+
+        container.innerHTML = `<div class="bird-answer">
+          <img class="bird-answer-img" src="${imgSrc}" alt="${d.name}" onerror="this.src='/placeholder-bird.svg'">
+          <div class="bird-answer-body">
+            <div class="bird-answer-name">${d.name}</div>
+            ${p.status ? `<div class="bird-answer-status">${p.status}</div>` : ''}
+            ${p.activity ? `<div class="bird-answer-text">${p.activity}</div>` : ''}
+            ${p.findIt ? `<div class="bird-answer-text"><strong style="color:var(--gold)">Where to look:</strong> ${p.findIt}</div>` : ''}
+            ${p.lookFor ? `<div class="bird-answer-text"><strong style="color:var(--gold)">Look for:</strong> ${p.lookFor}</div>` : ''}
+            ${likelihood ? `<span class="bird-likelihood ${likelihood}">Likelihood: ${likelihood}</span>` : ''}
+          </div>
+        </div>`;
+      } catch (err) {
+        container.innerHTML = `<div class="predict-card"><p style="color:var(--dawn)">Unable to get prediction. ${err.message}</p></div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Ask';
+      }
+    };
+
+    loadForecast(currentRegion);
+  })();
+  </script>
+</body>
+</html>
