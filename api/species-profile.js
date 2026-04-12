@@ -46,54 +46,51 @@ module.exports = async (req, res) => {
     const season = getSeason();
     const cacheKey = `birding:profile:${code}:${season}`;
 
-    // Check for cached profile
+    // Check for cached profile TEXT (images are always fetched fresh)
+    let profile = null;
     try {
       const r = getRedis();
       const cached = await r.get(cacheKey);
       if (cached) {
-        const profile = typeof cached === 'string' ? JSON.parse(cached) : cached;
-        
-        // Attach fresh real-time sightings (not cached with profile)
-        const recentSightings = await getRecentSightings(code);
-        
-        return res.status(200).json({
-          ...profile,
-          recentSightings,
-          cached: true,
-        });
+        profile = typeof cached === 'string' ? JSON.parse(cached) : cached;
       }
     } catch (e) { console.warn('Redis read:', e.message); }
 
-    // Generate profile with Haiku
-    const profile = await generateProfile(code, name, sciName || '', season);
-    
-    // Get image and recent sightings
+    // Generate profile text with Haiku if not cached
+    if (!profile) {
+      profile = await generateProfile(code, name, sciName || '', season);
+      
+      // Cache ONLY the text content (no images)
+      const textOnly = {
+        speciesCode: code,
+        comName: name,
+        sciName: sciName || '',
+        season,
+        ...profile,
+      };
+      try {
+        const r = getRedis();
+        await r.set(cacheKey, JSON.stringify(textOnly), { ex: PROFILE_TTL });
+      } catch (e) { console.warn('Redis write:', e.message); }
+    }
+
+    // ALWAYS fetch images and sightings fresh (never cached with profile)
     const [image, recentSightings, inatPhotos] = await Promise.all([
       getBestImage(code, name),
       getRecentSightings(code),
       getINatPhotos(sciName || name, { perPage: 4 }).catch(() => []),
     ]);
 
-    const result = {
+    res.status(200).json({
       speciesCode: code,
       comName: name,
       sciName: sciName || '',
       season,
       image,
       inatPhotos,
-      ...profile,
-    };
-
-    // Cache the generated profile (without real-time sightings)
-    try {
-      const r = getRedis();
-      await r.set(cacheKey, JSON.stringify(result), { ex: PROFILE_TTL });
-    } catch (e) { console.warn('Redis write:', e.message); }
-
-    res.status(200).json({
-      ...result,
       recentSightings,
-      cached: false,
+      cached: !!profile?.generatedBy,
+      ...profile,
     });
   } catch (err) {
     console.error('Species profile error:', err);
