@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/saginaw-bay", "destination": "/saginaw-bay.html" },
     { "source": "/migration", "destination": "/migration.html" },
+    { "source": "/species/:code", "destination": "/species.html" },
     { "source": "/((?!api/)(?!_next/)(?!.*\\.).*)", "destination": "/index.html" }
   ],
   "functions": {

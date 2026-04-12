@@ -63,7 +63,7 @@
         ? `<img class="sighting-img" src="${imgSrc}" alt="${s.comName}" loading="lazy" onerror="this.style.display='none'">`
         : `<div class="placeholder-img"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2C8 2 4 6 4 10c0 6 8 12 8 12s8-6 8-12c0-4-4-8-8-8z"/><circle cx="12" cy="10" r="3"/></svg></div>`;
 
-      return `<div class="sighting-card" style="animation-delay:${i * 0.05}s">
+      return `<a href="/species/${s.speciesCode}?name=${encodeURIComponent(s.comName)}&sci=${encodeURIComponent(s.sciName)}" class="sighting-card" style="animation-delay:${i * 0.05}s;text-decoration:none;color:inherit">
         ${imgHtml}
         <div class="sighting-body">
           <div class="sighting-name">${s.comName}</div>
@@ -75,7 +75,7 @@
             ${s.howMany ? `<span>×${s.howMany}</span>` : ''}
           </div>
         </div>
-      </div>`;
+      </a>`;
     }).join('');
   }
 

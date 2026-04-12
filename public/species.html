@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Species Profile — Michigan Birding Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .species-hero {
+      padding: 7rem 2rem 3rem;
+      background: linear-gradient(165deg, var(--forest-deep) 0%, #0d1f12 60%, var(--forest) 100%);
+      display: flex;
+      gap: 2.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .species-hero-img {
+      width: 320px;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 2px solid rgba(212,160,60,0.2);
+      flex-shrink: 0;
+    }
+    .species-hero-info { flex: 1; min-width: 280px; }
+    .species-hero-info .back { font-size: 0.8rem; color: var(--gold-light); display: block; margin-bottom: 1rem; }
+    .species-hero-info h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+    .species-sci {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--cream-dark);
+      margin-bottom: 1rem;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      background: rgba(212,160,60,0.15);
+      color: var(--gold);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 2px;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .right-now-box {
+      margin-top: 1.25rem;
+      padding: 1.25rem;
+      background: rgba(212,160,60,0.08);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    .right-now-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    .profile-section {
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(212,160,60,0.08);
+      border-radius: 4px;
+    }
+    .profile-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .profile-section p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--cream-mid);
+    }
+
+    /* Map */
+    .map-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+    .map-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+    #sightingsMap {
+      width: 100%;
+      height: 450px;
+      border-radius: 4px;
+      border: 1px solid rgba(212,160,60,0.15);
+    }
+    .sighting-list {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 0.75rem;
+    }
+    .sighting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(212,160,60,0.06);
+      border-radius: 3px;
+      font-size: 0.8rem;
+    }
+    .sighting-row .loc { color: var(--cream); font-weight: 500; }
+    .sighting-row .dt { color: var(--cream-dark); }
+    .sighting-row .ct { color: var(--gold-light); }
+
+    /* Sounds */
+    .sounds-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+    .sounds-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+    .sound-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--forest);
+      border: 1px solid rgba(212,160,60,0.1);
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .sound-play {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .sound-play:hover { background: var(--gold-light); }
+    .sound-play svg { fill: var(--forest-deep); }
+    .sound-info { flex: 1; }
+    .sound-info .type { font-weight: 600; color: var(--cream); font-size: 0.9rem; }
+    .sound-info .meta { font-size: 0.75rem; color: var(--cream-dark); }
+    audio { display: none; }
+
+    /* iNat photos */
+    .photos-row {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    .photos-row img {
+      width: 160px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 3px;
+      border: 1px solid rgba(212,160,60,0.1);
+      flex-shrink: 0;
+    }
+    .photos-label {
+      font-size: 0.7rem;
+      color: var(--cream-dark);
+      margin-top: 0.4rem;
+    }
+
+    .fun-fact {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+    .fun-fact-box {
+      padding: 1.5rem 2rem;
+      background: rgba(212,160,60,0.06);
+      border: 1px solid rgba(212,160,60,0.15);
+      border-radius: 4px;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--cream);
+    }
+
+    @media (max-width: 768px) {
+      .species-hero { flex-direction: column; padding-top: 5rem; }
+      .species-hero-img { width: 100%; height: 220px; }
+      .profile-grid { grid-template-columns: 1fr; }
+      #sightingsMap { height: 300px; }
+    }
+
+    .loading-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      gap: 1rem;
+      color: var(--cream-dark);
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/" class="nav-logo">MBR</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/saginaw-bay">Saginaw Bay</a>
+      <a href="/migration">Migration</a>
+    </div>
+  </nav>
+
+  <div id="pageContent">
+    <div class="loading-page">
+      <div class="loading-spinner"></div>
+      <p>Loading species profile...</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Michigan Birding Report</h3>
+        <p>Built by <a href="https://chrisizworski.com" target="_blank">Chris Izworski</a>. Species profiles generated by Claude Haiku and cached for performance. Sighting data from <a href="https://ebird.org" target="_blank">eBird</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+  (function() {
+    // Parse species info from URL: /species/kirwar?name=...&sci=...
+    const path = window.location.pathname;
+    const params = new URLSearchParams(window.location.search);
+    const code = path.split('/species/')[1] || params.get('code');
+    const name = params.get('name') || '';
+    const sci = params.get('sci') || '';
+
+    if (!code) {
+      document.getElementById('pageContent').innerHTML = '<div class="loading-page"><p>No species specified. <a href="/">Return home</a></p></div>';
+      return;
+    }
+
+    // Update page title
+    if (name) document.title = `${name} — Michigan Birding Report`;
+
+    let currentAudio = null;
+
+    async function loadProfile() {
+      const container = document.getElementById('pageContent');
+      try {
+        const res = await fetch(`/api/species-profile?code=${code}&name=${encodeURIComponent(name)}&sci=${encodeURIComponent(sci)}`);
+        if (!res.ok) throw new Error('API ' + res.status);
+        const d = await res.json();
+
+        const imgSrc = d.image?.url || '/placeholder-bird.svg';
+        const sightings = d.recentSightings || [];
+        const photos = d.inatPhotos || [];
+
+        container.innerHTML = `
+          <div class="species-hero">
+            <img class="species-hero-img" src="${imgSrc}" alt="${d.comName}" onerror="this.src='/placeholder-bird.svg'">
+            <div class="species-hero-info">
+              <a href="/" class="back">← Michigan Birding Report</a>
+              <h1>${d.comName}</h1>
+              <div class="species-sci">${d.sciName}</div>
+              <span class="status-badge">${d.season} ${new Date().getFullYear()}</span>
+              ${d.cached ? '<span class="status-badge">Cached Profile</span>' : '<span class="status-badge">Fresh Profile</span>'}
+              ${d.generatedBy === 'haiku' ? '<span class="status-badge">AI-Enhanced</span>' : ''}
+              <div class="right-now-box">
+                <div class="right-now-label">What's Happening Now</div>
+                ${d.rightNow || 'No current activity data available.'}
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-section">
+              <h3>Michigan Status</h3>
+              <p>${d.michiganStatus || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Where to Find</h3>
+              <p>${d.whereToFind || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Field Identification</h3>
+              <p>${d.fieldMarks || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Habitat</h3>
+              <p>${d.habitat || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Nesting</h3>
+              <p>${d.nesting || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Conservation</h3>
+              <p>${d.conservation || ''}</p>
+            </div>
+          </div>
+
+          ${d.funFact ? `<div class="fun-fact"><div class="fun-fact-box">${d.funFact}</div></div>` : ''}
+
+          ${photos.length ? `
+            <div class="map-section">
+              <h2>Recent Photos from Michigan</h2>
+              <div class="photos-row">
+                ${photos.map(p => `<a href="${p.inatUrl}" target="_blank" rel="noopener"><img src="${p.photoUrl}" alt="${d.comName}" loading="lazy" onerror="this.style.display='none'"></a>`).join('')}
+              </div>
+              <div class="photos-label">Photos from iNaturalist (CC licensed). Observers: ${photos.map(p => p.observer).join(', ')}</div>
+            </div>
+          ` : ''}
+
+          <div class="sounds-section">
+            <h2>Listen</h2>
+            <div id="soundsContainer"><div class="loading-state"><div class="loading-spinner"></div></div></div>
+          </div>
+
+          <div class="map-section">
+            <h2>Recent Sightings in Michigan</h2>
+            ${sightings.length ? `
+              <div id="sightingsMap"></div>
+              <div class="sighting-list">
+                ${sightings.map(s => {
+                  const dt = new Date(s.obsDt?.replace(' ','T') || '');
+                  const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                  return `<div class="sighting-row">
+                    <span class="loc">${(s.locName||'').substring(0, 40)}</span>
+                    <span class="dt">${dateStr}</span>
+                    ${s.howMany ? `<span class="ct">${s.howMany}</span>` : ''}
+                  </div>`;
+                }).join('')}
+              </div>
+            ` : '<p style="color:var(--cream-dark)">No sightings reported in Michigan in the past 14 days.</p>'}
+          </div>
+        `;
+
+        // Init map
+        if (sightings.length) initMap(sightings, d.comName);
+
+        // Load sounds
+        loadSounds(d.sciName || sci);
+
+      } catch (err) {
+        container.innerHTML = `<div class="loading-page">
+          <p>Error loading species profile.</p>
+          <p style="font-size:0.8rem;opacity:0.6">${err.message}</p>
+          <a href="/" class="btn btn-outline">Return Home</a>
+        </div>`;
+      }
+    }
+
+    function initMap(sightings, comName) {
+      const validPts = sightings.filter(s => s.lat && s.lng);
+      if (!validPts.length) return;
+
+      const map = L.map('sightingsMap', {
+        scrollWheelZoom: false,
+      }).setView([44.3, -84.7], 6);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        maxZoom: 16,
+      }).addTo(map);
+
+      const goldIcon = L.divIcon({
+        className: '',
+        html: '<div style="width:12px;height:12px;background:#d4a03c;border:2px solid #f5f0e6;border-radius:50%;box-shadow:0 0 6px rgba(212,160,60,0.5)"></div>',
+        iconSize: [12, 12],
+        iconAnchor: [6, 6],
+      });
+
+      validPts.forEach(s => {
+        const dt = new Date(s.obsDt?.replace(' ','T') || '');
+        const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        L.marker([s.lat, s.lng], { icon: goldIcon })
+          .addTo(map)
+          .bindPopup(`<b>${comName}</b><br>${s.locName || ''}<br>${dateStr}${s.howMany ? ' · ' + s.howMany : ''}`);
+      });
+
+      if (validPts.length > 1) {
+        const bounds = L.latLngBounds(validPts.map(s => [s.lat, s.lng]));
+        map.fitBounds(bounds, { padding: [30, 30] });
+      } else {
+        map.setView([validPts[0].lat, validPts[0].lng], 10);
+      }
+    }
+
+    async function loadSounds(sciName) {
+      const container = document.getElementById('soundsContainer');
+      if (!sciName) {
+        container.innerHTML = '<p style="color:var(--cream-dark);font-size:0.9rem">No audio available.</p>';
+        return;
+      }
+      try {
+        const res = await fetch(`/api/sounds?species=${encodeURIComponent(sciName)}&type=song&max=3`);
+        if (!res.ok) throw new Error('Sounds API error');
+        const data = await res.json();
+
+        if (!data.recordings || !data.recordings.length) {
+          container.innerHTML = '<p style="color:var(--cream-dark);font-size:0.9rem">No recordings available on Xeno-canto.</p>';
+          return;
+        }
+
+        container.innerHTML = data.recordings.map((r, i) => `
+          <div class="sound-card">
+            <button class="sound-play" onclick="toggleAudio(${i}, '${r.audioUrl}')">
+              <svg width="18" height="18" viewBox="0 0 24 24" id="playIcon${i}"><polygon points="6,4 20,12 6,20"/></svg>
+            </button>
+            <div class="sound-info">
+              <div class="type">${r.type || 'Song'} · ${r.duration || ''}</div>
+              <div class="meta">${r.location || ''} · ${r.recordist || ''} · ${r.license || ''}</div>
+            </div>
+            <audio id="audio${i}" src="${r.audioUrl}" preload="none"></audio>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = '<p style="color:var(--cream-dark);font-size:0.9rem">Audio temporarily unavailable.</p>';
+      }
+    }
+
+    // Global audio toggle
+    window.toggleAudio = function(idx, url) {
+      const audio = document.getElementById('audio' + idx);
+      if (!audio) return;
+
+      // Stop any other playing audio
+      if (currentAudio && currentAudio !== audio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      if (audio.paused) {
+        audio.play();
+        currentAudio = audio;
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+        currentAudio = null;
+      }
+    };
+
+    loadProfile();
+  })();
+  </script>
+</body>
+</html>
