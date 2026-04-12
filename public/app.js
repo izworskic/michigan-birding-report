@@ -134,17 +134,18 @@
         return;
       }
 
-      // Show top species as cards with images
+      // Show top species as cards with images — all tappable to species profiles
       const topSpecies = species.slice(0, 8);
       container.innerHTML = topSpecies.map(sp => {
         const imgSrc = sp.image?.url || '';
         const hasImg = imgSrc && !imgSrc.includes('placeholder');
-        return `<div class="bay-hotspot-card">
+        const href = `/species/${sp.speciesCode}?name=${encodeURIComponent(sp.comName)}&sci=${encodeURIComponent(sp.sciName || '')}`;
+        return `<a href="${href}" class="bay-hotspot-card" style="display:block;text-decoration:none;color:inherit">
           ${hasImg ? `<img src="${imgSrc}" alt="${sp.comName}" style="width:100%;height:100px;object-fit:cover;border-radius:2px;margin-bottom:0.5rem" loading="lazy" onerror="this.style.display='none'">` : ''}
           <div class="bay-hotspot-name">${sp.comName}</div>
           <div class="bay-hotspot-species">${truncate(sp.locName, 35)}</div>
           <div class="bay-hotspot-recent">${formatDate(sp.obsDt)}${sp.howMany ? ' · ' + sp.howMany + ' reported' : ''}</div>
-        </div>`;
+        </a>`;
       }).join('');
 
     } catch (err) {

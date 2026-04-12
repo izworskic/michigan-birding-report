@@ -110,6 +110,7 @@
     <div class="nav-links">
       <a href="/">Home</a>
       <a href="/saginaw-bay" style="color:var(--gold)">Saginaw Bay</a>
+      <a href="/predictions">Predictions</a>
       <a href="/migration">Migration</a>
     </div>
   </nav>
@@ -183,15 +184,16 @@
 
             const d = new Date(sp.obsDt?.replace(' ','T') || '');
             const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const href = `/species/${sp.speciesCode}?name=${encodeURIComponent(sp.comName)}&sci=${encodeURIComponent(sp.sciName || '')}`;
 
-            return `<div class="species-item">
+            return `<a href="${href}" class="species-item" style="text-decoration:none;color:inherit">
               ${imgHtml}
               <div class="species-info">
                 <div class="sp-name">${sp.comName}</div>
                 <div class="sp-meta">${dateStr}${sp.howMany ? ' · ' + sp.howMany + ' reported' : ''}</div>
                 <div class="sp-loc">${sp.hotspotName || sp.locName || ''}</div>
               </div>
-            </div>`;
+            </a>`;
           }).join('');
         } catch (err) {
           container.innerHTML = `<div class="error-state"><p>Unable to load sightings.</p></div>`;
@@ -201,10 +203,11 @@
       function renderHotspotDetails() {
         const container = document.getElementById('hotspotDetails');
         container.innerHTML = '<div class="bay-hotspots">' + HOTSPOT_INFO.map(h => `
-          <div class="bay-hotspot-card">
+          <a href="https://ebird.org/hotspot/${h.locId}" target="_blank" rel="noopener" class="bay-hotspot-card" style="display:block;text-decoration:none;color:inherit">
             <div class="bay-hotspot-name">${h.name}</div>
             <div class="bay-hotspot-recent" style="margin-top:0.5rem">${h.desc}</div>
-          </div>
+            <div style="margin-top:0.5rem;font-size:0.7rem;color:var(--gold-light)">View on eBird →</div>
+          </a>
         `).join('') + '</div>';
       }
 
