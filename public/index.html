@@ -3,12 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Michigan Birding Report — Real-Time Sightings &amp; Migration Intelligence</title>
-  <meta name="description" content="Live bird sightings, migration forecasts, and species data across Michigan. Powered by eBird, BirdCast, and real-time field reports.">
-  <meta property="og:title" content="Michigan Birding Report">
-  <meta property="og:description" content="Real-time birding intelligence for Michigan. Notable sightings, migration forecasts, Saginaw Bay hub, and species profiles.">
+  <title>Michigan Birding Report — Real-Time Bird Sightings, Migration Forecasts &amp; Species Guide</title>
+  <meta name="description" content="Live bird sightings across Michigan updated every 15 minutes. Notable species alerts, Saginaw Bay birding hub, migration forecasts, species profiles with photos and audio. Free birding intelligence for Michigan birders.">
+  <meta property="og:title" content="Michigan Birding Report — Real-Time Sightings &amp; Migration Forecasts">
+  <meta property="og:description" content="Live bird sightings, migration radar, species profiles, and AI-powered predictions for Michigan birders. Saginaw Bay hub with 80+ species.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://birding.chrisizworski.com">
+  <meta property="og:site_name" content="Michigan Birding Report">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://birding.chrisizworski.com">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Michigan Birding Report",
+    "url": "https://birding.chrisizworski.com",
+    "description": "Real-time bird sightings, migration forecasts, and species profiles for Michigan birders",
+    "author": {
+      "@type": "Person",
+      "name": "Chris Izworski",
+      "url": "https://chrisizworski.com"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Chris Izworski"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://birding.chrisizworski.com/predictions?name={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,9 +57,9 @@
       </div>
     </nav>
     <div class="hero-content">
-      <p class="hero-tag">Real-Time Birding Intelligence</p>
+      <p class="hero-tag">Live eBird Data, Updated Every 15 Minutes</p>
       <h1>Michigan<br>Birding Report</h1>
-      <p class="hero-sub">Live sightings, migration forecasts, and field intelligence across the Great Lakes State. Powered by eBird data and updated every 15 minutes.</p>
+      <p class="hero-sub">Real-time bird sightings, migration forecasts, and species profiles for every region of the Great Lakes State.</p>
       <div class="hero-stats" id="heroStats">
         <div class="stat">
           <span class="stat-num" id="statSpecies">—</span>
@@ -57,8 +84,8 @@
   <!-- WEEKEND FORECAST -->
   <section class="section section-dark" id="forecast">
     <div class="section-header">
-      <h2>This Weekend's Birding Forecast</h2>
-      <p class="section-sub">AI-powered recommendations based on real-time eBird data and current conditions</p>
+      <h2>Michigan Birding Forecast This Weekend</h2>
+      <p class="section-sub">AI-powered predictions based on real-time eBird data, weather, and migration patterns</p>
     </div>
     <div class="forecast-card" id="forecastCard">
       <div class="loading-state">
@@ -71,8 +98,8 @@
   <!-- NOTABLE SIGHTINGS -->
   <section class="section" id="notable">
     <div class="section-header">
-      <h2>What's Flying Now</h2>
-      <p class="section-sub">Notable and rare sightings across Michigan in the past 7 days</p>
+      <h2>Notable Bird Sightings in Michigan</h2>
+      <p class="section-sub">Rare and unusual species reported across Michigan this week, from eBird</p>
       <div class="region-filters" id="regionFilters">
         <button class="filter-btn active" data-region="US-MI">All Michigan</button>
         <button class="filter-btn" data-region="UP">Upper Peninsula</button>
@@ -92,9 +119,9 @@
   <section class="section section-dark" id="saginawBay">
     <div class="bay-hero">
       <div class="bay-content">
-        <p class="bay-tag">Premier Destination</p>
-        <h2>Saginaw Bay</h2>
-        <p class="bay-desc">One of the most important staging areas for waterfowl and shorebirds in the Great Lakes basin. Eight key hotspots covering marshes, mudflats, and coastal habitat from Bay City to Tawas Point.</p>
+        <p class="bay-tag">Michigan's Premier Birding Destination</p>
+        <h2>Saginaw Bay Birding</h2>
+        <p class="bay-desc">One of the most important staging areas for waterfowl and shorebirds in the Great Lakes basin. Eight key hotspots covering marshes, mudflats, and coastal habitat from Bay City to Tawas Point. Over 300 species recorded.</p>
         <div class="bay-hotspots" id="bayHotspots">
           <div class="loading-state">
             <div class="loading-spinner"></div>
@@ -108,8 +135,8 @@
   <!-- MIGRATION -->
   <section class="section" id="migration">
     <div class="section-header">
-      <h2>Migration Intelligence</h2>
-      <p class="section-sub">BirdCast radar data and forecasts for Michigan counties</p>
+      <h2>Bird Migration Radar for Michigan</h2>
+      <p class="section-sub">BirdCast radar data and nocturnal migration forecasts for Michigan counties</p>
     </div>
     <div class="migration-grid">
       <div class="migration-card">
@@ -134,8 +161,8 @@
   <!-- REGIONS -->
   <section class="section section-dark" id="regions">
     <div class="section-header">
-      <h2>Explore by Region</h2>
-      <p class="section-sub">Tap a region to see what's been spotted. Data from eBird, updated every 15 minutes.</p>
+      <h2>Where to Go Birding in Michigan</h2>
+      <p class="section-sub">Tap a region to see this week's notable sightings. Data from eBird, updated every 15 minutes.</p>
     </div>
     <div class="regions-grid">
       <div class="region-card" data-region="UP" onclick="selectRegion('UP')" style="cursor:pointer">
@@ -174,8 +201,8 @@
   <!-- SEASONAL CALENDAR -->
   <section class="section" id="calendar">
     <div class="section-header">
-      <h2>Seasonal Calendar</h2>
-      <p class="section-sub">When to look for Michigan's key species groups</p>
+      <h2>Michigan Bird Migration Calendar</h2>
+      <p class="section-sub">When to look for Michigan's key species, from spring waterfowl through winter irruptions</p>
     </div>
     <div class="calendar-grid" id="calendarGrid"></div>
   </section>
@@ -183,8 +210,8 @@
   <!-- GEAR -->
   <section class="section" id="gear">
     <div class="section-header">
-      <h2>Essential Birding Gear</h2>
-      <p class="section-sub">Field-tested recommendations for Michigan birders</p>
+      <h2>Best Birding Binoculars and Gear for Michigan</h2>
+      <p class="section-sub">Field-tested optics and guides recommended for Great Lakes birding</p>
     </div>
     <div class="gear-grid">
       <a href="https://www.amazon.com/dp/B00KFCP9Q0?tag=michigantrout-20" target="_blank" rel="noopener" class="gear-card">
