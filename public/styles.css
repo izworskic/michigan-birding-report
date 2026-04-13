@@ -821,3 +821,21 @@ a:hover { color: var(--gold); }
 
 /* Status badges on species page */
 .status-badge { background: rgba(26,92,42,0.1) !important; color: var(--forest) !important; }
+
+/* ---- Sub-page hero text (white on dark green) ---- */
+.species-hero, .predict-hero, .mig-hero, .bay-page-hero { color: #fff; }
+.species-hero h1, .predict-hero h1, .mig-hero h1, .bay-page-hero h1 { color: #fff; }
+.species-hero .species-sci { color: rgba(255,255,255,0.7); }
+.species-hero .back { color: var(--gold-light) !important; }
+.right-now-box { color: #fff !important; }
+.right-now-label { color: var(--gold-light) !important; }
+
+/* Sub-page content text (dark on light) */
+.hotspot-section h2 { color: var(--forest-deep); }
+.hotspot-section > p { color: var(--text-mid); }
+.mig-content > p { color: var(--text-mid); }
+.predict-content { color: var(--text); }
+.ask-section .sub { color: var(--text-mid) !important; }
+
+/* Photos label */
+.photos-label { color: var(--text-light) !important; }

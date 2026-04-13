@@ -30,7 +30,7 @@
     }
     .species-hero-info { flex: 1; min-width: 280px; }
     .species-hero-info .back { font-size: 0.8rem; color: var(--gold-light); display: block; margin-bottom: 1rem; }
-    .species-hero-info h1 {
+    .species-hero-info h1 { color: #fff;
       font-family: var(--font-display);
       font-size: clamp(2rem, 5vw, 3.5rem);
       font-weight: 700;
@@ -39,9 +39,9 @@
     }
     .species-sci {
       font-family: var(--font-display);
-      font-style: italic;
+      font-style: italic; color: rgba(255,255,255,0.7);
       font-size: 1.2rem;
-      color: var(--cream-dark);
+      color: var(--text-mid);
       margin-bottom: 1rem;
     }
     .status-badge {
@@ -99,7 +99,7 @@
     .profile-section p {
       font-size: 0.9rem;
       line-height: 1.7;
-      color: var(--cream-mid);
+      color: var(--text-mid);
     }
 
     /* Map */
@@ -111,7 +111,7 @@
     .map-section h2 {
       font-family: var(--font-display);
       font-size: 1.8rem;
-      color: var(--cream);
+      color: var(--text);
       margin-bottom: 1rem;
     }
     #sightingsMap {
@@ -136,8 +136,8 @@
       border-radius: 3px;
       font-size: 0.8rem;
     }
-    .sighting-row .loc { color: var(--cream); font-weight: 500; }
-    .sighting-row .dt { color: var(--cream-dark); }
+    .sighting-row .loc { color: var(--text); font-weight: 500; }
+    .sighting-row .dt { color: var(--text-mid); }
     .sighting-row .ct { color: var(--gold-light); }
 
     /* Sounds */
@@ -149,7 +149,7 @@
     .sounds-section h2 {
       font-family: var(--font-display);
       font-size: 1.8rem;
-      color: var(--cream);
+      color: var(--text);
       margin-bottom: 1rem;
     }
     .sound-card {
@@ -178,8 +178,8 @@
     .sound-play:hover { background: var(--gold-light); }
     .sound-play svg { fill: var(--forest-deep); }
     .sound-info { flex: 1; }
-    .sound-info .type { font-weight: 600; color: var(--cream); font-size: 0.9rem; }
-    .sound-info .meta { font-size: 0.75rem; color: var(--cream-dark); }
+    .sound-info .type { font-weight: 600; color: var(--text); font-size: 0.9rem; }
+    .sound-info .meta { font-size: 0.75rem; color: var(--text-mid); }
     audio { display: none; }
 
     /* iNat photos */
@@ -200,7 +200,7 @@
     }
     .photos-label {
       font-size: 0.7rem;
-      color: var(--cream-dark);
+      color: var(--text-mid);
       margin-top: 0.4rem;
     }
 
@@ -216,9 +216,9 @@
       border-radius: 4px;
       font-family: var(--font-display);
       font-size: 1.15rem;
-      font-style: italic;
+      font-style: italic; color: rgba(255,255,255,0.7);
       line-height: 1.7;
-      color: var(--cream);
+      color: var(--text);
     }
 
     @media (max-width: 768px) {
@@ -235,7 +235,7 @@
       justify-content: center;
       min-height: 60vh;
       gap: 1rem;
-      color: var(--cream-dark);
+      color: var(--text-mid);
     }
   </style>
 </head>
@@ -327,7 +327,7 @@
                   </div>`;
                 }).join('')}
               </div>
-            ` : '<p style="color:var(--cream-dark)">No sightings reported in Michigan in the past 14 days.</p>'}
+            ` : '<p style="color:var(--text-mid)">No sightings reported in Michigan in the past 14 days.</p>'}
           </div>
 
           <div class="profile-grid">
@@ -379,11 +379,11 @@
               <div style="font-size:2.5rem">🔭</div>
               <div style="flex:1;min-width:200px">
                 <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:var(--gold);margin-bottom:0.3rem">Spot More Birds This Season</div>
-                <p style="font-size:0.9rem;color:var(--cream-dark);line-height:1.5;margin:0">Quality optics make all the difference for field identification. The Nikon Monarch M5 8x42 delivers outstanding clarity for Michigan birding in all conditions.</p>
+                <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.5;margin:0">Quality optics make all the difference for field identification. The Nikon Monarch M5 8x42 delivers outstanding clarity for Michigan birding in all conditions.</p>
               </div>
               <a href="https://www.amazon.com/dp/B09GV5J647?tag=michigantrout-20" target="_blank" rel="noopener" class="btn btn-primary" style="white-space:nowrap">View on Amazon →</a>
             </div>
-            <p style="font-size:0.65rem;color:var(--cream-dark);opacity:0.5;margin-top:0.75rem">As an Amazon Associate I earn from qualifying purchases.</p>
+            <p style="font-size:0.65rem;color:var(--text-mid);opacity:0.5;margin-top:0.75rem">As an Amazon Associate I earn from qualifying purchases.</p>
           </div>
         `;
 
@@ -441,7 +441,7 @@
     async function loadSounds(sciName) {
       const container = document.getElementById('soundsContainer');
       if (!sciName) {
-        container.innerHTML = '<p style="color:var(--cream-dark);font-size:0.9rem">No audio available.</p>';
+        container.innerHTML = '<p style="color:var(--text-mid);font-size:0.9rem">No audio available.</p>';
         return;
       }
       try {
@@ -450,7 +450,7 @@
         const data = await res.json();
 
         if (!data.recordings || !data.recordings.length) {
-          container.innerHTML = '<p style="color:var(--cream-dark);font-size:0.9rem">No recordings available on Xeno-canto.</p>';
+          container.innerHTML = '<p style="color:var(--text-mid);font-size:0.9rem">No recordings available on Xeno-canto.</p>';
           return;
         }
 
@@ -467,7 +467,7 @@
           </div>
         `).join('');
       } catch (err) {
-        container.innerHTML = '<p style="color:var(--cream-dark);font-size:0.9rem">Audio temporarily unavailable.</p>';
+        container.innerHTML = '<p style="color:var(--text-mid);font-size:0.9rem">Audio temporarily unavailable.</p>';
       }
     }
 
