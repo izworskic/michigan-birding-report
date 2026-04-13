@@ -3,6 +3,7 @@
     { "source": "/saginaw-bay", "destination": "/saginaw-bay.html" },
     { "source": "/predictions", "destination": "/predictions.html" },
     { "source": "/migration", "destination": "/migration.html" },
+    { "source": "/county/:fips", "destination": "/county.html" },
     { "source": "/species/:code", "destination": "/species.html" },
     { "source": "/((?!api/)(?!_next/)(?!.*\\.).*)", "destination": "/index.html" }
   ],
