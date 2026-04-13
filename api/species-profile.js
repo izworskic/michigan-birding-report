@@ -8,7 +8,7 @@
  */
 
 const { Redis } = require('@upstash/redis');
-const { getSpeciesObservations, getRecentObservations } = require('../lib/ebird');
+const { getSpeciesObservations, getRecentObservations, getNotableSightings } = require('../lib/ebird');
 const { getBestImage, getINatPhotos } = require('../lib/media');
 
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
@@ -100,16 +100,36 @@ module.exports = async (req, res) => {
 
 async function getRecentSightings(speciesCode) {
   try {
-    const obs = await getSpeciesObservations('US-MI', speciesCode, { back: 14 });
-    return (obs || []).slice(0, 15).map(o => ({
-      locName: o.locName,
-      obsDt: o.obsDt,
-      howMany: o.howMany || null,
-      lat: o.lat,
-      lng: o.lng,
-      locId: o.locId,
-      subnational2Code: o.subnational2Code,
-    }));
+    // Query BOTH endpoints and merge - notable sightings often don't appear
+    // in the regular species endpoint for rare birds
+    const [speciesObs, notableObs] = await Promise.all([
+      getSpeciesObservations('US-MI', speciesCode, { back: 30 }).catch(() => []),
+      getNotableSightings('US-MI', { back: 14, maxResults: 50 }).catch(() => []),
+    ]);
+
+    // Filter notable to just this species
+    const notableForSpecies = (notableObs || []).filter(o => o.speciesCode === speciesCode);
+
+    // Merge and deduplicate by location+date
+    const all = [...(speciesObs || []), ...notableForSpecies];
+    const seen = new Map();
+    for (const o of all) {
+      const key = `${o.locId || o.locName}:${o.obsDt}`;
+      if (!seen.has(key)) seen.set(key, o);
+    }
+
+    return Array.from(seen.values())
+      .sort((a, b) => new Date(b.obsDt?.replace(' ', 'T') || 0) - new Date(a.obsDt?.replace(' ', 'T') || 0))
+      .slice(0, 20)
+      .map(o => ({
+        locName: o.locName,
+        obsDt: o.obsDt,
+        howMany: o.howMany || null,
+        lat: o.lat,
+        lng: o.lng,
+        locId: o.locId,
+        subnational2Code: o.subnational2Code,
+      }));
   } catch (e) {
     return [];
   }

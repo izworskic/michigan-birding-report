@@ -5,12 +5,23 @@
   function formatDate(dtStr) {
     if (!dtStr) return '';
     const d = new Date(dtStr.replace(' ', 'T'));
-    const h = Math.floor((Date.now() - d) / 3600000);
-    if (h < 1) return 'Just now';
-    if (h < 24) return h + 'h ago';
-    const days = Math.floor(h / 24);
-    if (days === 1) return 'Yesterday';
-    if (days < 7) return days + 'd ago';
+    if (isNaN(d)) return dtStr;
+    const now = new Date();
+    const diffMs = now - d;
+    const diffHrs = diffMs / 3600000;
+    const diffDays = Math.floor(diffHrs / 24);
+    
+    // Today: show time
+    if (diffDays === 0 && d.getDate() === now.getDate()) {
+      return 'Today ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+    // Yesterday
+    if (diffDays <= 1 && d.getDate() === now.getDate() - 1) {
+      return 'Yesterday ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+    // Within a week: "3 days ago"
+    if (diffDays < 7) return diffDays + ' days ago';
+    // Older: "Apr 5"
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 

@@ -315,11 +315,18 @@
           <div class="map-section">
             <h2>Recent Sightings Across Michigan</h2>
             ${sightings.length ? `
+              <p style="font-size:0.82rem;color:var(--text-mid);margin-bottom:1rem">${sightings.length} report${sightings.length > 1 ? 's' : ''} in the past 30 days from eBird</p>
               <div id="sightingsMap"></div>
               <div class="sighting-list">
                 ${sightings.map(s => {
                   const dt = new Date(s.obsDt?.replace(' ','T') || '');
-                  const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                  const now = new Date();
+                  const days = Math.floor((now - dt) / 86400000);
+                  let dateStr;
+                  if (days === 0) dateStr = 'Today';
+                  else if (days === 1) dateStr = 'Yesterday';
+                  else if (days < 7) dateStr = days + ' days ago';
+                  else dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                   return `<div class="sighting-row">
                     <span class="loc">${(s.locName||'').substring(0, 40)}</span>
                     <span class="dt">${dateStr}</span>
@@ -327,7 +334,10 @@
                   </div>`;
                 }).join('')}
               </div>
-            ` : '<p style="color:var(--text-mid)">No sightings reported in Michigan in the past 14 days.</p>'}
+            ` : `<div style="padding:1.5rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:6px">
+              <p style="color:var(--text-mid);margin-bottom:0.5rem">No eBird reports for ${d.comName} in Michigan in the past 30 days.</p>
+              <p style="font-size:0.82rem;color:var(--text-light)">This species may not be present in Michigan during ${d.season}, or sightings may be underreported. Check the seasonal information below, or <a href="https://ebird.org/species/${code}" target="_blank" style="color:var(--forest)">view the full eBird species page</a> for historical data.</p>
+            </div>`}
           </div>
 
           <div class="profile-grid">
