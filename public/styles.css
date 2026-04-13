@@ -25,6 +25,16 @@
   --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+
+  /* Backward-compatible aliases for sub-page dark hero sections */
+  --cream: #f5f0e6;
+  --cream-mid: #e8e0d0;
+  --cream-dark: #9a9488;
+  --forest-mid: #e8f0ea;
+  --canopy: #1a5c2a;
+  --gold-dim: #9a7209;
+  --bark: #6b5a42;
+  --dawn: #c4785a;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -678,3 +688,136 @@ a:hover { color: var(--gold); }
   .footer-content { flex-direction: column; }
   .hero-scroll-hint { display: none; }
 }
+
+/* ---- Sub-page overrides for light theme ---- */
+/* Profile/content sections on species, predictions, migration pages */
+.profile-grid .profile-section {
+  background: var(--bg-card);
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+.profile-grid .profile-section h3 { color: var(--forest); }
+.profile-grid .profile-section p { color: var(--text-mid); }
+
+.map-section { color: var(--text); }
+.map-section h2 { color: var(--forest-deep); }
+
+.sounds-section h2 { color: var(--forest-deep); }
+
+.fun-fact-box {
+  background: var(--gold-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* Species hero stays dark, but right-now box adapts */
+.right-now-box { color: #fff; }
+
+/* Sighting rows in species page */
+.sighting-row {
+  background: var(--bg-card) !important;
+  border-color: var(--border-light) !important;
+}
+.sighting-row .loc { color: var(--text) !important; }
+.sighting-row .dt { color: var(--text-light) !important; }
+.sighting-row .ct { color: var(--gold) !important; }
+
+/* Sound cards */
+.sound-card {
+  background: var(--bg-card) !important;
+  border-color: var(--border-light) !important;
+}
+.sound-info .type { color: var(--text) !important; }
+.sound-info .meta { color: var(--text-light) !important; }
+.sound-play { background: var(--forest) !important; }
+.sound-play svg { fill: #fff !important; }
+
+/* Prediction page cards */
+.predict-card {
+  background: var(--bg-card) !important;
+  border-color: var(--border-light) !important;
+  box-shadow: var(--shadow-sm);
+}
+.predict-card h3 { color: var(--forest) !important; }
+.predict-card p { color: var(--text-mid) !important; }
+
+.headline-box {
+  background: var(--gold-bg) !important;
+  border-left-color: var(--gold) !important;
+  color: var(--text) !important;
+}
+
+/* Weather bar on predictions page */
+.wx-bar {
+  background: var(--bg-card) !important;
+  border-color: var(--border-light) !important;
+}
+.wx-val { color: var(--forest) !important; }
+.wx-label { color: var(--text-light) !important; }
+.wx-forecast { color: var(--text-mid) !important; }
+
+/* Ask about a bird */
+.ask-input {
+  background: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+.ask-input:focus { border-color: var(--forest) !important; }
+.ask-input::placeholder { color: var(--text-light) !important; }
+.ask-btn { background: var(--forest) !important; color: #fff !important; }
+.ask-btn:hover { background: var(--forest-deep) !important; }
+
+.bird-answer {
+  background: var(--bg-card) !important;
+  border-color: var(--border-light) !important;
+  box-shadow: var(--shadow-sm);
+}
+.bird-answer-name { color: var(--text) !important; }
+.bird-answer-status { color: var(--forest) !important; }
+.bird-answer-text { color: var(--text-mid) !important; }
+
+.quick-ask {
+  background: var(--bg-card) !important;
+  border-color: var(--border-light) !important;
+  color: var(--text-mid) !important;
+}
+.quick-ask:hover { border-color: var(--forest) !important; color: var(--text) !important; }
+
+/* Migration page */
+.season-status {
+  background: var(--gold-bg) !important;
+  color: var(--text) !important;
+}
+.season-label { color: var(--gold) !important; }
+
+.dash-card {
+  background: var(--bg-card) !important;
+  border-color: var(--border-light) !important;
+  box-shadow: var(--shadow-sm);
+  color: var(--text) !important;
+}
+.dash-card:hover { border-color: var(--forest) !important; box-shadow: var(--shadow-md); }
+.dash-card h3 { color: var(--forest) !important; }
+.dash-card p { color: var(--text-mid) !important; }
+.dash-card .dash-tag { color: var(--gold) !important; }
+
+.timeline-title { color: var(--text) !important; }
+.timeline-desc { color: var(--text-mid) !important; }
+
+/* Condition badges - keep their own colors */
+.condition-badge.positive { background: rgba(76,175,80,0.08) !important; color: #2e7d32 !important; }
+.condition-badge.caution { background: rgba(255,193,7,0.08) !important; color: #f57f17 !important; }
+.condition-badge.alert { background: rgba(244,67,54,0.08) !important; color: #c62828 !important; }
+.condition-badge.info { background: rgba(46,125,156,0.08) !important; color: #2e7d9c !important; }
+
+/* Bay page species list */
+.species-item {
+  background: var(--bg-card) !important;
+  border-color: var(--border-light) !important;
+}
+.sp-name { color: var(--text) !important; }
+.sp-meta { color: var(--text-mid) !important; }
+.sp-loc { color: var(--gold) !important; }
+
+/* Status badges on species page */
+.status-badge { background: rgba(26,92,42,0.1) !important; color: var(--forest) !important; }
