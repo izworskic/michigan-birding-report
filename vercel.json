@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/saginaw-bay", "destination": "/saginaw-bay.html" },
     { "source": "/predictions", "destination": "/predictions.html" },
     { "source": "/migration", "destination": "/migration.html" },
