@@ -12,39 +12,49 @@
   <meta property="og:site_name" content="Michigan Birding Report">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://birding.chrisizworski.com">
-
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Michigan Birding Report",
-    "url": "https://birding.chrisizworski.com",
-    "description": "Real-time bird sightings, migration forecasts, and species profiles for Michigan birders",
-    "author": {
-      "@type": "Person",
-      "name": "Chris Izworski",
-      "url": "https://chrisizworski.com"
-    },
-    "publisher": {
-      "@type": "Person",
-      "name": "Chris Izworski"
-    },
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://birding.chrisizworski.com/predictions?name={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  }
+  {"@context":"https://schema.org","@type":"WebSite","name":"Michigan Birding Report","url":"https://birding.chrisizworski.com","description":"Real-time bird sightings, migration forecasts, and species profiles for Michigan birders","author":{"@type":"Person","name":"Chris Izworski","url":"https://chrisizworski.com"},"potentialAction":{"@type":"SearchAction","target":"https://birding.chrisizworski.com/predictions?name={search_term_string}","query-input":"required name=search_term_string"}}
   </script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Homepage-specific styles */
+    .bird-search { max-width: 480px; margin: 2rem auto 0; display: flex; gap: 0.5rem; }
+    .bird-search input {
+      flex: 1; padding: 0.7rem 1rem; border: 2px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1); color: #fff; border-radius: 4px;
+      font-family: var(--font-body); font-size: 0.9rem; outline: none;
+    }
+    .bird-search input:focus { border-color: var(--gold-light); background: rgba(255,255,255,0.15); }
+    .bird-search input::placeholder { color: rgba(255,255,255,0.5); }
+    .bird-search button {
+      padding: 0.7rem 1.4rem; background: var(--gold-light); color: var(--forest-deep);
+      border: none; border-radius: 4px; font-weight: 600; font-size: 0.85rem; cursor: pointer;
+      font-family: var(--font-body);
+    }
+    .bird-search button:hover { background: #e8c06a; }
+
+    .conditions-bar {
+      display: flex; gap: 1.5rem; padding: 1rem 2rem; background: var(--gold-bg);
+      border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center;
+      justify-content: center; font-size: 0.82rem; color: var(--text-mid);
+    }
+    .conditions-bar strong { color: var(--forest); }
+    .conditions-bar .cond-item { display: flex; align-items: center; gap: 0.4rem; }
+    .cond-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .cond-dot.green { background: #4CAF50; }
+    .cond-dot.yellow { background: #FFC107; }
+    .cond-dot.red { background: #f44336; }
+
+    #stateMap { width: 100%; height: 380px; border-radius: 6px; border: 1px solid var(--border-light); margin-bottom: 1.5rem; }
+    @media (max-width: 768px) { #stateMap { height: 280px; } }
+  </style>
 </head>
 <body>
 
-  <!-- HERO -->
   <header class="hero" id="hero">
     <div class="hero-grain"></div>
     <nav class="top-nav">
@@ -53,17 +63,20 @@
         <a href="/saginaw-bay">Saginaw Bay</a>
         <a href="/predictions">Predictions</a>
         <a href="/migration">Migration</a>
-        <a href="#notable">Rare Birds</a>
       </div>
     </nav>
     <div class="hero-content">
       <p class="hero-tag">Live eBird Data, Updated Every 15 Minutes</p>
       <h1>Michigan<br>Birding Report</h1>
-      <p class="hero-sub">Real-time bird sightings, migration forecasts, and species profiles for every region of the Great Lakes State.</p>
+      <p class="hero-sub">Real-time sightings, migration forecasts, and species profiles for birders across the Great Lakes State.</p>
+      <div class="bird-search">
+        <input type="text" id="heroSearch" placeholder="Search any bird... e.g. Scarlet Tanager" aria-label="Search for a bird species">
+        <button onclick="heroSearchGo()">Search</button>
+      </div>
       <div class="hero-stats" id="heroStats">
         <div class="stat">
           <span class="stat-num" id="statSpecies">—</span>
-          <span class="stat-label">Species This Week</span>
+          <span class="stat-label">Bay Species</span>
         </div>
         <div class="stat">
           <span class="stat-num" id="statNotable">—</span>
@@ -71,35 +84,22 @@
         </div>
         <div class="stat">
           <span class="stat-num" id="statHotspots">8</span>
-          <span class="stat-label">Saginaw Bay Hotspots</span>
+          <span class="stat-label">Bay Hotspots</span>
         </div>
       </div>
     </div>
-    <div class="hero-scroll-hint">
-      <span>Scroll to explore</span>
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4v12m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="1.5"/></svg>
-    </div>
   </header>
 
-  <!-- WEEKEND FORECAST -->
-  <section class="section section-dark" id="forecast">
-    <div class="section-header">
-      <h2>Michigan Birding Forecast This Weekend</h2>
-      <p class="section-sub">AI-powered predictions based on real-time eBird data, weather, and migration patterns</p>
-    </div>
-    <div class="forecast-card" id="forecastCard">
-      <div class="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Generating forecast...</p>
-      </div>
-    </div>
-  </section>
+  <!-- CONDITIONS BAR -->
+  <div class="conditions-bar" id="conditionsBar">
+    <span class="cond-item"><span class="cond-dot green"></span> Loading conditions...</span>
+  </div>
 
-  <!-- NOTABLE SIGHTINGS -->
-  <section class="section" id="notable">
+  <!-- SIGHTINGS MAP -->
+  <section class="section" id="mapSection">
     <div class="section-header">
-      <h2>Notable Bird Sightings in Michigan</h2>
-      <p class="section-sub">Rare and unusual species reported across Michigan this week, from eBird</p>
+      <h2>Notable Bird Sightings Across Michigan</h2>
+      <p class="section-sub">Rare and unusual species reported this week. Tap a marker for details, tap a card to explore the species.</p>
       <div class="region-filters" id="regionFilters">
         <button class="filter-btn active" data-region="US-MI">All Michigan</button>
         <button class="filter-btn" data-region="UP">Upper Peninsula</button>
@@ -107,6 +107,7 @@
         <button class="filter-btn" data-region="SLP">Southern Lower</button>
       </div>
     </div>
+    <div id="stateMap"></div>
     <div class="sightings-grid" id="notableGrid">
       <div class="loading-state">
         <div class="loading-spinner"></div>
@@ -115,7 +116,7 @@
     </div>
   </section>
 
-  <!-- SAGINAW BAY HUB PREVIEW -->
+  <!-- SAGINAW BAY -->
   <section class="section section-dark" id="saginawBay">
     <div class="bay-hero">
       <div class="bay-content">
@@ -123,11 +124,48 @@
         <h2>Saginaw Bay Birding</h2>
         <p class="bay-desc">One of the most important staging areas for waterfowl and shorebirds in the Great Lakes basin. Eight key hotspots covering marshes, mudflats, and coastal habitat from Bay City to Tawas Point. Over 300 species recorded.</p>
         <div class="bay-hotspots" id="bayHotspots">
-          <div class="loading-state">
-            <div class="loading-spinner"></div>
-          </div>
+          <div class="loading-state"><div class="loading-spinner"></div></div>
         </div>
-        <a href="/saginaw-bay" class="btn btn-primary">Explore Saginaw Bay Hub →</a>
+        <a href="/saginaw-bay" class="btn btn-primary">Explore All Saginaw Bay Sightings →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEEKEND FORECAST -->
+  <section class="section" id="forecast">
+    <div class="section-header">
+      <h2>Michigan Birding Forecast</h2>
+      <p class="section-sub">AI-powered predictions based on real-time eBird data, weather, and migration patterns</p>
+    </div>
+    <div class="forecast-card" id="forecastCard">
+      <div class="loading-state"><div class="loading-spinner"></div><p>Generating forecast...</p></div>
+    </div>
+  </section>
+
+  <!-- REGIONS -->
+  <section class="section section-dark" id="regions">
+    <div class="section-header">
+      <h2>Where to Go Birding in Michigan</h2>
+      <p class="section-sub">Tap a region to filter the sightings map above</p>
+    </div>
+    <div class="regions-grid">
+      <div class="region-card" onclick="selectRegion('UP')" style="cursor:pointer">
+        <div class="region-icon">🌲</div>
+        <h3>Upper Peninsula</h3>
+        <p>Boreal forest, Great Lakes shoreline, Whitefish Point. Northern specialties: Spruce Grouse, Black-backed Woodpecker, Gray Jay.</p>
+        <div class="region-recent" id="upRecent"><span style="font-size:0.75rem;color:var(--text-light)">Loading...</span></div>
+      </div>
+      <div class="region-card" onclick="selectRegion('NLP')" style="cursor:pointer">
+        <div class="region-icon">🌿</div>
+        <h3>Northern Lower</h3>
+        <p>Jack pine barrens, AuSable River, Sleeping Bear Dunes. Only breeding range of Kirtland's Warbler. Tawas Point is a premier migration trap.</p>
+        <div class="region-recent" id="nlpRecent"><span style="font-size:0.75rem;color:var(--text-light)">Loading...</span></div>
+      </div>
+      <div class="region-card" onclick="selectRegion('SLP')" style="cursor:pointer">
+        <div class="region-icon">🏞️</div>
+        <h3>Southern Lower</h3>
+        <p>Saginaw Bay, Pointe Mouillee, Erie Metropark, Shiawassee NWR. Critical stopover along the Mississippi and Atlantic flyways.</p>
+        <div class="region-recent" id="slpRecent"><span style="font-size:0.75rem;color:var(--text-light)">Loading...</span></div>
       </div>
     </div>
   </section>
@@ -136,70 +174,29 @@
   <section class="section" id="migration">
     <div class="section-header">
       <h2>Bird Migration Radar for Michigan</h2>
-      <p class="section-sub">BirdCast radar data and nocturnal migration forecasts for Michigan counties</p>
+      <p class="section-sub">BirdCast radar data and nocturnal migration forecasts</p>
     </div>
     <div class="migration-grid">
       <div class="migration-card">
         <h3>Tonight's Forecast</h3>
-        <p>BirdCast migration forecast maps predict nocturnal migration intensity based on 25+ years of radar data combined with weather models.</p>
-        <a href="https://birdcast.org/migration-tools/migration-forecast-maps/" target="_blank" rel="noopener" class="btn btn-outline">View National Forecast →</a>
+        <p>BirdCast predicts nocturnal migration intensity using 25+ years of radar data.</p>
+        <a href="https://birdcast.org/migration-tools/migration-forecast-maps/" target="_blank" rel="noopener" class="btn btn-outline">View Forecast →</a>
       </div>
       <div class="migration-card">
         <h3>Bay County Dashboard</h3>
-        <p>County-level migration traffic, flight direction, speed, altitude, and expected nocturnal migrants for the Saginaw Bay region.</p>
-        <a href="https://dashboard.birdcast.org/region/US-MI-017" target="_blank" rel="noopener" class="btn btn-outline">Bay County Dashboard →</a>
+        <p>County-level migration traffic, flight direction, and expected species for the Saginaw Bay region.</p>
+        <a href="https://dashboard.birdcast.org/region/US-MI-017" target="_blank" rel="noopener" class="btn btn-outline">Open Dashboard →</a>
       </div>
       <div class="migration-card">
         <h3>Michigan Statewide</h3>
-        <p>State-level migration data covering all 83 counties. See how many birds crossed Michigan last night and which species are on the move.</p>
-        <a href="https://dashboard.birdcast.org/region/US-MI" target="_blank" rel="noopener" class="btn btn-outline">Michigan Dashboard →</a>
-      </div>
-    </div>
-    <div class="migration-season-note" id="migrationNote"></div>
-  </section>
-
-  <!-- REGIONS -->
-  <section class="section section-dark" id="regions">
-    <div class="section-header">
-      <h2>Where to Go Birding in Michigan</h2>
-      <p class="section-sub">Tap a region to see this week's notable sightings. Data from eBird, updated every 15 minutes.</p>
-    </div>
-    <div class="regions-grid">
-      <div class="region-card" data-region="UP" onclick="selectRegion('UP')" style="cursor:pointer">
-        <div class="region-icon">🌲</div>
-        <h3>Upper Peninsula</h3>
-        <p>Boreal forest, Great Lakes shoreline, Whitefish Point. Northern specialties: Spruce Grouse, Black-backed Woodpecker, Gray Jay.</p>
-        <div class="region-recent" id="upRecent"><span style="font-size:0.75rem;color:var(--cream-dark)">Loading...</span></div>
-        <div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap">
-          <a href="https://ebird.org/region/US-MI?env.minX=-90.5&env.maxX=-83.5&env.minY=45.5&env.maxY=47.5" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--gold-light)" onclick="event.stopPropagation()">eBird UP →</a>
-          <span style="font-size:0.75rem;color:var(--gold-dim);cursor:pointer" onclick="event.stopPropagation();selectRegion('UP')">View sightings ↑</span>
-        </div>
-      </div>
-      <div class="region-card" data-region="NLP" onclick="selectRegion('NLP')" style="cursor:pointer">
-        <div class="region-icon">🌿</div>
-        <h3>Northern Lower</h3>
-        <p>Jack pine barrens, AuSable River, Sleeping Bear Dunes. Only breeding range of the Kirtland's Warbler. Tawas Point is a premier migration trap.</p>
-        <div class="region-recent" id="nlpRecent"><span style="font-size:0.75rem;color:var(--cream-dark)">Loading...</span></div>
-        <div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap">
-          <a href="https://ebird.org/region/US-MI" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--gold-light)" onclick="event.stopPropagation()">eBird MI →</a>
-          <span style="font-size:0.75rem;color:var(--gold-dim);cursor:pointer" onclick="event.stopPropagation();selectRegion('NLP')">View sightings ↑</span>
-        </div>
-      </div>
-      <div class="region-card" data-region="SLP" onclick="selectRegion('SLP')" style="cursor:pointer">
-        <div class="region-icon">🏞️</div>
-        <h3>Southern Lower</h3>
-        <p>Saginaw Bay marshes, Pointe Mouillee, Erie Metropark, Shiawassee NWR. Critical stopover habitat along the Mississippi and Atlantic flyways.</p>
-        <div class="region-recent" id="slpRecent"><span style="font-size:0.75rem;color:var(--cream-dark)">Loading...</span></div>
-        <div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap">
-          <a href="https://ebird.org/region/US-MI" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--gold-light)" onclick="event.stopPropagation()">eBird MI →</a>
-          <span style="font-size:0.75rem;color:var(--gold-dim);cursor:pointer" onclick="event.stopPropagation();selectRegion('SLP')">View sightings ↑</span>
-        </div>
+        <p>Full state migration data across all 83 counties. How many birds crossed Michigan last night.</p>
+        <a href="/migration" class="btn btn-outline">Migration Hub →</a>
       </div>
     </div>
   </section>
 
-  <!-- SEASONAL CALENDAR -->
-  <section class="section" id="calendar">
+  <!-- CALENDAR -->
+  <section class="section section-dark" id="calendar">
     <div class="section-header">
       <h2>Michigan Bird Migration Calendar</h2>
       <p class="section-sub">When to look for Michigan's key species, from spring waterfowl through winter irruptions</p>
@@ -217,46 +214,48 @@
       <a href="https://www.amazon.com/dp/B09GV5J647?tag=michigantrout-20" target="_blank" rel="noopener" class="gear-card">
         <div class="gear-icon">🔭</div>
         <h3>Nikon Monarch M5 8x42</h3>
-        <p>Outstanding clarity and brightness for dawn/dusk birding. Waterproof, fog-proof, and comfortable for all-day use in Michigan's variable weather.</p>
+        <p>Outstanding clarity and brightness for dawn/dusk birding. Waterproof, fog-proof, and comfortable for all-day use.</p>
         <span class="gear-cta">View on Amazon →</span>
       </a>
       <a href="https://www.amazon.com/dp/0307957918?tag=michigantrout-20" target="_blank" rel="noopener" class="gear-card">
         <div class="gear-icon">📖</div>
         <h3>Sibley Field Guide: Eastern North America</h3>
-        <p>The pocket-sized field guide every Michigan birder carries. 650 species with 4,600 illustrations, updated range maps, and voice descriptions. Fits in a jacket pocket.</p>
+        <p>The pocket-sized field guide every Michigan birder carries. 650 species with 4,600 illustrations and updated range maps.</p>
         <span class="gear-cta">View on Amazon →</span>
       </a>
       <a href="https://www.amazon.com/dp/B08DVBRP18?tag=michigantrout-20" target="_blank" rel="noopener" class="gear-card">
         <div class="gear-icon">🔍</div>
-        <h3>Vortex Diamondback HD Spotting Scope</h3>
-        <p>Essential for scanning Saginaw Bay's vast mudflats and open water. The 20-60x zoom picks up shorebirds and waterfowl at extreme distance.</p>
+        <h3>Vortex Diamondback HD Scope</h3>
+        <p>Essential for scanning Saginaw Bay mudflats and open water. 20-60x zoom picks up shorebirds at extreme distance.</p>
         <span class="gear-cta">View on Amazon →</span>
       </a>
       <a href="https://www.amazon.com/s?k=birding+binocular+harness+strap&tag=michigantrout-20" target="_blank" rel="noopener" class="gear-card">
         <div class="gear-icon">🎒</div>
         <h3>Binocular Harness Strap</h3>
-        <p>Keeps your optics secure at chest level for instant access. Essential for long days at migration hotspots and hawk watches. Reduces neck fatigue on all-day outings.</p>
+        <p>Keeps your optics secure at chest level for instant access. Reduces neck fatigue on all-day outings at migration hotspots.</p>
         <span class="gear-cta">View on Amazon →</span>
       </a>
     </div>
-    <p style="text-align:center;font-size:0.7rem;color:var(--cream-dark);margin-top:1.5rem;opacity:0.6">As an Amazon Associate I earn from qualifying purchases.</p>
+    <p style="text-align:center;font-size:0.65rem;color:var(--text-light);margin-top:1rem">As an Amazon Associate I earn from qualifying purchases.</p>
   </section>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-brand">
         <h3>Michigan Birding Report</h3>
-        <p>Built by <a href="https://chrisizworski.com" target="_blank">Chris Izworski</a>. Data from <a href="https://ebird.org" target="_blank">eBird</a>, <a href="https://birdcast.org" target="_blank">BirdCast</a>, <a href="https://xeno-canto.org" target="_blank">Xeno-canto</a>, and <a href="https://www.inaturalist.org" target="_blank">iNaturalist</a>. Species images from Wikimedia Commons (CC licensed).</p>
+        <p>Built by <a href="https://chrisizworski.com" target="_blank">Chris Izworski</a> in Bay City, Michigan. Data from <a href="https://ebird.org" target="_blank">eBird</a>, <a href="https://birdcast.org" target="_blank">BirdCast</a>, <a href="https://xeno-canto.org" target="_blank">Xeno-canto</a>, and <a href="https://www.inaturalist.org" target="_blank">iNaturalist</a>. Predictions by Claude.</p>
       </div>
       <div class="footer-links">
-        <a href="https://freighterviewfarms.com" target="_blank">Freighter View Farms</a>
+        <a href="/saginaw-bay">Saginaw Bay Hub</a>
+        <a href="/predictions">Ask About a Bird</a>
+        <a href="/migration">Migration Intelligence</a>
         <a href="https://trout.chrisizworski.com" target="_blank">Michigan Trout Report</a>
-        <a href="https://great-lakes-gazette.vercel.app" target="_blank">Great Lakes Gazette</a>
+        <a href="https://freighterviewfarms.com" target="_blank">Freighter View Farms</a>
       </div>
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

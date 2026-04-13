@@ -375,6 +375,14 @@
       }
     };
 
+    // Check URL params for pre-filled bird name (from homepage search)
+    const urlParams = new URLSearchParams(window.location.search);
+    const prefill = urlParams.get('name');
+    if (prefill) {
+      document.getElementById('birdInput').value = prefill;
+      setTimeout(() => askAboutBird(), 500);
+    }
+
     loadForecast(currentRegion);
   })();
   </script>
