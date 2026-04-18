@@ -56,6 +56,7 @@
     </div>
   </div>
   <div class="county-content">
+    <div id="topHotspot"></div>
     <div id="countyMap"></div>
     <h2 style="font-family:var(--font-display);font-size:1.5rem;color:var(--forest-deep);margin-bottom:1rem">Recent Species</h2>
     <div class="species-grid" id="speciesGrid">
@@ -120,6 +121,18 @@
         const obs = d.observations || [];
         document.getElementById('spCount').textContent = d.speciesCount || obs.length;
         document.getElementById('obsCount').textContent = obs.length;
+
+        // Find top hotspot (most reported location)
+        const locCounts = {};
+        obs.forEach(o => {
+          const loc = o.locName || '';
+          if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
+        });
+        const topLoc = Object.entries(locCounts).sort((a,b) => b[1] - a[1])[0];
+        if (topLoc) {
+          const hotspotEl = document.getElementById('topHotspot');
+          if (hotspotEl) hotspotEl.innerHTML = `<div style="padding:0.8rem;background:var(--gold-bg);border:1px solid var(--border);border-radius:5px;margin-bottom:1rem;font-size:0.82rem;color:var(--text-mid)"><strong style="color:var(--forest)">Top hotspot:</strong> ${topLoc[0]} (${topLoc[1]} reports in 14 days)</div>`;
+        }
 
         // Map
         const center = COORDS[fips] || [44.3, -84.7];

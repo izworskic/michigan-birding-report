@@ -10,15 +10,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="/styles.css">
   <style>
     .predict-hero {
-      padding: 7rem 2rem 3rem;
-      background: linear-gradient(165deg, var(--forest-deep) 0%, #0d1f12 60%, var(--forest) 100%);
+      padding: 5.5rem 2rem 1.5rem;
+      background: linear-gradient(165deg, var(--forest-deep) 0%, #1a5c2a 100%);
       text-align: center;
     }
-    .predict-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; margin-bottom: 0.5rem; color: #fff; }
-    .predict-hero .lead { font-size: 1rem; color: rgba(255,255,255,0.8); max-width: 550px; margin: 0 auto; font-weight: 300; }
+    .predict-hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 0.3rem; color: #fff; }
+    .predict-hero .lead { font-size: 0.9rem; color: rgba(255,255,255,0.8); max-width: 550px; margin: 0 auto; font-weight: 300; }
+    #predMap { width:100%;height:280px;border-bottom:1px solid var(--border-light); }
+    .pred-map-info { font-size:0.68rem;color:var(--text-light);padding:0.3rem 1rem;border-bottom:1px solid var(--border-light); }
 
     .predict-content { max-width: 900px; margin: 0 auto; padding: 2rem; }
 
@@ -203,8 +206,11 @@
 
   <div class="predict-hero">
     <h1>Birding Predictions</h1>
-    <p class="lead">Weather-driven forecasts and real-time intelligence. Ask about any bird to learn what it's doing in Michigan right now.</p>
+    <p class="lead">Weather-driven forecasts and species intelligence. Ask about any bird.</p>
   </div>
+
+  <div id="predMap"></div>
+  <div class="pred-map-info">Notable sightings across Michigan this week — tap any dot for details</div>
 
   <div class="predict-content">
     <div class="region-picker" id="regionPicker">
@@ -255,6 +261,7 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script>
   (function() {
     let currentRegion = 'saginaw-bay';
@@ -390,7 +397,27 @@
     }
 
     loadForecast(currentRegion);
+
+    // Predictions page sightings map
+    if (document.getElementById('predMap')) {
+      const pmap = L.map('predMap', {scrollWheelZoom:false}).setView([44.3,-84.7],6);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+        attribution:'© OSM © CARTO',maxZoom:14
+      }).addTo(pmap);
+      const icon = L.divIcon({className:'',html:'<div style="width:10px;height:10px;background:#1a5c2a;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></div>',iconSize:[10,10],iconAnchor:[5,5]});
+      fetch('/api/notable?region=US-MI&back=7')
+        .then(r=>r.json())
+        .then(d=>{
+          (d.sightings||[]).forEach(s=>{
+            if(!s.lat||!s.lng)return;
+            L.marker([s.lat,s.lng],{icon})
+              .bindPopup(`<b>${s.comName}</b><br><span style="font-size:0.8rem;color:#555">${(s.locName||'').substring(0,30)}</span><br><a href="/species/${s.speciesCode}?name=${encodeURIComponent(s.comName)}&sci=${encodeURIComponent(s.sciName||'')}" style="font-size:0.75rem;color:#1a5c2a">Profile →</a>`)
+              .addTo(pmap);
+          });
+        }).catch(()=>{});
+    }
   })();
   </script>
+  
 </body>
 </html>

@@ -10,15 +10,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="/styles.css">
   <style>
     .mig-hero {
-      padding: 7rem 2rem 3rem;
-      background: linear-gradient(165deg, var(--forest-deep) 0%, #0d1f12 60%, var(--forest) 100%);
+      padding: 5.5rem 2rem 1.5rem;
+      background: linear-gradient(165deg, var(--forest-deep) 0%, #1a5c2a 100%);
       text-align: center;
     }
-    .mig-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; margin-bottom: 0.5rem; color: #fff; }
-    .mig-hero .lead { font-size: 1rem; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto; font-weight: 300; }
+    .mig-hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 0.3rem; color: #fff; }
+    .mig-hero .lead { font-size: 0.9rem; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto; font-weight: 300; }
+    #migMap { width:100%;height:280px;border-bottom:1px solid var(--border-light); }
+    .mig-map-info { font-size:0.68rem;color:var(--text-light);padding:0.3rem 1rem;border-bottom:1px solid var(--border-light); }
     .mig-content { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
     .mig-content h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--forest-deep); margin-bottom: 0.5rem; }
     .mig-content > p { color: var(--text-mid); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; }
@@ -114,8 +117,11 @@
 
   <div class="mig-hero">
     <h1>Migration Intelligence</h1>
-    <p class="lead">Radar data, weather-driven forecasts, and county-level migration dashboards for Michigan. Know when the birds are flying.</p>
+    <p class="lead">Radar data, forecasts, and county dashboards. Know when the birds are flying.</p>
   </div>
+
+  <div id="migMap"></div>
+  <div class="mig-map-info">Notable sightings across Michigan this week — context for migration activity</div>
 
   <div class="mig-content">
 
@@ -199,6 +205,7 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script>
   (function() {
     const month = new Date().getMonth() + 1;
@@ -257,6 +264,25 @@
         <div class="timeline-desc">${e.desc}</div>
       </div>`
     ).join('');
+
+    // Migration map
+    if (document.getElementById('migMap') && typeof L !== 'undefined') {
+      const mmap = L.map('migMap', {scrollWheelZoom:false}).setView([44.3,-84.7],6);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+        attribution:'© OSM © CARTO',maxZoom:14
+      }).addTo(mmap);
+      const icon = L.divIcon({className:'',html:'<div style="width:10px;height:10px;background:#1a5c2a;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></div>',iconSize:[10,10],iconAnchor:[5,5]});
+      fetch('/api/notable?region=US-MI&back=7')
+        .then(r=>r.json())
+        .then(d=>{
+          (d.sightings||[]).forEach(s=>{
+            if(!s.lat||!s.lng)return;
+            L.marker([s.lat,s.lng],{icon})
+              .bindPopup(`<b>${s.comName}</b><br><span style="font-size:0.8rem;color:#555">${(s.locName||'').substring(0,30)}</span>`)
+              .addTo(mmap);
+          });
+        }).catch(()=>{});
+    }
   })();
   </script>
 </body>
