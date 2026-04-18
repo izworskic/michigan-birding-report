@@ -1,5 +1,5 @@
 const { getRecentObservations } = require('../lib/ebird');
-const { getImage } = require('../lib/media');
+const { getBestImage } = require('../lib/media');
 
 const BAY_COUNTIES = ['US-MI-017', 'US-MI-011', 'US-MI-157', 'US-MI-063', 'US-MI-145', 'US-MI-111', 'US-MI-069'];
 
@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
     // Fetch images for top 20 species
     const topForImages = speciesList.slice(0, 20);
     const images = await Promise.all(
-      topForImages.map(s => getImage(s.comName).catch(() => null))
+      topForImages.map(s => getBestImage(s.comName).catch(() => null))
     );
     topForImages.forEach((s, i) => { s.image = images[i]; });
 
