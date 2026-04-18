@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Michigan Birding Report — Real-Time Bird Sightings, Migration Forecasts &amp; Species Guide</title>
-  <meta name="description" content="Live bird sightings across Michigan updated every 15 minutes. Notable species alerts, Saginaw Bay birding hub, migration forecasts, species profiles with photos and audio.">
-  <meta property="og:title" content="Michigan Birding Report — Real-Time Sightings &amp; Migration Forecasts">
-  <meta property="og:description" content="Live bird sightings, migration radar, species profiles, and AI-powered predictions for Michigan birders.">
+  <title>Michigan Birding Report — Real-Time Bird Sightings Map &amp; Species Guide</title>
+  <meta name="description" content="Live bird sightings mapped across Michigan. Notable species alerts, Saginaw Bay hotspots, migration forecasts, and species profiles updated from eBird every 15 minutes.">
+  <meta property="og:title" content="Michigan Birding Report — Real-Time Sightings Map">
+  <meta property="og:description" content="Every notable bird sighting in Michigan, mapped in real time. Tap any dot to learn about the species.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://birding.chrisizworski.com">
   <meta property="og:site_name" content="Michigan Birding Report">
   <link rel="canonical" href="https://birding.chrisizworski.com">
   <meta name="indexnow" content="f8a3b2c1d4e5f6a7b8c9d0e1f2a3b4c5">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","name":"Michigan Birding Report","url":"https://birding.chrisizworski.com","description":"Real-time bird sightings, migration forecasts, and species profiles for Michigan birders","author":{"@type":"Person","name":"Chris Izworski","url":"https://chrisizworski.com"}}
+  {"@context":"https://schema.org","@type":"WebSite","name":"Michigan Birding Report","url":"https://birding.chrisizworski.com","author":{"@type":"Person","name":"Chris Izworski","url":"https://chrisizworski.com"}}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,220 +21,151 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="/styles.css">
   <style>
-    .dash-hero {
-      padding: 5.5rem 2rem 1.5rem;
-      background: linear-gradient(165deg, var(--forest-deep) 0%, #1a5c2a 100%);
-      color: #fff;
+    .site-bar {
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      display:flex;align-items:center;gap:0.75rem;
+      padding:0.5rem 1rem;
+      background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);
     }
-    .dash-hero-inner { max-width: 1100px; margin: 0 auto; }
-    .dash-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; margin-bottom: 0.3rem; }
-    .dash-hero .sub { font-size: 0.9rem; color: rgba(255,255,255,0.75); margin-bottom: 1.25rem; }
-    .dash-search { display: flex; gap: 0.5rem; max-width: 420px; }
-    .dash-search input { flex:1; padding:0.6rem 1rem; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.1); color:#fff; border-radius:4px; font-size:0.85rem; outline:none; font-family:var(--font-body); }
-    .dash-search input:focus { border-color: var(--gold-light); }
-    .dash-search input::placeholder { color:rgba(255,255,255,0.45); }
-    .dash-search button { padding:0.6rem 1.2rem; background:var(--gold-light); color:var(--forest-deep); border:none; border-radius:4px; font-weight:600; font-size:0.8rem; cursor:pointer; font-family:var(--font-body); }
+    .site-bar .logo { font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--forest);white-space:nowrap; }
+    .site-bar .search { flex:1;max-width:280px;padding:0.4rem 0.7rem;border:1px solid var(--border);border-radius:4px;font-size:0.8rem;outline:none;font-family:var(--font-body); }
+    .site-bar .search:focus { border-color:var(--forest); }
+    .site-bar nav { display:flex;gap:0.75rem;margin-left:auto; }
+    .site-bar nav a { font-size:0.72rem;font-weight:500;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.04em; }
+    .site-bar nav a:hover { color:var(--forest); }
 
-    .conditions-strip {
-      display: flex; gap: 1rem; padding: 0.8rem 2rem; background: var(--gold-bg);
-      border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center;
-      justify-content: center; font-size: 0.8rem; color: var(--text-mid);
+    .cond-strip {
+      margin-top:3rem;
+      display:flex;gap:0.75rem;padding:0.5rem 1rem;background:var(--gold-bg);
+      border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;
+      font-size:0.78rem;color:var(--text-mid);
     }
-    .conditions-strip strong { color: var(--forest); }
-    .cond-pill { display:inline-flex; align-items:center; gap:0.35rem; padding:0.2rem 0.6rem; border-radius:12px; font-size:0.72rem; font-weight:500; }
-    .cond-pill.good { background:rgba(76,175,80,0.12); color:#2e7d32; }
-    .cond-pill.warn { background:rgba(255,193,7,0.12); color:#f57f17; }
-    .cond-pill.alert { background:rgba(244,67,54,0.1); color:#c62828; }
-    .cond-pill.info { background:rgba(46,125,156,0.1); color:#2e7d9c; }
+    .cond-strip strong { color:var(--forest); }
+    .cpill { display:inline-flex;align-items:center;gap:0.3rem;padding:0.15rem 0.5rem;border-radius:10px;font-size:0.7rem;font-weight:500; }
+    .cpill.g { background:rgba(76,175,80,0.1);color:#2e7d32; }
+    .cpill.y { background:rgba(255,193,7,0.1);color:#f57f17; }
+    .cpill.r { background:rgba(244,67,54,0.08);color:#c62828; }
 
-    .dashboard { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    #map { width:100%;height:55vh;min-height:320px; }
+    .map-info { padding:0.4rem 1rem;font-size:0.7rem;color:var(--text-light);background:var(--bg);border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between; }
 
-    .kpi-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .kpi { flex:1; min-width:140px; padding:1rem; background:var(--bg-card); border:1px solid var(--border-light); border-radius:6px; text-align:center; box-shadow:var(--shadow-sm); }
-    .kpi .num { font-family:var(--font-display); font-size:2rem; font-weight:700; color:var(--forest); }
-    .kpi .lbl { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-light); }
+    .filters { display:flex;gap:0.35rem;padding:0.6rem 1rem;background:var(--bg);border-bottom:1px solid var(--border-light);flex-wrap:wrap; }
 
-    #stateMap { width:100%; height:380px; border-radius:6px; border:1px solid var(--border-light); box-shadow:var(--shadow-sm); }
-    .map-legend { font-size:0.72rem; color:var(--text-light); margin-top:0.5rem; text-align:right; }
+    .content { max-width:900px;margin:0 auto;padding:1rem; }
+    .feed-title { font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--forest-deep);margin-bottom:0.75rem; }
 
-    .filter-row { display:flex; gap:0.4rem; margin:1.25rem 0; flex-wrap:wrap; }
+    .feed { display:flex;flex-direction:column;gap:0.5rem; }
+    .f-card { display:flex;gap:0.6rem;padding:0.6rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:5px;text-decoration:none;color:inherit;align-items:center;transition:box-shadow 0.15s; }
+    .f-card:hover { box-shadow:var(--shadow-md); }
+    .f-img { width:56px;height:56px;border-radius:4px;object-fit:cover;flex-shrink:0;background:var(--bg-alt); }
+    .f-body { flex:1;min-width:0; }
+    .f-name { font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text); }
+    .f-loc { font-size:0.75rem;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .f-when { font-size:0.68rem;color:var(--text-light); }
 
-    .species-feed { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; margin-top:1.5rem; }
-    .feed-card { display:flex; gap:0.75rem; padding:0.75rem; background:var(--bg-card); border:1px solid var(--border-light); border-radius:6px; text-decoration:none; color:inherit; transition:box-shadow 0.2s,transform 0.15s; box-shadow:var(--shadow-sm); align-items:center; }
-    .feed-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
-    .feed-img { width:64px; height:64px; border-radius:5px; object-fit:cover; flex-shrink:0; background:var(--bg-alt); }
-    .feed-info { flex:1; min-width:0; }
-    .feed-name { font-family:var(--font-display); font-size:1.05rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .feed-loc { font-size:0.75rem; color:var(--text-mid); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .feed-when { font-size:0.7rem; color:var(--text-light); }
-    .feed-badge { font-size:0.6rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; padding:0.15rem 0.4rem; border-radius:3px; background:var(--gold-bg); color:var(--gold); }
+    .quick-links { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;margin:2rem 0; }
+    .ql { padding:1rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:6px;text-decoration:none;color:inherit;box-shadow:var(--shadow-sm);transition:box-shadow 0.15s,transform 0.15s; }
+    .ql:hover { box-shadow:var(--shadow-md);transform:translateY(-2px); }
+    .ql h3 { font-family:var(--font-display);font-size:1.05rem;font-weight:600;color:var(--forest);margin-bottom:0.2rem; }
+    .ql p { font-size:0.78rem;color:var(--text-mid);line-height:1.4; }
 
-    .section-divider { border:none; border-top:1px solid var(--border-light); margin:2.5rem 0; }
+    .gear-row { display:flex;gap:0.75rem;overflow-x:auto;padding-bottom:0.5rem;margin:1rem 0; }
+    .g-card { flex-shrink:0;width:200px;padding:0.8rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:5px;text-decoration:none;color:inherit; }
+    .g-card h4 { font-size:0.85rem;color:var(--forest);margin-bottom:0.2rem; }
+    .g-card p { font-size:0.72rem;color:var(--text-mid);line-height:1.3; }
 
-    .tools-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; margin-top:1.5rem; }
-    .tool-card { padding:1.5rem; background:var(--bg-card); border:1px solid var(--border-light); border-radius:6px; box-shadow:var(--shadow-sm); transition:box-shadow 0.2s,transform 0.15s; }
-    .tool-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
-    .tool-card h3 { font-family:var(--font-display); font-size:1.2rem; font-weight:600; color:var(--forest); margin-bottom:0.4rem; }
-    .tool-card p { font-size:0.82rem; color:var(--text-mid); margin-bottom:0.75rem; line-height:1.5; }
+    .county-footer { font-size:0.68rem;display:flex;flex-wrap:wrap;gap:0.2rem 0.5rem;margin-top:1rem; }
+    .county-footer a { color:var(--text-mid); }
 
-    .cal-row { display:flex; gap:0.5rem; overflow-x:auto; padding-bottom:0.5rem; margin-top:1rem; }
-    .cal-chip { flex-shrink:0; padding:0.5rem 1rem; background:var(--bg-card); border:1px solid var(--border-light); border-radius:4px; font-size:0.75rem; text-align:center; min-width:100px; }
-    .cal-chip.now { border-color:var(--forest); background:var(--forest-light); }
-    .cal-chip .cm { font-weight:600; color:var(--forest); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.06em; }
-    .cal-chip .ce { font-size:0.78rem; color:var(--text); margin-top:0.15rem; }
-
-    .county-links { display:flex; flex-wrap:wrap; gap:0.25rem 0.5rem; margin-top:1rem; }
-    .county-links a { font-size:0.68rem; color:var(--text-mid); }
-    .county-links a:hover { color:var(--forest); }
-
-    @media(max-width:768px) {
-      #stateMap { height:260px; }
-      .kpi-row { gap:0.5rem; }
-      .kpi { min-width:80px; padding:0.7rem 0.4rem; }
-      .kpi .num { font-size:1.5rem; }
-      .species-feed { grid-template-columns:1fr; }
-      .dash-hero { padding-top:4.5rem; }
+    @media(max-width:600px) {
+      #map { height:45vh;min-height:260px; }
+      .site-bar { gap:0.4rem;padding:0.4rem 0.6rem; }
+      .site-bar .search { max-width:160px; }
+      .site-bar nav { gap:0.4rem; }
+      .site-bar nav a { font-size:0.65rem; }
     }
   </style>
 </head>
 <body>
 
-  <nav class="top-nav">
-    <a href="/" class="nav-logo">MBR</a>
-    <div class="nav-links">
-      <a href="/saginaw-bay">Saginaw Bay</a>
-      <a href="/predictions">Predictions</a>
+  <div class="site-bar">
+    <a href="/" class="logo">MBR</a>
+    <input class="search" type="text" id="search" placeholder="Search any bird..." aria-label="Search bird">
+    <nav>
+      <a href="/saginaw-bay">Bay</a>
+      <a href="/predictions">Predict</a>
       <a href="/migration">Migration</a>
-    </div>
-  </nav>
-
-  <header class="dash-hero">
-    <div class="dash-hero-inner">
-      <h1>Michigan Birding Report</h1>
-      <p class="sub">Real-time sightings, migration forecasts, and species intelligence for Michigan birders.</p>
-      <div class="dash-search">
-        <input type="text" id="heroSearch" placeholder="Search any bird... e.g. Kirtland's Warbler" aria-label="Search for a bird species">
-        <button onclick="heroSearchGo()">Go</button>
-      </div>
-    </div>
-  </header>
-
-  <div class="conditions-strip" id="condStrip">
-    <span>Loading conditions...</span>
+    </nav>
   </div>
 
-  <main class="dashboard">
-    <!-- KPIs - contextual, linked to source data -->
-    <div class="kpi-row">
-      <a href="#feed" class="kpi" style="text-decoration:none;color:inherit">
-        <div class="num" id="kpiNotable">—</div>
-        <div class="lbl">Notable Species This Week</div>
-        <div id="kpiNotableSub" style="font-size:0.7rem;color:var(--text-light);margin-top:0.2rem"></div>
-      </a>
-      <a href="/saginaw-bay" class="kpi" style="text-decoration:none;color:inherit">
-        <div class="num" id="kpiBay">—</div>
-        <div class="lbl">Saginaw Bay (14 days)</div>
-        <div style="font-size:0.7rem;color:var(--text-light);margin-top:0.2rem">across 7 counties</div>
-      </a>
-      <a href="/migration" class="kpi" style="text-decoration:none;color:inherit">
-        <div class="num" id="kpiMigration">—</div>
-        <div class="lbl" id="kpiMigLabel">Migration Status</div>
-      </a>
+  <div class="cond-strip" id="cond"><span>Loading conditions...</span></div>
+
+  <div id="map"></div>
+  <div class="map-info">
+    <span id="mapCount">Loading sightings...</span>
+    <span>eBird data, 15-min cache</span>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-r="US-MI">All Michigan</button>
+    <button class="filter-btn" data-r="UP">Upper Peninsula</button>
+    <button class="filter-btn" data-r="NLP">Northern Lower</button>
+    <button class="filter-btn" data-r="SLP">Southern Lower</button>
+  </div>
+
+  <div class="content">
+    <div class="feed-title" id="feedTitle">Notable Sightings This Week</div>
+    <div class="feed" id="feed">
+      <div class="loading-state"><div class="loading-spinner"></div><p>Loading from eBird...</p></div>
     </div>
 
-    <!-- MAP + SIGHTINGS -->
-    <h2 style="font-family:var(--font-display);font-size:1.5rem;color:var(--forest-deep);margin-bottom:0.4rem">Notable Sightings This Week</h2>
-    <p style="font-size:0.82rem;color:var(--text-mid);margin-bottom:0.75rem">Rare and unusual species reported across Michigan. Tap any marker or card to explore the species.</p>
-
-    <div class="filter-row" id="filters">
-      <button class="filter-btn active" data-region="US-MI">All Michigan</button>
-      <button class="filter-btn" data-region="UP">Upper Peninsula</button>
-      <button class="filter-btn" data-region="NLP">Northern Lower</button>
-      <button class="filter-btn" data-region="SLP">Southern Lower</button>
-    </div>
-
-    <div id="stateMap"></div>
-    <div class="map-legend"><span id="markerCount">0</span> sightings mapped · Data from eBird, updated every 15 min</div>
-
-    <div class="species-feed" id="feed">
-      <div class="loading-state"><div class="loading-spinner"></div><p>Loading eBird sightings...</p></div>
-    </div>
-
-    <hr class="section-divider">
-
-    <!-- TOOLS -->
-    <h2 style="font-family:var(--font-display);font-size:1.5rem;color:var(--forest-deep);margin-bottom:0.3rem">Birding Tools</h2>
-    <div class="tools-grid">
-      <a href="/saginaw-bay" class="tool-card" style="text-decoration:none;color:inherit">
+    <div class="quick-links">
+      <a href="/saginaw-bay" class="ql">
         <h3>Saginaw Bay Hub</h3>
-        <p>80+ species across 7 counties. Tobico Marsh, Nayanquing Point, Tawas Point, and more. Michigan's premier birding destination.</p>
-        <span style="font-size:0.78rem;color:var(--forest);font-weight:600">Explore →</span>
+        <p>Hotspot map, species list, and conditions for Michigan's premier birding destination.</p>
       </a>
-      <a href="/predictions" class="tool-card" style="text-decoration:none;color:inherit">
-        <h3>Ask About a Bird</h3>
-        <p>Type any species and get an AI prediction: what it's doing in Michigan right now, where to find it, and your chances of seeing it today.</p>
-        <span style="font-size:0.78rem;color:var(--forest);font-weight:600">Ask now →</span>
+      <a href="/predictions" class="ql">
+        <h3>Ask About Any Bird</h3>
+        <p>Type a species name and get AI intelligence on what it's doing in Michigan right now.</p>
       </a>
-      <a href="/migration" class="tool-card" style="text-decoration:none;color:inherit">
+      <a href="/migration" class="ql">
         <h3>Migration Radar</h3>
-        <p>BirdCast county-level dashboards, nocturnal flight data, and migration timeline. Know when the big waves are coming.</p>
-        <span style="font-size:0.78rem;color:var(--forest);font-weight:600">View →</span>
+        <p>BirdCast county dashboards and nocturnal migration forecasts for Michigan.</p>
       </a>
     </div>
 
-    <hr class="section-divider">
-
-    <!-- FORECAST -->
-    <h2 style="font-family:var(--font-display);font-size:1.5rem;color:var(--forest-deep);margin-bottom:0.3rem">This Week's Forecast</h2>
-    <p style="font-size:0.82rem;color:var(--text-mid);margin-bottom:1rem">AI-generated from current weather, eBird data, and migration patterns</p>
-    <div class="forecast-card" id="forecastCard">
-      <div class="loading-state"><div class="loading-spinner"></div></div>
-    </div>
-
-    <hr class="section-divider">
-
-    <!-- SEASONAL -->
-    <h2 style="font-family:var(--font-display);font-size:1.5rem;color:var(--forest-deep);margin-bottom:0.3rem">What's in Season</h2>
-    <div class="cal-row" id="calRow"></div>
-
-    <hr class="section-divider">
-
-    <!-- GEAR -->
-    <h2 style="font-family:var(--font-display);font-size:1.4rem;color:var(--forest-deep);margin-bottom:0.3rem">Recommended Gear</h2>
-    <div class="gear-grid" style="margin-top:0.75rem">
-      <a href="https://www.amazon.com/dp/B09GV5J647?tag=michigantrout-20" target="_blank" rel="noopener" class="gear-card">
-        <div class="gear-icon">🔭</div><h3>Nikon Monarch M5 8x42</h3>
-        <p>Outstanding clarity for dawn/dusk birding. Waterproof, fog-proof.</p><span class="gear-cta">Amazon →</span>
+    <div style="font-size:0.85rem;font-weight:600;color:var(--text-mid);margin-bottom:0.3rem">Recommended Gear</div>
+    <div class="gear-row">
+      <a href="https://www.amazon.com/dp/B09GV5J647?tag=michigantrout-20" target="_blank" rel="noopener" class="g-card">
+        <h4>Nikon Monarch M5 8x42</h4><p>Outstanding clarity for dawn/dusk birding.</p>
       </a>
-      <a href="https://www.amazon.com/dp/0307957918?tag=michigantrout-20" target="_blank" rel="noopener" class="gear-card">
-        <div class="gear-icon">📖</div><h3>Sibley Eastern Field Guide</h3>
-        <p>650 species, 4,600 illustrations. The pocket guide Michigan birders carry.</p><span class="gear-cta">Amazon →</span>
+      <a href="https://www.amazon.com/dp/0307957918?tag=michigantrout-20" target="_blank" rel="noopener" class="g-card">
+        <h4>Sibley Eastern Guide</h4><p>The pocket field guide Michigan birders carry.</p>
       </a>
-      <a href="https://www.amazon.com/dp/B08DVBRP18?tag=michigantrout-20" target="_blank" rel="noopener" class="gear-card">
-        <div class="gear-icon">🔍</div><h3>Vortex Diamondback HD Scope</h3>
-        <p>20-60x zoom for scanning mudflats and open water at distance.</p><span class="gear-cta">Amazon →</span>
+      <a href="https://www.amazon.com/dp/B08DVBRP18?tag=michigantrout-20" target="_blank" rel="noopener" class="g-card">
+        <h4>Vortex Diamondback Scope</h4><p>20-60x for scanning mudflats and open water.</p>
       </a>
     </div>
-    <p style="font-size:0.6rem;color:var(--text-light);margin-top:0.5rem">As an Amazon Associate I earn from qualifying purchases.</p>
-  </main>
+    <p style="font-size:0.55rem;color:var(--text-light)">As an Amazon Associate I earn from qualifying purchases.</p>
+  </div>
 
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-brand">
         <h3>Michigan Birding Report</h3>
-        <p>Built by <a href="https://chrisizworski.com" target="_blank">Chris Izworski</a> in Bay City, Michigan. Data from <a href="https://ebird.org" target="_blank">eBird</a>, <a href="https://birdcast.org" target="_blank">BirdCast</a>, <a href="https://xeno-canto.org" target="_blank">Xeno-canto</a>, and <a href="https://www.inaturalist.org" target="_blank">iNaturalist</a>.</p>
+        <p>Built by <a href="https://chrisizworski.com">Chris Izworski</a> in Bay City, MI. Data: <a href="https://ebird.org">eBird</a>, <a href="https://birdcast.org">BirdCast</a>, <a href="https://xeno-canto.org">Xeno-canto</a>, <a href="https://inaturalist.org">iNaturalist</a>.</p>
       </div>
       <div class="footer-links">
         <a href="/saginaw-bay">Saginaw Bay</a>
         <a href="/predictions">Predictions</a>
         <a href="/migration">Migration</a>
-        <a href="https://trout.chrisizworski.com" target="_blank">Michigan Trout Report</a>
-        <a href="https://freighterviewfarms.com" target="_blank">Freighter View Farms</a>
+        <a href="https://trout.chrisizworski.com">Michigan Trout Report</a>
+        <a href="https://freighterviewfarms.com">Freighter View Farms</a>
       </div>
     </div>
-    <div style="max-width:1100px;margin:1rem auto 0;padding-top:1rem;border-top:1px solid var(--border)">
-      <p style="font-size:0.65rem;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem">Birding by County</p>
-      <div class="county-links" id="countyLinks"></div>
+    <div style="max-width:900px;margin:0.75rem auto 0;padding-top:0.75rem;border-top:1px solid var(--border)">
+      <div class="county-footer" id="cfooter"></div>
     </div>
   </footer>
 
