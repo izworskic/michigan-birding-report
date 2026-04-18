@@ -95,6 +95,10 @@
       const d = await r.json();
       notable = d.sightings || [];
       document.getElementById('kpiNotable').textContent = notable.length;
+      // Add top 3 species names as context
+      const topNames = notable.slice(0, 3).map(s => s.comName);
+      const sub = document.getElementById('kpiNotableSub');
+      if (sub && topNames.length) sub.textContent = topNames.join(', ');
       render(notable);
       plotMap(notable);
     } catch {

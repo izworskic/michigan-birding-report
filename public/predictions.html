@@ -364,9 +364,13 @@
             <div class="bird-answer-name">${d.name}</div>
             ${p.status ? `<div class="bird-answer-status">${p.status}</div>` : ''}
             ${p.activity ? `<div class="bird-answer-text">${p.activity}</div>` : ''}
-            ${p.findIt ? `<div class="bird-answer-text"><strong style="color:var(--gold)">Where to look:</strong> ${p.findIt}</div>` : ''}
-            ${p.lookFor ? `<div class="bird-answer-text"><strong style="color:var(--gold)">Look for:</strong> ${p.lookFor}</div>` : ''}
+            ${p.findIt ? `<div class="bird-answer-text"><strong style="color:var(--forest)">Where to look:</strong> ${p.findIt}</div>` : ''}
+            ${p.lookFor ? `<div class="bird-answer-text"><strong style="color:var(--forest)">Look for:</strong> ${p.lookFor}</div>` : ''}
             ${likelihood ? `<span class="bird-likelihood ${likelihood}">Likelihood: ${likelihood}</span>` : ''}
+            <div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+              <a href="https://ebird.org/species/${d.prediction?.sciName ? encodeURIComponent(d.name.toLowerCase().replace(/[^a-z]/g,'')) : 'search'}?q=${encodeURIComponent(d.name)}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--forest);font-weight:500">View on eBird →</a>
+              <a href="https://www.allaboutbirds.org/guide/${encodeURIComponent(d.name.replace(/'/g,'').replace(/\s+/g,'_'))}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--forest);font-weight:500">All About Birds →</a>
+            </div>
           </div>
         </div>`;
       } catch (err) {

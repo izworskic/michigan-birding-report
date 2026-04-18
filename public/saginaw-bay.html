@@ -3,107 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saginaw Bay Birding — Real-Time Sightings, Hotspots &amp; Conditions | Michigan Birding Report</title>
+  <meta name="description" content="Live bird sightings at Saginaw Bay's 8 premier hotspots: Tobico Marsh, Nayanquing Point, Fish Point, Tawas Point, and more. Map, weather, and species list updated from eBird.">
   <link rel="canonical" href="https://birding.chrisizworski.com/saginaw-bay">
-  <meta name="description" content="Real-time bird sightings at Saginaw Bay: Tobico Marsh, Bay City SRA, Nayanquing Point, Fish Point, Tawas Point, and more. 80+ species from eBird.">
-  <title>Saginaw Bay Birding Hub — Michigan Birding Report</title>
-  <meta name="description" content="Real-time bird sightings at Saginaw Bay's top hotspots: Tobico Marsh, Bay City SRA, Nayanquing Point, Fish Point, and more.">
+  <meta property="og:title" content="Saginaw Bay Birding — Michigan Birding Report">
+  <meta property="og:description" content="Real-time sightings at 8 hotspots across Saginaw Bay. Map, conditions, and species intelligence.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Saginaw Bay Birding","url":"https://birding.chrisizworski.com/saginaw-bay","description":"Real-time bird sightings at Saginaw Bay hotspots","isPartOf":{"@type":"WebSite","name":"Michigan Birding Report","url":"https://birding.chrisizworski.com"}}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="/styles.css">
   <style>
-    .bay-page-hero {
-      padding: 8rem 2rem 4rem;
-      background: linear-gradient(165deg, var(--forest-deep) 0%, #0d1f12 50%, var(--forest) 100%);
-      text-align: center;
-    }
-    .bay-page-hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-    .bay-page-hero .lead { color: rgba(255,255,255,0.8);
-      font-size: 1.1rem;
-      font-weight: 300;
-      color: var(--text-mid);
-      max-width: 650px;
-      margin: 0 auto;
-    }
-    .hotspot-section { padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; }
-    .hotspot-section h2 {
-      font-family: var(--font-display);
-      font-size: 1.8rem;
-      color: var(--gold);
-      margin-bottom: 0.5rem;
-    }
-    .hotspot-section > p {
-      color: var(--text-mid);
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-    }
-    .species-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1rem;
-      margin-bottom: 3rem;
-    }
-    .species-item {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      padding: 0.75rem;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(212,160,60,0.08);
-      border-radius: 3px;
-    }
-    .species-thumb {
-      width: 56px;
-      height: 56px;
-      border-radius: 3px;
-      object-fit: cover;
-      background: var(--forest-mid);
-      flex-shrink: 0;
-    }
-    .species-info .sp-name {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .species-info .sp-meta {
-      font-size: 0.75rem;
-      color: var(--text-mid);
-    }
-    .species-info .sp-loc {
-      font-size: 0.7rem;
-      color: var(--gold-dim);
-    }
-    .back-link {
-      display: inline-block;
-      margin-bottom: 1rem;
-      font-size: 0.85rem;
-      color: var(--gold-light);
-    }
-    .dashboard-embed {
-      margin: 2rem 0;
-      padding: 1.5rem;
-      background: var(--forest);
-      border: 1px solid rgba(212,160,60,0.1);
-      border-radius: 4px;
-      text-align: center;
-    }
-    .dashboard-embed h3 {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-    }
-    .dashboard-embed p {
-      font-size: 0.9rem;
-      color: var(--text-mid);
-      margin-bottom: 1rem;
-    }
+    .bay-hero { padding:6rem 2rem 2rem; background:linear-gradient(165deg,var(--forest-deep) 0%,#1a5c2a 100%); color:#fff; }
+    .bay-hero-inner { max-width:1100px; margin:0 auto; }
+    .bay-hero h1 { font-family:var(--font-display); font-size:clamp(2rem,5vw,3rem); font-weight:700; margin-bottom:0.3rem; }
+    .bay-hero .sub { color:rgba(255,255,255,0.75); font-size:0.9rem; max-width:600px; }
+    .bay-dash { max-width:1100px; margin:0 auto; padding:1.5rem 2rem 3rem; }
+    .bay-kpis { display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+    .bay-kpi { flex:1; min-width:120px; padding:0.8rem; background:var(--bg-card); border:1px solid var(--border-light); border-radius:6px; text-align:center; box-shadow:var(--shadow-sm); }
+    .bay-kpi .num { font-family:var(--font-display); font-size:1.8rem; font-weight:700; color:var(--forest); }
+    .bay-kpi .lbl { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-light); }
+    #bayMap { width:100%; height:400px; border-radius:6px; border:1px solid var(--border-light); box-shadow:var(--shadow-sm); margin-bottom:0.5rem; }
+    .map-note { font-size:0.7rem; color:var(--text-light); text-align:right; margin-bottom:1.5rem; }
+    .wx-box { padding:1rem 1.25rem; background:var(--gold-bg); border:1px solid var(--border); border-radius:6px; margin-bottom:1.5rem; font-size:0.85rem; color:var(--text-mid); }
+    .wx-box strong { color:var(--forest); }
+    .h2-sec { font-family:var(--font-display); font-size:1.4rem; color:var(--forest-deep); margin:2rem 0 0.5rem; }
+    .h2-sub { font-size:0.82rem; color:var(--text-mid); margin-bottom:1rem; }
+    .hotspot-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; margin-bottom:2rem; }
+    .hs-card { padding:1rem; background:var(--bg-card); border:1px solid var(--border-light); border-radius:6px; box-shadow:var(--shadow-sm); transition:box-shadow 0.2s,transform 0.15s; text-decoration:none; color:inherit; display:block; }
+    .hs-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .hs-name { font-family:var(--font-display); font-size:1.05rem; font-weight:600; color:var(--forest); margin-bottom:0.2rem; }
+    .hs-count { font-size:0.78rem; color:var(--text-mid); }
+    .hs-desc { font-size:0.75rem; color:var(--text-light); margin-top:0.3rem; line-height:1.4; }
+    .hs-link { font-size:0.7rem; color:var(--forest); font-weight:500; margin-top:0.4rem; display:inline-block; }
+    .sp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:0.75rem; margin-bottom:2rem; }
+    .sp-row { display:flex; gap:0.6rem; padding:0.6rem; background:var(--bg-card); border:1px solid var(--border-light); border-radius:5px; text-decoration:none; color:inherit; align-items:center; transition:box-shadow 0.15s; }
+    .sp-row:hover { box-shadow:var(--shadow-md); }
+    .sp-row img { width:48px; height:48px; border-radius:4px; object-fit:cover; flex-shrink:0; background:var(--bg-alt); }
+    .sp-row .sn { font-family:var(--font-display); font-size:0.95rem; font-weight:600; color:var(--text); }
+    .sp-row .sm { font-size:0.7rem; color:var(--text-light); }
+    @media(max-width:768px) { #bayMap{height:280px;} .bay-kpis{gap:0.5rem;} .bay-kpi{min-width:80px;padding:0.6rem;} .bay-kpi .num{font-size:1.4rem;} }
   </style>
 </head>
 <body>
@@ -111,38 +53,54 @@
     <a href="/" class="nav-logo">MBR</a>
     <div class="nav-links">
       <a href="/">Home</a>
-      <a href="/saginaw-bay" style="color:var(--gold)">Saginaw Bay</a>
+      <a href="/saginaw-bay" style="color:var(--forest);font-weight:600">Saginaw Bay</a>
       <a href="/predictions">Predictions</a>
       <a href="/migration">Migration</a>
     </div>
   </nav>
 
-  <div class="bay-page-hero">
-    <a href="/" class="back-link">← Back to Michigan Birding Report</a>
-    <h1>Saginaw Bay<br>Birding Hub</h1>
-    <p class="lead">One of the Great Lakes' most important staging areas for waterfowl, shorebirds, and migrating songbirds. Eight premier hotspots, real-time sightings, and seasonal intelligence.</p>
-  </div>
+  <header class="bay-hero">
+    <div class="bay-hero-inner">
+      <a href="/" style="font-size:0.8rem;color:var(--gold-light)">← Michigan Birding Report</a>
+      <h1>Saginaw Bay Birding</h1>
+      <p class="sub">Real-time sightings from 8 premier hotspots across 7 counties. One of the Great Lakes' most important staging areas for waterfowl, shorebirds, and migrating songbirds.</p>
+    </div>
+  </header>
 
-  <section class="hotspot-section">
-    <h2>What's Being Seen Now</h2>
-    <p>Recent species reported across all Saginaw Bay hotspots, updated from eBird every 15 minutes.</p>
-    <div class="species-list" id="baySpecies">
-      <div class="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Loading Saginaw Bay sightings...</p>
+  <main class="bay-dash">
+    <div class="bay-kpis">
+      <div class="bay-kpi"><div class="num" id="kSp">—</div><div class="lbl">Species (14 days)</div></div>
+      <div class="bay-kpi"><div class="num" id="kObs">—</div><div class="lbl">Total Reports</div></div>
+      <div class="bay-kpi"><div class="num">7</div><div class="lbl">Counties</div></div>
+      <div class="bay-kpi"><div class="num">8</div><div class="lbl">Hotspots</div></div>
+    </div>
+
+    <div class="wx-box" id="wxBox">Loading weather conditions...</div>
+
+    <h2 class="h2-sec" style="margin-top:0">Hotspot Map</h2>
+    <p class="h2-sub">All 8 Saginaw Bay hotspots. Tap a marker for details and recent species count.</p>
+    <div id="bayMap"></div>
+    <div class="map-note">Data from eBird, updated every 15 minutes</div>
+
+    <h2 class="h2-sec">Hotspots</h2>
+    <p class="h2-sub">Tap any hotspot to view it on eBird with full checklist history.</p>
+    <div class="hotspot-grid" id="hsGrid"></div>
+
+    <h2 class="h2-sec">Species Reported in the Past 14 Days</h2>
+    <p class="h2-sub">Tap any species for its full profile: identification, habitat, audio, and Michigan sighting map.</p>
+    <div class="sp-grid" id="spGrid">
+      <div class="loading-state"><div class="loading-spinner"></div><p>Loading sightings...</p></div>
+    </div>
+
+    <div style="padding:1.5rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:6px;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:1rem">
+      <div style="flex:1;min-width:200px">
+        <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--forest)">Scan the Bay</div>
+        <p style="font-size:0.82rem;color:var(--text-mid);margin:0.3rem 0 0">A spotting scope is essential for scanning Saginaw Bay's vast mudflats. The Vortex Diamondback HD 20-60x picks up shorebirds at extreme distance.</p>
       </div>
+      <a href="https://www.amazon.com/dp/B08DVBRP18?tag=michigantrout-20" target="_blank" rel="noopener" class="btn btn-primary" style="white-space:nowrap">View on Amazon →</a>
     </div>
-
-    <div class="dashboard-embed">
-      <h3>Migration Radar: Bay County</h3>
-      <p>Nocturnal migration traffic, flight direction, speed, and expected species from BirdCast.</p>
-      <a href="https://dashboard.birdcast.org/region/US-MI-017" target="_blank" rel="noopener" class="btn btn-outline">Open Bay County Dashboard →</a>
-    </div>
-
-    <h2>Featured Hotspots</h2>
-    <p>The core locations that make Saginaw Bay a destination for birders across the Midwest.</p>
-    <div id="hotspotDetails"></div>
-  </section>
+    <p style="font-size:0.6rem;color:var(--text-light);margin-top:0.4rem">As an Amazon Associate I earn from qualifying purchases.</p>
+  </main>
 
   <footer class="footer">
     <div class="footer-content">
@@ -153,69 +111,108 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script>
-    (function() {
-      const HOTSPOT_INFO = [
-        { locId:'L208963', name:'Bay City State Recreation Area', desc:'Wetlands and beach along Saginaw Bay. Excellent for waterfowl, shorebirds, and migrating passerines. The Tobico Marsh boardwalk is a highlight.' },
-        { locId:'L282752', name:'Tobico Marsh', desc:'A 1,700-acre coastal wetland with two observation towers. One of the best birding spots in the Saginaw Bay watershed.' },
-        { locId:'L148895', name:'Nayanquing Point SWA', desc:'Managed marshes and dikes along the bay. Outstanding for rails, bitterns, and marsh wrens in summer; waterfowl staging in spring and fall.' },
-        { locId:'L148835', name:'Fish Point SWA', desc:'Large cattail marsh at the southern end of Saginaw Bay. Breeding habitat for Black Terns, Least Bitterns, and Yellow-headed Blackbirds.' },
-        { locId:'L820964', name:'Quanicassee SWA', desc:'Managed wetlands and agricultural fields. Shorebird magnet when water levels are right, especially during southbound migration.' },
-        { locId:'L285440', name:'Shiawassee NWR', desc:'9,000+ acre refuge at the confluence of four rivers. Hosts tens of thousands of waterfowl during peak migration. Bald Eagles year-round.' },
-        { locId:'L1101197', name:'Tawas Point State Park', desc:'Premier migration trap on the bay. The sandy peninsula concentrates warblers, vireos, and flycatchers during spring and fall waves.' },
-        { locId:'L463424', name:'Wigwam Bay SWA', desc:'Remote coastal marsh on the eastern shore. Excellent for herons, egrets, and nesting Osprey.' },
-      ];
+  (function() {
+    const HOTSPOTS = [
+      { id:'L208963', name:'Bay City State Recreation Area', lat:43.6575, lng:-83.8877, desc:'Wetlands and beach along the bay. Excellent waterfowl, shorebirds, and migrating passerines.' },
+      { id:'L282752', name:'Tobico Marsh', lat:43.6647, lng:-83.8988, desc:'1,700-acre coastal wetland with two observation towers. Top birding spot in the Bay watershed.' },
+      { id:'L148895', name:'Nayanquing Point SWA', lat:43.7459, lng:-83.9145, desc:'Managed marshes and dikes. Outstanding for rails, bitterns, and waterfowl staging.' },
+      { id:'L148835', name:'Fish Point SWA', lat:43.7176, lng:-83.5831, desc:'Large cattail marsh. Breeding Black Terns, Least Bitterns, Yellow-headed Blackbirds.' },
+      { id:'L820964', name:'Quanicassee SWA', lat:43.6167, lng:-83.6833, desc:'Managed wetlands. Shorebird magnet when water levels cooperate.' },
+      { id:'L285440', name:'Shiawassee NWR', lat:43.3833, lng:-83.9167, desc:'9,000+ acre refuge. Tens of thousands of waterfowl during peak migration. Bald Eagles year-round.' },
+      { id:'L1101197', name:'Tawas Point State Park', lat:44.2625, lng:-83.4447, desc:'Premier migration trap. Sandy peninsula concentrates warblers, vireos, and flycatchers.' },
+      { id:'L463424', name:'Wigwam Bay SWA', lat:43.8333, lng:-83.7333, desc:'Remote coastal marsh. Herons, egrets, and nesting Osprey.' },
+    ];
 
-      async function loadBaySpecies() {
-        const container = document.getElementById('baySpecies');
-        try {
-          const res = await fetch('/api/hotspot?mode=saginaw-bay&back=14');
-          if (!res.ok) throw new Error('API error ' + res.status);
-          const data = await res.json();
+    // Init map
+    const map = L.map('bayMap', { scrollWheelZoom:false }).setView([43.75, -83.7], 9);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution:'&copy; OSM &copy; CARTO', maxZoom:14
+    }).addTo(map);
 
-          if (!data.species || !data.species.length) {
-            container.innerHTML = '<div class="loading-state"><p>No recent sightings available.</p></div>';
-            return;
-          }
+    const hsIcon = L.divIcon({
+      className:'',
+      html:'<div style="width:18px;height:18px;background:#1a5c2a;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3)"></div>',
+      iconSize:[18,18], iconAnchor:[9,9]
+    });
 
-          container.innerHTML = data.species.map(sp => {
-            const imgSrc = sp.image?.url || '';
-            const imgHtml = imgSrc
-              ? `<img class="species-thumb" src="${imgSrc}" alt="${sp.comName}" loading="lazy" onerror="this.style.display='none'">`
-              : `<div class="species-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--canopy)">🐦</div>`;
+    HOTSPOTS.forEach(h => {
+      L.marker([h.lat, h.lng], { icon:hsIcon })
+        .bindPopup(`<div style="min-width:180px"><b style="font-size:0.95rem">${h.name}</b><br><span style="font-size:0.8rem;color:#555">${h.desc}</span><br><a href="https://ebird.org/hotspot/${h.id}" target="_blank" style="font-size:0.75rem;color:#1a5c2a">View on eBird →</a></div>`)
+        .addTo(map);
+    });
 
-            const d = new Date(sp.obsDt?.replace(' ','T') || '');
-            const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            const href = `/species/${sp.speciesCode}?name=${encodeURIComponent(sp.comName)}&sci=${encodeURIComponent(sp.sciName || '')}`;
+    // Render hotspot cards
+    document.getElementById('hsGrid').innerHTML = HOTSPOTS.map(h =>
+      `<a href="https://ebird.org/hotspot/${h.id}" target="_blank" rel="noopener" class="hs-card">
+        <div class="hs-name">${h.name}</div>
+        <div class="hs-desc">${h.desc}</div>
+        <span class="hs-link">View on eBird →</span>
+      </a>`
+    ).join('');
 
-            return `<a href="${href}" class="species-item" style="text-decoration:none;color:inherit">
-              ${imgHtml}
-              <div class="species-info">
-                <div class="sp-name">${sp.comName}</div>
-                <div class="sp-meta">${dateStr}${sp.howMany ? ' · ' + sp.howMany + ' reported' : ''}</div>
-                <div class="sp-loc">${sp.hotspotName || sp.locName || ''}</div>
-              </div>
-            </a>`;
-          }).join('');
-        } catch (err) {
-          container.innerHTML = `<div class="error-state"><p>Unable to load sightings.</p></div>`;
+    // Load weather
+    fetch('/api/predict?mode=forecast&region=saginaw-bay')
+      .then(r => r.json())
+      .then(d => {
+        const el = document.getElementById('wxBox');
+        const w = d.weather;
+        const bc = d.birdingConditions || [];
+        let html = '';
+        if (w) {
+          html += `<strong>Saginaw Bay conditions:</strong> ${w.temp}°, winds ${w.wind}. ${w.forecast}. Tonight: ${w.tonight}. `;
         }
-      }
+        bc.forEach(c => {
+          html += `<span style="display:inline-block;margin-top:0.3rem;padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:500;${
+            c.type === 'positive' ? 'background:rgba(76,175,80,0.1);color:#2e7d32' :
+            c.type === 'alert' ? 'background:rgba(244,67,54,0.08);color:#c62828' :
+            'background:rgba(255,193,7,0.1);color:#f57f17'
+          }">${c.text}</span> `;
+        });
+        el.innerHTML = html || 'Weather data temporarily unavailable.';
+      })
+      .catch(() => { document.getElementById('wxBox').textContent = 'Weather data temporarily unavailable.'; });
 
-      function renderHotspotDetails() {
-        const container = document.getElementById('hotspotDetails');
-        container.innerHTML = '<div class="bay-hotspots">' + HOTSPOT_INFO.map(h => `
-          <a href="https://ebird.org/hotspot/${h.locId}" target="_blank" rel="noopener" class="bay-hotspot-card" style="display:block;text-decoration:none;color:inherit">
-            <div class="bay-hotspot-name">${h.name}</div>
-            <div class="bay-hotspot-recent" style="margin-top:0.5rem">${h.desc}</div>
-            <div style="margin-top:0.5rem;font-size:0.7rem;color:var(--gold-light)">View on eBird →</div>
-          </a>
-        `).join('') + '</div>';
-      }
+    // Load species
+    fetch('/api/hotspot?mode=saginaw-bay&back=14')
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById('kSp').textContent = d.speciesCount || 0;
+        document.getElementById('kObs').textContent = d.totalObservations || 0;
 
-      loadBaySpecies();
-      renderHotspotDetails();
-    })();
+        const grid = document.getElementById('spGrid');
+        const species = d.species || [];
+        if (!species.length) {
+          grid.innerHTML = '<p style="color:var(--text-mid)">No sightings in the past 14 days.</p>';
+          return;
+        }
+        grid.innerHTML = species.map(sp => {
+          const img = sp.image?.url || '';
+          const dt = new Date(sp.obsDt?.replace(' ','T') || '');
+          const days = Math.floor((Date.now() - dt) / 86400000);
+          let when = days === 0 ? 'Today' : days === 1 ? 'Yesterday' : days < 7 ? days + 'd ago' : dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+          return `<a href="/species/${sp.speciesCode}?name=${encodeURIComponent(sp.comName)}&sci=${encodeURIComponent(sp.sciName||'')}" class="sp-row">
+            ${img ? `<img src="${img}" alt="${sp.comName}" loading="lazy" onerror="this.style.display='none'">` : '<div style="width:48px;height:48px;background:var(--bg-alt);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.2rem">🐦</div>'}
+            <div>
+              <div class="sn">${sp.comName}</div>
+              <div class="sm">${when} · ${sp.locName ? sp.locName.substring(0,30) : ''}${sp.howMany ? ' · '+sp.howMany : ''}</div>
+            </div>
+          </a>`;
+        }).join('');
+
+        // Also plot species sightings on map
+        const spIcon = L.divIcon({
+          className:'',
+          html:'<div style="width:8px;height:8px;background:#d4a03c;border:1.5px solid #fff;border-radius:50%;box-shadow:0 0 3px rgba(0,0,0,0.2)"></div>',
+          iconSize:[8,8], iconAnchor:[4,4]
+        });
+        // We don't have lat/lng on hotspot species, but the hotspot locations cover it
+      })
+      .catch(() => {
+        document.getElementById('spGrid').innerHTML = '<p style="color:var(--text-mid)">Unable to load sightings.</p>';
+      });
+  })();
   </script>
 </body>
 </html>

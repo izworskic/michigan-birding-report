@@ -124,11 +124,22 @@
   </div>
 
   <main class="dashboard">
-    <!-- KPIs -->
+    <!-- KPIs - contextual, linked to source data -->
     <div class="kpi-row">
-      <div class="kpi"><div class="num" id="kpiNotable">—</div><div class="lbl">Notable This Week</div></div>
-      <div class="kpi"><div class="num" id="kpiBay">—</div><div class="lbl">Saginaw Bay Species</div></div>
-      <div class="kpi"><div class="num" id="kpiMigration">—</div><div class="lbl" id="kpiMigLabel">Migration Status</div></div>
+      <a href="#feed" class="kpi" style="text-decoration:none;color:inherit">
+        <div class="num" id="kpiNotable">—</div>
+        <div class="lbl">Notable Species This Week</div>
+        <div id="kpiNotableSub" style="font-size:0.7rem;color:var(--text-light);margin-top:0.2rem"></div>
+      </a>
+      <a href="/saginaw-bay" class="kpi" style="text-decoration:none;color:inherit">
+        <div class="num" id="kpiBay">—</div>
+        <div class="lbl">Saginaw Bay (14 days)</div>
+        <div style="font-size:0.7rem;color:var(--text-light);margin-top:0.2rem">across 7 counties</div>
+      </a>
+      <a href="/migration" class="kpi" style="text-decoration:none;color:inherit">
+        <div class="num" id="kpiMigration">—</div>
+        <div class="lbl" id="kpiMigLabel">Migration Status</div>
+      </a>
     </div>
 
     <!-- MAP + SIGHTINGS -->
