@@ -7,7 +7,7 @@
   <meta name="description" id="pageMeta" content="Real-time bird sightings and birding hotspots for Michigan counties.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Michigan Birding Report">
-  <link rel="canonical" id="canonical" href="https://birding.chrisizworski.com/county/">
+  <link rel="canonical" id="canonical" href="https://michiganbirdingreport.com/county/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -73,7 +73,7 @@
     </div>
     <p style="font-size:0.6rem;color:var(--text-light);margin-top:0.5rem">As an Amazon Associate I earn from qualifying purchases.</p>
   </div>
-  <footer class="footer"><div class="footer-content"><div class="footer-brand"><h3>Michigan Birding Report</h3><p>Built by <a href="https://chrisizworski.com">Chris Izworski</a>, Bay City, Michigan. Chris is a <a href="https://chrisizworski.com/michigan-911-executive-director/">former Michigan 911 director</a>, <a href="https://chrisizworski.com/chris-izworski-trout-fishing/">avid Michigan outdoorsman</a>, and creator of the <a href="https://trout.chrisizworski.com">Michigan Trout Report</a>. Data from <a href="https://ebird.org">eBird</a>.</p></div></div></footer>
+  <footer class="footer"><div class="footer-content"><div class="footer-brand"><h3>Michigan Birding Report</h3><p>Built by <a href="/chris-izworski">Chris Izworski</a>, Bay City, Michigan. Chris is a <a href="https://chrisizworski.com/michigan-911-executive-director/">former Michigan 911 director</a>, <a href="https://chrisizworski.com/chris-izworski-trout-fishing/">avid Michigan outdoorsman</a>, and creator of the <a href="https://michigantroutreport.com">Michigan Trout Report</a>. Data from <a href="https://ebird.org">eBird</a>.</p></div></div></footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script>
   (function() {
@@ -94,7 +94,7 @@
 
     document.title = `Birding in ${name} County, Michigan — Michigan Birding Report`;
     document.getElementById('pageMeta').content = `Real-time bird sightings, species list, and hotspots for ${name} County, Michigan. Updated from eBird every 15 minutes.`;
-    document.getElementById('canonical').href = `https://birding.chrisizworski.com/county/${fips}`;
+    document.getElementById('canonical').href = `https://michiganbirdingreport.com/county/${fips}`;
     document.getElementById('countyName').textContent = `${name} County Birding`;
     document.getElementById('countyLead').textContent = `Real-time bird sightings from eBird for ${name} County, Michigan`;
 
@@ -102,8 +102,8 @@
       "@context":"https://schema.org","@type":"WebPage",
       "name":`Birding in ${name} County, Michigan`,
       "description":`Bird sightings and hotspots for ${name} County, Michigan`,
-      "url":`https://birding.chrisizworski.com/county/${fips}`,
-      "isPartOf":{"@type":"WebSite","name":"Michigan Birding Report","url":"https://birding.chrisizworski.com"}
+      "url":`https://michiganbirdingreport.com/county/${fips}`,
+      "isPartOf":{"@type":"WebSite","name":"Michigan Birding Report","url":"https://michiganbirdingreport.com"}
     });
 
     // Nearby counties

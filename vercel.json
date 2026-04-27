@@ -1,7 +1,54 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "birding.chrisizworski.com"
+        }
+      ],
+      "destination": "https://michiganbirdingreport.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "birding.chrisizworski.com"
+        }
+      ],
+      "destination": "https://michiganbirdingreport.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "michigan-birding-report.vercel.app"
+        }
+      ],
+      "destination": "https://michiganbirdingreport.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "michigan-birding-report.vercel.app"
+        }
+      ],
+      "destination": "https://michiganbirdingreport.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/chris-izworski", "destination": "/chris-izworski.html" },
     { "source": "/saginaw-bay", "destination": "/saginaw-bay.html" },
     { "source": "/predictions", "destination": "/predictions.html" },
     { "source": "/migration", "destination": "/migration.html" },
