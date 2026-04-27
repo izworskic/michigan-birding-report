@@ -5,6 +5,28 @@
       "has": [
         {
           "type": "host",
+          "value": "www.michiganbirdingreport.com"
+        }
+      ],
+      "destination": "https://michiganbirdingreport.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.michiganbirdingreport.com"
+        }
+      ],
+      "destination": "https://michiganbirdingreport.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
           "value": "birding.chrisizworski.com"
         }
       ],
