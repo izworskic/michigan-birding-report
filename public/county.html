@@ -7,6 +7,9 @@
   <meta name="description" id="pageMeta" content="Real-time bird sightings and birding hotspots for Michigan counties.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Michigan Birding Report">
+  <meta property="og:image" content="https://michiganbirdingreport.com/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://michiganbirdingreport.com/og-image.svg">
   <link rel="canonical" id="canonical" href="https://michiganbirdingreport.com/county/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,6 +44,7 @@
     <a href="/" class="nav-logo">MBR</a>
     <div class="nav-links">
       <a href="/">Home</a>
+      <a href="/counties">Counties</a>
       <a href="/saginaw-bay">Saginaw Bay</a>
       <a href="/predictions">Predictions</a>
       <a href="/migration">Migration</a>
@@ -77,8 +81,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script>
   (function() {
-    const COUNTIES = {"003":"Alger","005":"Allegan","007":"Alpena","009":"Antrim","011":"Arenac","013":"Baraga","015":"Barry","017":"Bay","019":"Benzie","021":"Berrien","023":"Branch","025":"Calhoun","027":"Cass","029":"Charlevoix","031":"Cheboygan","033":"Chippewa","035":"Clare","037":"Clinton","039":"Crawford","041":"Delta","043":"Dickinson","045":"Eaton","047":"Emmet","049":"Genesee","051":"Gladwin","053":"Gogebic","055":"Grand Traverse","057":"Gratiot","059":"Hillsdale","061":"Houghton","063":"Huron","065":"Ingham","067":"Ionia","069":"Iosco","071":"Iron","073":"Isabella","075":"Jackson","077":"Kalamazoo","079":"Kalkaska","081":"Kent","083":"Keweenaw","085":"Lake","087":"Lapeer","089":"Leelanau","091":"Lenawee","093":"Livingston","095":"Luce","097":"Mackinac","099":"Macomb","101":"Manistee","103":"Marquette","105":"Mason","107":"Mecosta","109":"Menominee","111":"Midland","113":"Missaukee","115":"Monroe","117":"Montcalm","119":"Montmorency","121":"Muskegon","123":"Newaygo","125":"Oakland","127":"Oceana","129":"Ogemaw","131":"Ontonagon","133":"Osceola","135":"Oscoda","137":"Otsego","139":"Ottawa","141":"Presque Isle","143":"Roscommon","145":"Saginaw","147":"St. Clair","149":"St. Joseph","151":"Sanilac","153":"Schoolcraft","155":"Shiawassee","157":"Tuscola","159":"Van Buren","161":"Washtenaw","163":"Wayne","165":"Wexford"};
-    const COORDS = {"017":[43.73,-83.98],"011":[44.04,-83.75],"063":[43.99,-82.86],"145":[43.33,-84.05],"069":[44.31,-83.55],"049":[43.02,-83.71],"081":[42.95,-85.53],"125":[42.67,-83.38],"163":[42.28,-83.24],"099":[42.67,-82.91],"033":[46.33,-84.55],"103":[46.56,-87.4],"055":[44.67,-85.55],"089":[45.01,-85.85],"121":[43.25,-86.25],"139":[42.98,-86.1]};
+    const COUNTIES = {"001":"Alcona","003":"Alger","005":"Allegan","007":"Alpena","009":"Antrim","011":"Arenac","013":"Baraga","015":"Barry","017":"Bay","019":"Benzie","021":"Berrien","023":"Branch","025":"Calhoun","027":"Cass","029":"Charlevoix","031":"Cheboygan","033":"Chippewa","035":"Clare","037":"Clinton","039":"Crawford","041":"Delta","043":"Dickinson","045":"Eaton","047":"Emmet","049":"Genesee","051":"Gladwin","053":"Gogebic","055":"Grand Traverse","057":"Gratiot","059":"Hillsdale","061":"Houghton","063":"Huron","065":"Ingham","067":"Ionia","069":"Iosco","071":"Iron","073":"Isabella","075":"Jackson","077":"Kalamazoo","079":"Kalkaska","081":"Kent","083":"Keweenaw","085":"Lake","087":"Lapeer","089":"Leelanau","091":"Lenawee","093":"Livingston","095":"Luce","097":"Mackinac","099":"Macomb","101":"Manistee","103":"Marquette","105":"Mason","107":"Mecosta","109":"Menominee","111":"Midland","113":"Missaukee","115":"Monroe","117":"Montcalm","119":"Montmorency","121":"Muskegon","123":"Newaygo","125":"Oakland","127":"Oceana","129":"Ogemaw","131":"Ontonagon","133":"Osceola","135":"Oscoda","137":"Otsego","139":"Ottawa","141":"Presque Isle","143":"Roscommon","145":"Saginaw","147":"St. Clair","149":"St. Joseph","151":"Sanilac","153":"Schoolcraft","155":"Shiawassee","157":"Tuscola","159":"Van Buren","161":"Washtenaw","163":"Wayne","165":"Wexford"};
+    const COORDS = {"001":[44.70,-83.45],"017":[43.73,-83.98],"011":[44.04,-83.75],"063":[43.99,-82.86],"145":[43.33,-84.05],"069":[44.31,-83.55],"049":[43.02,-83.71],"081":[42.95,-85.53],"125":[42.67,-83.38],"163":[42.28,-83.24],"099":[42.67,-82.91],"033":[46.33,-84.55],"103":[46.56,-87.4],"055":[44.67,-85.55],"089":[45.01,-85.85],"121":[43.25,-86.25],"139":[42.98,-86.1]};
     const NEARBY = {"017":["011","063","145","111","157","069"],"011":["069","051","017","129"],"145":["145","017","157","155","111"],"049":["087","093","125","155","145"],"081":["139","067","117","121","127"]};
 
     const path = window.location.pathname;

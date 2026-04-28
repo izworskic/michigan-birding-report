@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Michigan Birding Report</title>
+  <desc id="desc">A social preview image for Michigan Birding Report with a map-inspired field guide layout.</desc>
+  <rect width="1200" height="630" fill="#f7f4ec"/>
+  <rect x="0" y="0" width="1200" height="630" fill="#163f23"/>
+  <path d="M0 470 C170 425 250 505 390 464 C530 423 590 350 730 390 C900 440 1000 338 1200 370 L1200 630 L0 630 Z" fill="#f7f4ec" opacity="0.95"/>
+  <path d="M0 518 C180 482 296 562 435 520 C595 472 702 520 862 492 C1015 465 1090 495 1200 470 L1200 630 L0 630 Z" fill="#dfe9df" opacity="0.75"/>
+  <circle cx="930" cy="146" r="78" fill="#d4a03c" opacity="0.95"/>
+  <g fill="none" stroke="#f7f4ec" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.96">
+    <path d="M275 198 C336 135 423 132 485 190"/>
+    <path d="M485 190 C555 120 660 130 723 202"/>
+    <path d="M392 185 C426 224 455 269 466 326"/>
+    <path d="M596 184 C560 223 532 267 520 326"/>
+  </g>
+  <g fill="#f7f4ec">
+    <circle cx="297" cy="190" r="9"/>
+    <circle cx="703" cy="194" r="9"/>
+  </g>
+  <text x="84" y="104" fill="#d4a03c" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" letter-spacing="5">LIVE MICHIGAN BIRDING DATA</text>
+  <text x="82" y="192" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700">Michigan Birding</text>
+  <text x="82" y="282" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700">Report</text>
+  <text x="86" y="347" fill="#dfe9df" font-family="Arial, Helvetica, sans-serif" font-size="31">Notable sightings, county pages, migration context, and daily field reports.</text>
+  <rect x="84" y="404" width="296" height="48" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="112" y="437" fill="#163f23" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">michiganbirdingreport.com</text>
+</svg>

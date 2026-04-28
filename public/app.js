@@ -39,6 +39,23 @@
     });
   }
 
+  const dailyCard = document.getElementById('latestDailyCard');
+  if(dailyCard){
+    fetch('/api/latest-daily')
+      .then(r=>r.json())
+      .then(d=>{
+        if(d.url) dailyCard.href = d.url;
+        const titleEl = document.getElementById('latestDailyTitle');
+        const metaEl = document.getElementById('latestDailyMeta');
+        if(titleEl && d.title) titleEl.textContent = d.title;
+        if(metaEl) {
+          const when = d.date ? new Date(d.date + 'T12:00:00Z').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : 'Updated every morning';
+          metaEl.textContent = when + ' from Michigan Birding Daily';
+        }
+      })
+      .catch(()=>{});
+  }
+
   // -- Conditions --
   fetch('/api/predict?mode=forecast&region=saginaw-bay')
     .then(r=>r.json())
@@ -137,6 +154,6 @@
   // -- County footer --
   const counties={'017':'Bay','145':'Saginaw','069':'Iosco','063':'Huron','011':'Arenac','111':'Midland','157':'Tuscola','081':'Kent','161':'Washtenaw','163':'Wayne','125':'Oakland','099':'Macomb','049':'Genesee','077':'Kalamazoo','139':'Ottawa','065':'Ingham','115':'Monroe','021':'Berrien','033':'Chippewa','103':'Marquette','055':'Grand Traverse','089':'Leelanau','121':'Muskegon','047':'Emmet'};
   const cf=document.getElementById('cfooter');
-  if(cf) cf.innerHTML=Object.entries(counties).map(([f,n])=>`<a href="/county/${f}">${n}</a>`).join('');
+  if(cf) cf.innerHTML='<a href="/counties">All 83 counties</a> ' + Object.entries(counties).map(([f,n])=>`<a href="/county/${f}">${n}</a>`).join('');
 
 })();

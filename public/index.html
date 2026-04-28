@@ -10,10 +10,16 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://michiganbirdingreport.com">
   <meta property="og:site_name" content="Michigan Birding Report">
+  <meta property="og:image" content="https://michiganbirdingreport.com/og-image.svg">
+  <meta property="og:image:alt" content="Michigan Birding Report live Michigan birding data">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Michigan Birding Report">
+  <meta name="twitter:description" content="Live bird sightings, county pages, migration context, and daily Michigan birding reports.">
+  <meta name="twitter:image" content="https://michiganbirdingreport.com/og-image.svg">
   <link rel="canonical" href="https://michiganbirdingreport.com">
   <meta name="indexnow" content="f8a3b2c1d4e5f6a7b8c9d0e1f2a3b4c5">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","name":"Michigan Birding Report","url":"https://michiganbirdingreport.com","author":{"@type":"Person","name":"Chris Izworski","url":"https://michiganbirdingreport.com/chris-izworski"}}
+  {"@context":"https://schema.org","@type":"WebSite","name":"Michigan Birding Report","url":"https://michiganbirdingreport.com","description":"Live Michigan bird sightings, county birding pages, migration context, and daily field reports.","author":{"@type":"Person","name":"Chris Izworski","url":"https://michiganbirdingreport.com/chris-izworski"},"potentialAction":{"@type":"SearchAction","target":"https://michiganbirdingreport.com/predictions?name={search_term_string}","query-input":"required name=search_term_string"}}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,8 +41,60 @@
     .site-bar nav a { font-size:0.72rem;font-weight:500;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.04em; }
     .site-bar nav a:hover { color:var(--forest); }
 
-    .cond-strip {
+    .intro-band {
       margin-top:3rem;
+      background:linear-gradient(180deg,#fff 0%,var(--bg) 100%);
+      border-bottom:1px solid var(--border-light);
+      padding:1.2rem 1rem;
+    }
+    .intro-grid {
+      max-width:1080px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:minmax(0,1.7fr) minmax(260px,0.9fr);
+      gap:1rem;
+      align-items:stretch;
+    }
+    .intro-copy h1 {
+      font-family:var(--font-display);
+      font-size:clamp(2rem,5vw,3.2rem);
+      line-height:1;
+      color:var(--forest-deep);
+      margin-bottom:0.45rem;
+    }
+    .intro-copy p { color:var(--text-mid); font-size:0.98rem; max-width:720px; }
+    .intro-actions { display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.8rem; }
+    .intro-actions a {
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:0.42rem 0.7rem;
+      border:1px solid var(--border);
+      border-radius:4px;
+      background:#fff;
+      color:var(--forest);
+      font-size:0.78rem;
+      font-weight:600;
+    }
+    .daily-card {
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:150px;
+      background:var(--forest-deep);
+      color:#fff;
+      border-radius:6px;
+      padding:1rem;
+      box-shadow:var(--shadow-sm);
+    }
+    .daily-card:hover { color:#fff; box-shadow:var(--shadow-md); }
+    .daily-label { color:var(--gold-light); font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; margin-bottom:0.4rem; }
+    .daily-title { font-family:var(--font-display); font-size:1.18rem; line-height:1.2; font-weight:700; margin-bottom:0.4rem; }
+    .daily-meta { font-size:0.78rem; color:rgba(255,255,255,0.72); }
+    .daily-cta { margin-top:0.8rem; font-size:0.76rem; color:#fff; font-weight:700; }
+
+    .cond-strip {
+      margin-top:0;
       display:flex;gap:0.75rem;padding:0.5rem 1rem;background:var(--gold-bg);
       border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;
       font-size:0.78rem;color:var(--text-mid);
@@ -84,6 +142,7 @@
       .site-bar .search { max-width:160px; }
       .site-bar nav { gap:0.4rem; }
       .site-bar nav a { font-size:0.65rem; }
+      .intro-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -93,11 +152,34 @@
     <a href="/" class="logo">MBR</a>
     <input class="search" type="text" id="search" placeholder="Search any bird..." aria-label="Search bird">
     <nav>
+      <a href="/counties">Counties</a>
       <a href="/saginaw-bay">Bay</a>
-      <a href="/predictions">Predict</a>
-      <a href="/migration">Migration</a>
+      <a href="https://daily.michiganbirdingreport.com">Daily</a>
     </nav>
   </div>
+
+  <section class="intro-band">
+    <div class="intro-grid">
+      <div class="intro-copy">
+        <h1>Michigan Birding Report</h1>
+        <p>Live Michigan bird sightings, notable eBird reports, county birding pages, Saginaw Bay hotspots, migration context, and daily field reports for birders deciding where to look today.</p>
+        <div class="intro-actions" aria-label="Primary birding resources">
+          <a href="/counties">All 83 Counties</a>
+          <a href="/methodology">Data Methodology</a>
+          <a href="/chris-izworski">About Chris Izworski</a>
+          <a href="/predictions">Species Predictions</a>
+        </div>
+      </div>
+      <a href="https://daily.michiganbirdingreport.com" class="daily-card" id="latestDailyCard">
+        <div>
+          <div class="daily-label">Latest Daily Report</div>
+          <div class="daily-title" id="latestDailyTitle">Michigan Birding Daily</div>
+          <div class="daily-meta" id="latestDailyMeta">A sighting-led report updated every morning.</div>
+        </div>
+        <div class="daily-cta">Read the latest report</div>
+      </a>
+    </div>
+  </section>
 
   <div class="cond-strip" id="cond"><span>Loading conditions...</span></div>
 
@@ -124,6 +206,10 @@
       <a href="/saginaw-bay" class="ql">
         <h3>Saginaw Bay Hub</h3>
         <p>Hotspot map, species list, and conditions for Michigan's premier birding destination.</p>
+      </a>
+      <a href="/counties" class="ql">
+        <h3>County Directory</h3>
+        <p>Crawlable links into all 83 Michigan county birding pages.</p>
       </a>
       <a href="/predictions" class="ql">
         <h3>Ask About Any Bird</h3>
@@ -166,8 +252,10 @@
       </div>
       <div class="footer-links">
         <a href="/saginaw-bay">Saginaw Bay</a>
+        <a href="/counties">County Directory</a>
         <a href="/predictions">Predictions</a>
         <a href="/migration">Migration</a>
+        <a href="/methodology">Methodology</a>
         <a href="/chris-izworski">Chris Izworski</a>
         <a href="https://daily.michiganbirdingreport.com">Michigan Birding Daily</a>
         <a href="https://michigantroutreport.com">Michigan Trout Report</a>

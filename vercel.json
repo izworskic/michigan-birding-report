@@ -71,6 +71,8 @@
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/chris-izworski", "destination": "/chris-izworski.html" },
+    { "source": "/counties", "destination": "/counties.html" },
+    { "source": "/methodology", "destination": "/methodology.html" },
     { "source": "/saginaw-bay", "destination": "/saginaw-bay.html" },
     { "source": "/predictions", "destination": "/predictions.html" },
     { "source": "/migration", "destination": "/migration.html" },

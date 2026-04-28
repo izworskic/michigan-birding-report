@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michigan Birding Report Methodology, Data Sources &amp; Update Cadence</title>
+<meta name="description" content="How Michigan Birding Report uses eBird, BirdCast, National Weather Service forecasts, iNaturalist media, and structured county pages to publish Michigan birding context.">
+<link rel="canonical" href="https://michiganbirdingreport.com/methodology">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Michigan Birding Report Methodology">
+<meta property="og:description" content="Data sources, update cadence, limitations, and responsible-use notes for Michigan Birding Report.">
+<meta property="og:url" content="https://michiganbirdingreport.com/methodology">
+<meta property="og:image" content="https://michiganbirdingreport.com/og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://michiganbirdingreport.com/og-image.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+body { padding-top:56px; }
+.simple-nav { position:fixed; top:0; left:0; right:0; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 18px; background:rgba(255,255,255,0.97); border-bottom:1px solid var(--border); box-shadow:var(--shadow-sm); }
+.simple-nav .brand { font-family:var(--font-display); font-size:20px; font-weight:700; color:var(--forest); }
+.simple-nav .links { display:flex; gap:14px; flex-wrap:wrap; justify-content:flex-end; }
+.simple-nav a { font-size:13px; font-weight:600; color:var(--text-mid); }
+.page-hero { background:var(--forest-deep); color:#fff; padding:36px 20px 30px; }
+.wrap { max-width:880px; margin:0 auto; }
+.eyebrow { color:var(--gold-light); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
+h1 { font-family:var(--font-display); font-size:clamp(34px,6vw,56px); line-height:1.03; margin-bottom:12px; }
+.lede { max-width:760px; color:rgba(255,255,255,0.82); font-size:18px; line-height:1.55; }
+.content { padding:32px 20px 56px; }
+.content h2 { font-family:var(--font-display); color:var(--forest-deep); font-size:28px; margin:30px 0 10px; }
+.content h2:first-child { margin-top:0; }
+.content p { color:var(--text-mid); margin-bottom:15px; font-size:16px; }
+.source-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin:16px 0 24px; }
+.source { background:#fff; border:1px solid var(--border-light); border-radius:6px; padding:14px; box-shadow:var(--shadow-sm); }
+.source strong { display:block; color:var(--forest); margin-bottom:4px; }
+.source span { color:var(--text-mid); font-size:14px; }
+.note { background:var(--gold-bg); border:1px solid var(--border); border-radius:6px; padding:14px; color:var(--text-mid); margin:18px 0; }
+.resource-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+.resource-links a { background:var(--forest-light); border:1px solid #cfe2cf; border-radius:4px; padding:8px 12px; color:var(--forest-deep); font-size:14px; font-weight:700; }
+@media (max-width:640px) {
+  body { padding-top:72px; }
+  .simple-nav { align-items:flex-start; flex-direction:column; }
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Michigan Birding Report Methodology",
+  "author": {
+    "@type": "Person",
+    "name": "Chris Izworski",
+    "url": "https://michiganbirdingreport.com/chris-izworski"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Michigan Birding Report",
+    "url": "https://michiganbirdingreport.com"
+  },
+  "mainEntityOfPage": "https://michiganbirdingreport.com/methodology"
+}
+</script>
+</head>
+<body>
+<header class="simple-nav">
+  <a class="brand" href="/">Michigan Birding Report</a>
+  <nav class="links">
+    <a href="/">Live Map</a>
+    <a href="/counties">Counties</a>
+    <a href="/saginaw-bay">Saginaw Bay</a>
+    <a href="/chris-izworski">Chris</a>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Data Sources and Trust</div>
+    <h1>Methodology</h1>
+    <p class="lede">Michigan Birding Report is a practical field tool. It combines public birding data, migration context, weather, and county pages so Michigan birders can make better decisions before heading outside.</p>
+  </div>
+</section>
+
+<main class="content">
+  <div class="wrap">
+    <h2>Primary Sources</h2>
+    <p>The site is built from public and community data sources. It does not replace field judgment, official conservation guidance, or local access rules.</p>
+    <div class="source-list">
+      <div class="source"><strong>eBird</strong><span>Recent observations, notable sightings, county activity, species names, and hotspot references.</span></div>
+      <div class="source"><strong>BirdCast</strong><span>Migration context and nocturnal movement signals used on migration-focused pages.</span></div>
+      <div class="source"><strong>National Weather Service</strong><span>Weather forecasts used to add wind, temperature, precipitation, and birding-condition context.</span></div>
+      <div class="source"><strong>iNaturalist and Xeno-canto</strong><span>Public media references used for species pages where available.</span></div>
+    </div>
+
+    <h2>Update Cadence</h2>
+    <p>The live map and notable sightings feed are served through cached API routes. Most public pages are designed to refresh quickly while still using caching so the site stays fast and stable.</p>
+    <p>Daily birding reports are published on the companion site, <a href="https://daily.michiganbirdingreport.com">Michigan Birding Daily</a>. The daily system looks for a notable or recent statewide sighting first. If no useful statewide signal is available, it falls back to county rotation so the archive continues growing across Michigan.</p>
+
+    <h2>How County Pages Work</h2>
+    <p>Each county page uses a Michigan county eBird region code, recent observations, and sighting locations to create a local birding snapshot. Pages are meant to answer practical questions: what has been reported, where activity is concentrated, and what species are worth looking into next.</p>
+
+    <h2>Limitations</h2>
+    <div class="note">
+      Sightings can be delayed, private locations may be hidden, observer effort varies by county, and rare reports may change after review. Treat the site as a starting point, then verify sensitive sightings and follow ethical birding practices.
+    </div>
+    <p>Michigan Birding Report avoids publishing private access guidance and does not encourage disturbance of sensitive birds, nesting areas, private land, or restricted habitat.</p>
+
+    <h2>Operator</h2>
+    <p>The site is founded and operated by <a href="/chris-izworski">Chris Izworski</a> from Bay City, Michigan. It is part of a broader set of Michigan data projects focused on making public outdoor and Great Lakes information easier to read.</p>
+    <div class="resource-links">
+      <a href="/counties">Browse counties</a>
+      <a href="/">Open live map</a>
+      <a href="https://daily.michiganbirdingreport.com">Read daily report</a>
+      <a href="/chris-izworski">Chris Izworski profile</a>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <h3>Michigan Birding Report</h3>
+      <p>Live eBird sightings, county pages, migration context, and daily field reports for Michigan birders.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Live Map</a>
+      <a href="/counties">County Directory</a>
+      <a href="/chris-izworski">Chris Izworski</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
