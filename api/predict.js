@@ -1,5 +1,5 @@
 /**
- * api/predict.js — Weather-driven birding predictions + ask about any bird
+ * api/predict.js: Weather-driven birding predictions + ask about any bird
  * 
  * Two modes:
  *   ?mode=forecast&region=saginaw-bay  → What to expect this weekend
@@ -217,7 +217,7 @@ Write a JSON response:
   "activity": "2-3 sentences: what is this species doing right now given the season and weather? Be specific.",
   "findIt": "2 sentences: where in Michigan to look and what time of day. Name real places.",
   "lookFor": "1-2 sentences: key field marks or behaviors to watch for right now.",
-  "likelihood": "low/medium/high — how likely is a Michigan birder to see this species today?"
+  "likelihood": "low/medium/high: how likely is a Michigan birder to see this species today?"
 }
 
 Return ONLY valid JSON.`;

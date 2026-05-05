@@ -1,5 +1,5 @@
 /**
- * api/sounds.js — Bird sounds from Xeno-canto API v3
+ * api/sounds.js: Bird sounds from Xeno-canto API v3
  * Returns song/call recordings for a given species
  */
 

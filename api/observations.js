@@ -1,5 +1,5 @@
 /**
- * api/observations.js — Recent observations by region
+ * api/observations.js: Recent observations by region
  * Supports Michigan regions (UP, NLP, SLP) or county codes
  */
 

@@ -1,4 +1,4 @@
-# MICHIGAN BIRDING REPORT — FINAL REDESIGN
+# MICHIGAN BIRDING REPORT: FINAL REDESIGN
 
 ## The Birder Test
 
@@ -58,7 +58,7 @@ FIX: Conditions strip → MAP → Feed. No KPIs. The map IS the data.
 
 [Thin conditions strip: 68° SW 12mph · Migration favorable tonight]
 
-[FULL-WIDTH LEAFLET MAP — 50vh height]
+[FULL-WIDTH LEAFLET MAP: 50vh height]
 [  Every green dot = a notable sighting this week from eBird     ]
 [  Tap dot → popup: species name, location, date, "View profile →"]
 
@@ -84,22 +84,22 @@ Rules:
 
 ```
 [Nav]
-[Hero: "Saginaw Bay Birding" — one sentence, not a paragraph]
+[Hero: "Saginaw Bay Birding": one sentence, not a paragraph]
 [Conditions: Bay County weather + wind + birding quality]
 
-[MAP — 400px — TWO layers:]
+[MAP: 400px: TWO layers:]
 [  Layer 1: Green pins = 8 hotspot locations (static, labeled)]
 [  Layer 2: Gold dots = actual bird observations with lat/lng  ]
 [  Tap pin → hotspot name, species count, "View on eBird"      ]
 [  Tap dot → species name, date, location                      ]
 
 [Hotspot Leaderboard:]
-[  1. Tawas Point — 52 species — top: Yellow-rumped Warbler, Hermit Thrush]
-[  2. Tobico Marsh — 41 species — top: Great Egret, Sora]
-[  3. Nayanquing Point — 38 species — top: Virginia Rail, American Bittern]
+[  1. Tawas Point: 52 species: top: Yellow-rumped Warbler, Hermit Thrush]
+[  2. Tobico Marsh: 41 species: top: Great Egret, Sora]
+[  3. Nayanquing Point: 38 species: top: Virginia Rail, American Bittern]
 [  (ranked by species count, not alphabetical)]
 
-[Full Species List — grouped:]
+[Full Species List: grouped:]
 [  WATERFOWL (12): Mallard, Wood Duck, Blue-winged Teal...]
 [  SHOREBIRDS (8): Killdeer, Greater Yellowlegs...]
 [  RAPTORS (4): Bald Eagle, Red-tailed Hawk...]

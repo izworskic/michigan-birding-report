@@ -1,5 +1,5 @@
 /**
- * api/recommend.js — Claude Haiku birding recommendations
+ * api/recommend.js: Claude Haiku birding recommendations
  * Given current conditions, recommends where to bird and what to look for
  */
 

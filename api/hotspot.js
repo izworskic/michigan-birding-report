@@ -1,5 +1,5 @@
 /**
- * api/hotspot.js — Sightings at Saginaw Bay region or specific locations
+ * api/hotspot.js: Sightings at Saginaw Bay region or specific locations
  * Uses county-level queries for reliable data coverage
  */
 

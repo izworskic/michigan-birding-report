@@ -51,8 +51,8 @@
     <h1 id="countyName">Loading...</h1>
     <p class="lead" id="countyLead"></p>
     <div class="county-stats">
-      <div class="county-stat"><div class="num" id="spCount">—</div><div class="lbl">Species</div></div>
-      <div class="county-stat"><div class="num" id="obsCount">—</div><div class="lbl">Observations</div></div>
+      <div class="county-stat"><div class="num" id="spCount">-</div><div class="lbl">Species</div></div>
+      <div class="county-stat"><div class="num" id="obsCount">-</div><div class="lbl">Observations</div></div>
     </div>
   </div>
   <div class="county-content">
@@ -92,7 +92,7 @@
     const name = COUNTIES[fips];
     const code = 'US-MI-' + fips;
 
-    document.title = `Birding in ${name} County, Michigan — Michigan Birding Report`;
+    document.title = `Birding in ${name} County, Michigan: Michigan Birding Report`;
     document.getElementById('pageMeta').content = `Real-time bird sightings, species list, and hotspots for ${name} County, Michigan. Updated from eBird every 15 minutes.`;
     document.getElementById('canonical').href = `https://birding.chrisizworski.com/county/${fips}`;
     document.getElementById('countyName').textContent = `${name} County Birding`;

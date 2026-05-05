@@ -1,14 +1,14 @@
-# Michigan Birding Report — Quality Scoring Matrix & Execution Plan
+# Michigan Birding Report: Quality Scoring Matrix & Execution Plan
 
 ## The Birder's Core Questions (Value Function)
 
 Every page must answer at least one of these. If it doesn't, it has no reason to exist.
 
-1. **"What's happening right now?"** — Live sightings, conditions, migration activity
-2. **"What can I see today, and where?"** — Species + locations + map
-3. **"Tell me about this bird"** — ID, behavior, status, seasonal context
-4. **"Where should I go birding?"** — Hotspot recommendations with data
-5. **"What's coming next?"** — Migration forecast, seasonal preview
+1. **"What's happening right now?"**: Live sightings, conditions, migration activity
+2. **"What can I see today, and where?"**: Species + locations + map
+3. **"Tell me about this bird"**: ID, behavior, status, seasonal context
+4. **"Where should I go birding?"**: Hotspot recommendations with data
+5. **"What's coming next?"**: Migration forecast, seasonal preview
 
 ## Scoring Matrix (0-5 per dimension, 30 max per page)
 
@@ -24,57 +24,57 @@ Every page must answer at least one of these. If it doesn't, it has no reason to
 ## Current State Audit
 
 ### Homepage (/)
-- Answers question: 3/5 — Shows notable birds but "80 Bay species" is context-free noise
-- Has a map: 4/5 — Statewide notable map works, but no Bay map
-- Fresh data: 4/5 — Notable feed is live, but KPIs feel disconnected
-- Actionable: 2/5 — Shows birds but doesn't say "go HERE today"
-- Linked depth: 3/5 — Cards link to species profiles
-- SEO target: 4/5 — Good title/meta for "Michigan birding"
+- Answers question: 3/5: Shows notable birds but "80 Bay species" is context-free noise
+- Has a map: 4/5: Statewide notable map works, but no Bay map
+- Fresh data: 4/5: Notable feed is live, but KPIs feel disconnected
+- Actionable: 2/5: Shows birds but doesn't say "go HERE today"
+- Linked depth: 3/5: Cards link to species profiles
+- SEO target: 4/5: Good title/meta for "Michigan birding"
 - **TOTAL: 20/30**
 
 ### Saginaw Bay (/saginaw-bay)
-- Answers question: 2/5 — Lists species but no "so what" context
-- Has a map: 0/5 — **NO MAP. Critical failure.** 8 hotspots, no map.
-- Fresh data: 3/5 — Species list is live but feels like a dump
-- Actionable: 2/5 — Hotspot descriptions exist but no "go here because X"
-- Linked depth: 3/5 — Species link to profiles, hotspots link to eBird
-- SEO target: 4/5 — "Saginaw Bay birding" is a real query
+- Answers question: 2/5: Lists species but no "so what" context
+- Has a map: 0/5: **NO MAP. Critical failure.** 8 hotspots, no map.
+- Fresh data: 3/5: Species list is live but feels like a dump
+- Actionable: 2/5: Hotspot descriptions exist but no "go here because X"
+- Linked depth: 3/5: Species link to profiles, hotspots link to eBird
+- SEO target: 4/5: "Saginaw Bay birding" is a real query
 - **TOTAL: 14/30** ← Worst page
 
 ### Species Profile (/species/{code})
-- Answers question: 5/5 — Directly answers "tell me about this bird"
-- Has a map: 4/5 — Sighting map with markers
-- Fresh data: 4/5 — Live eBird sightings + Haiku seasonal text
-- Actionable: 4/5 — "Where to find" + "look for" sections
-- Linked depth: 3/5 — Links back to home, audio, photos
-- SEO target: 3/5 — Species names are searched but URL structure could be cleaner
+- Answers question: 5/5: Directly answers "tell me about this bird"
+- Has a map: 4/5: Sighting map with markers
+- Fresh data: 4/5: Live eBird sightings + Haiku seasonal text
+- Actionable: 4/5: "Where to find" + "look for" sections
+- Linked depth: 3/5: Links back to home, audio, photos
+- SEO target: 3/5: Species names are searched but URL structure could be cleaner
 - **TOTAL: 23/30** ← Best page
 
 ### Predictions (/predictions)
-- Answers question: 5/5 — Directly answers "what can I see" + "ask about a bird"
-- Has a map: 0/5 — **No map at all**
-- Fresh data: 5/5 — Live weather + Haiku predictions
-- Actionable: 5/5 — Specific locations, species, timing
-- Linked depth: 2/5 — Doesn't link to species profiles from predictions
-- SEO target: 3/5 — "Michigan birding forecast" is a real query
+- Answers question: 5/5: Directly answers "what can I see" + "ask about a bird"
+- Has a map: 0/5: **No map at all**
+- Fresh data: 5/5: Live weather + Haiku predictions
+- Actionable: 5/5: Specific locations, species, timing
+- Linked depth: 2/5: Doesn't link to species profiles from predictions
+- SEO target: 3/5: "Michigan birding forecast" is a real query
 - **TOTAL: 20/30**
 
 ### Migration (/migration)
-- Answers question: 3/5 — Timeline and links but no live data on page
-- Has a map: 0/5 — **Links to BirdCast but no embedded map**
-- Fresh data: 2/5 — Conditions badge is live, rest is static
-- Actionable: 3/5 — Tells you when but not specifically where today
-- Linked depth: 4/5 — Good BirdCast links + county links
-- SEO target: 4/5 — "Michigan bird migration" is a real query
+- Answers question: 3/5: Timeline and links but no live data on page
+- Has a map: 0/5: **Links to BirdCast but no embedded map**
+- Fresh data: 2/5: Conditions badge is live, rest is static
+- Actionable: 3/5: Tells you when but not specifically where today
+- Linked depth: 4/5: Good BirdCast links + county links
+- SEO target: 4/5: "Michigan bird migration" is a real query
 - **TOTAL: 16/30**
 
 ### County Pages (/county/{fips})
-- Answers question: 3/5 — Shows species for a county
-- Has a map: 4/5 — Has a Leaflet map
-- Fresh data: 4/5 — Live eBird data
-- Actionable: 2/5 — Lists birds but doesn't recommend hotspots or timing
-- Linked depth: 4/5 — Cross-links to other counties + species
-- SEO target: 5/5 — "birding [county] county michigan" is perfect long-tail
+- Answers question: 3/5: Shows species for a county
+- Has a map: 4/5: Has a Leaflet map
+- Fresh data: 4/5: Live eBird data
+- Actionable: 2/5: Lists birds but doesn't recommend hotspots or timing
+- Linked depth: 4/5: Cross-links to other counties + species
+- SEO target: 5/5: "birding [county] county michigan" is perfect long-tail
 - **TOTAL: 22/30**
 
 ## Gap Analysis (Priority Order)

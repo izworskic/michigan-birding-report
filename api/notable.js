@@ -1,5 +1,5 @@
 /**
- * api/notable.js — Notable/rare bird sightings across Michigan
+ * api/notable.js: Notable/rare bird sightings across Michigan
  * Returns recent notable sightings with images
  */
 
