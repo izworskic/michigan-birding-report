@@ -1,14 +1,14 @@
 {
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "birding.chrisizworski.com"
         }
       ],
-      "destination": "https://michiganbirdingreport.com/:path*",
+      "destination": "https://michiganbirdingreport.com/$1",
       "permanent": true
     }
   ],
