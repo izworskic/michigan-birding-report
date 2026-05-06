@@ -1,4 +1,17 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "birding.chrisizworski.com"
+        }
+      ],
+      "destination": "https://michiganbirdingreport.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
