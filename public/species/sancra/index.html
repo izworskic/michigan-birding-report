@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandhill Crane in Michigan: Michigan Birding Report</title>
+  <meta name="description" content="Sandhill Crane (Antigone canadensis) in Michigan. Identification, range, habitat, best counties, and recent eBird sightings. Curated by Chris Izworski.">
+  <link rel="canonical" href="https://michiganbirdingreport.com/species/sancra">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Sandhill Crane in Michigan: Michigan Birding Report">
+  <meta property="og:description" content="Sandhill Crane (Antigone canadensis): identification, Michigan range, and recent sightings.">
+  <meta property="og:url" content="https://michiganbirdingreport.com/species/sancra">
+  <meta property="og:image" content="https://michiganbirdingreport.com/placeholder-bird.svg">
+  <meta property="og:site_name" content="Michigan Birding Report">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Sandhill Crane in Michigan: Michigan Birding Report">
+  <meta name="twitter:description" content="Sandhill Crane (Antigone canadensis): identification, Michigan range, and recent sightings.">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Sandhill Crane in Michigan: Michigan Birding Report", "description": "Sandhill Crane (Antigone canadensis) in Michigan. Identification, range, habitat, best counties, and recent eBird sightings. Curated by Chris Izworski.", "url": "https://michiganbirdingreport.com/species/sancra", "isPartOf": {"@type": "WebSite", "name": "Michigan Birding Report", "url": "https://michiganbirdingreport.com"}, "author": {"@type": "Person", "name": "Chris Izworski", "url": "https://chrisizworski.com"}, "about": {"@type": "Thing", "name": "Sandhill Crane", "alternateName": "Antigone canadensis"}}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .species-hero {
+      padding: 7rem 2rem 3rem;
+      background: linear-gradient(165deg, var(--forest-deep) 0%, #0d1f12 60%, var(--forest) 100%);
+      display: flex;
+      gap: 2.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .species-hero-img {
+      width: 320px;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 2px solid rgba(212,160,60,0.2);
+      flex-shrink: 0;
+    }
+    .species-hero-info { flex: 1; min-width: 280px; }
+    .species-hero-info .back { font-size: 0.8rem; color: var(--gold-light); display: block; margin-bottom: 1rem; }
+    .species-hero-info h1 { color: #fff;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+    .species-sci {
+      font-family: var(--font-display);
+      font-style: italic; color: rgba(255,255,255,0.7);
+      font-size: 1.2rem;
+      color: var(--text-mid);
+      margin-bottom: 1rem;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      background: rgba(212,160,60,0.15);
+      color: var(--gold);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 2px;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .right-now-box {
+      margin-top: 1.25rem;
+      padding: 1.25rem;
+      background: rgba(212,160,60,0.08);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    .right-now-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    .profile-section {
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(212,160,60,0.08);
+      border-radius: 4px;
+    }
+    .profile-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .profile-section p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text-mid);
+    }
+
+    /* Map */
+    .map-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+    .map-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    #sightingsMap {
+      width: 100%;
+      height: 450px;
+      border-radius: 4px;
+      border: 1px solid rgba(212,160,60,0.15);
+    }
+    .sighting-list {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 0.75rem;
+    }
+    .sighting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(212,160,60,0.06);
+      border-radius: 3px;
+      font-size: 0.8rem;
+    }
+    .sighting-row .loc { color: var(--text); font-weight: 500; }
+    .sighting-row .dt { color: var(--text-mid); }
+    .sighting-row .ct { color: var(--gold-light); }
+
+    /* Sounds */
+    .sounds-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+    .sounds-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .sound-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--forest);
+      border: 1px solid rgba(212,160,60,0.1);
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .sound-play {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .sound-play:hover { background: var(--gold-light); }
+    .sound-play svg { fill: var(--forest-deep); }
+    .sound-info { flex: 1; }
+    .sound-info .type { font-weight: 600; color: var(--text); font-size: 0.9rem; }
+    .sound-info .meta { font-size: 0.75rem; color: var(--text-mid); }
+    audio { display: none; }
+
+    /* iNat photos */
+    .photos-row {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    .photos-row img {
+      width: 160px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 3px;
+      border: 1px solid rgba(212,160,60,0.1);
+      flex-shrink: 0;
+    }
+    .photos-label {
+      font-size: 0.7rem;
+      color: var(--text-mid);
+      margin-top: 0.4rem;
+    }
+
+    .fun-fact {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+    .fun-fact-box {
+      padding: 1.5rem 2rem;
+      background: rgba(212,160,60,0.06);
+      border: 1px solid rgba(212,160,60,0.15);
+      border-radius: 4px;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-style: italic; color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    @media (max-width: 768px) {
+      .species-hero { flex-direction: column; padding-top: 5rem; }
+      .species-hero-img { width: 100%; height: 220px; }
+      .profile-grid { grid-template-columns: 1fr; }
+      #sightingsMap { height: 300px; }
+    }
+
+    .loading-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      gap: 1rem;
+      color: var(--text-mid);
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/" class="nav-logo">MBR</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/saginaw-bay">Saginaw Bay</a>
+      <a href="/migration">Migration</a>
+    </div>
+  </nav>
+
+  <div id="pageContent"><div class="species-hero"><img class="species-hero-img" src="https://michiganbirdingreport.com/placeholder-bird.svg" alt="Sandhill Crane" loading="eager"><div class="species-hero-info"><a href="/" class="back">← Michigan Birding Report</a><h1>Sandhill Crane</h1><div class="species-sci">Antigone canadensis</div><span class="status-badge">Common breeding migrant in central and southern Michigan; spectacular fall staging</span></div></div></div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Michigan Birding Report</h3>
+        <p>Built by <a href="https://chrisizworski.com" target="_blank">Chris Izworski</a>, Bay City, Michigan. Also see the <a href="https://trout.chrisizworski.com" target="_blank">Michigan Trout Report</a> and <a href="https://freighterviewfarms.com" target="_blank">Freighter View Farms</a>. Species data from <a href="https://ebird.org" target="_blank">eBird</a>. Photos from <a href="https://www.inaturalist.org" target="_blank">iNaturalist</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+  (function() {
+    // Parse species info from URL: /species/kirwar?name=...&sci=...
+    const path = window.location.pathname;
+    const params = new URLSearchParams(window.location.search);
+    const code = path.split('/species/')[1] || params.get('code');
+    const name = params.get('name') || '';
+    const sci = params.get('sci') || '';
+
+    if (!code) {
+      document.getElementById('pageContent').innerHTML = '<div class="loading-page"><p>No species specified. <a href="/">Return home</a></p></div>';
+      return;
+    }
+
+    // Update page title
+    if (name) document.title = `${name}: Michigan Birding Report`;
+
+    let currentAudio = null;
+
+    async function loadProfile() {
+      const container = document.getElementById('pageContent');
+      try {
+        const res = await fetch(`/api/species-profile?code=${code}&name=${encodeURIComponent(name)}&sci=${encodeURIComponent(sci)}`);
+        if (!res.ok) throw new Error('API ' + res.status);
+        const d = await res.json();
+
+        const imgSrc = d.image?.url || '/placeholder-bird.svg';
+        const sightings = d.recentSightings || [];
+        const photos = d.inatPhotos || [];
+
+        container.innerHTML = `
+          <div class="species-hero">
+            <img class="species-hero-img" src="${imgSrc}" alt="${d.comName}" onerror="this.src='/placeholder-bird.svg'">
+            <div class="species-hero-info">
+              <a href="/" class="back">← Michigan Birding Report</a>
+              <h1>${d.comName}</h1>
+              <div class="species-sci">${d.sciName}</div>
+              <span class="status-badge">${d.season} ${new Date().getFullYear()}</span>
+              ${d.generatedBy === 'haiku' ? '<span class="status-badge">AI-Enhanced</span>' : ''}
+              <div class="right-now-box">
+                <div class="right-now-label">What's Happening Now</div>
+                ${d.rightNow || 'No current activity data available.'}
+              </div>
+            </div>
+          </div>
+
+          <div class="map-section">
+            <h2>Recent Sightings Across Michigan</h2>
+            ${sightings.length ? `
+              <p style="font-size:0.82rem;color:var(--text-mid);margin-bottom:1rem">${sightings.length} report${sightings.length > 1 ? 's' : ''} in the past 30 days from eBird</p>
+              <div id="sightingsMap"></div>
+              <div class="sighting-list">
+                ${sightings.map(s => {
+                  const dt = new Date(s.obsDt?.replace(' ','T') || '');
+                  const now = new Date();
+                  const days = Math.floor((now - dt) / 86400000);
+                  let dateStr;
+                  if (days === 0) dateStr = 'Today';
+                  else if (days === 1) dateStr = 'Yesterday';
+                  else if (days < 7) dateStr = days + ' days ago';
+                  else dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                  return `<div class="sighting-row">
+                    <span class="loc">${(s.locName||'').substring(0, 40)}</span>
+                    <span class="dt">${dateStr}</span>
+                    ${s.howMany ? `<span class="ct">${s.howMany}</span>` : ''}
+                  </div>`;
+                }).join('')}
+              </div>
+            ` : `<div style="padding:1.5rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:6px">
+              <p style="color:var(--text-mid);margin-bottom:0.5rem">No eBird reports for ${d.comName} in Michigan in the past 30 days.</p>
+              <p style="font-size:0.82rem;color:var(--text-light)">This species may not be present in Michigan during ${d.season}, or sightings may be underreported. Check the seasonal information below, or <a href="https://ebird.org/species/${code}" target="_blank" style="color:var(--forest)">view the full eBird species page</a> for historical data.</p>
+            </div>`}
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-section">
+              <h3>Michigan Status</h3>
+              <p>${d.michiganStatus || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Where to Find</h3>
+              <p>${d.whereToFind || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Field Identification</h3>
+              <p>${d.fieldMarks || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Habitat</h3>
+              <p>${d.habitat || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Nesting</h3>
+              <p>${d.nesting || ''}</p>
+            </div>
+            <div class="profile-section">
+              <h3>Conservation</h3>
+              <p>${d.conservation || ''}</p>
+            </div>
+          </div>
+
+          ${d.funFact ? `<div class="fun-fact"><div class="fun-fact-box">${d.funFact}</div></div>` : ''}
+
+          <div class="sounds-section">
+            <h2>Listen</h2>
+            <div id="soundsContainer"><div class="loading-state"><div class="loading-spinner"></div></div></div>
+          </div>
+
+          ${photos.length ? `
+            <div class="map-section">
+              <h2>Recent Photos from Michigan</h2>
+              <div class="photos-row">
+                ${photos.map(p => `<a href="${p.inatUrl}" target="_blank" rel="noopener"><img src="${p.photoUrl}" alt="${d.comName}" loading="lazy" onerror="this.style.display='none'"></a>`).join('')}
+              </div>
+              <div class="photos-label">Photos from iNaturalist (CC licensed). Observers: ${photos.map(p => p.observer).join(', ')}</div>
+            </div>
+          ` : ''}
+
+          <div class="map-section">
+            <div style="padding:2rem;background:var(--forest);border:1px solid rgba(212,160,60,0.15);border-radius:4px;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap">
+              <div style="font-size:2.5rem">🔭</div>
+              <div style="flex:1;min-width:200px">
+                <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:var(--gold);margin-bottom:0.3rem">Spot More Birds This Season</div>
+                <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.5;margin:0">Quality optics make all the difference for field identification. The Nikon Monarch M5 8x42 delivers outstanding clarity for Michigan birding in all conditions.</p>
+              </div>
+              <a href="https://www.amazon.com/dp/B09GV5J647?tag=michigantrout-20" target="_blank" rel="noopener" class="btn btn-primary" style="white-space:nowrap">View on Amazon →</a>
+            </div>
+            <p style="font-size:0.65rem;color:var(--text-mid);opacity:0.5;margin-top:0.75rem">As an Amazon Associate I earn from qualifying purchases.</p>
+          </div>
+        `;
+
+        // Init map
+        if (sightings.length) initMap(sightings, d.comName);
+
+        // Load sounds
+        loadSounds(d.sciName || sci);
+
+      } catch (err) {
+        container.innerHTML = `<div class="loading-page">
+          <p>Error loading species profile.</p>
+          <p style="font-size:0.8rem;opacity:0.6">${err.message}</p>
+          <a href="/" class="btn btn-outline">Return Home</a>
+        </div>`;
+      }
+    }
+
+    function initMap(sightings, comName) {
+      const validPts = sightings.filter(s => s.lat && s.lng);
+      if (!validPts.length) return;
+
+      const map = L.map('sightingsMap', {
+        scrollWheelZoom: false,
+      }).setView([44.3, -84.7], 6);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        maxZoom: 16,
+      }).addTo(map);
+
+      const goldIcon = L.divIcon({
+        className: '',
+        html: '<div style="width:16px;height:16px;background:#d4a03c;border:3px solid #1a2e1a;border-radius:50%;box-shadow:0 0 8px rgba(212,160,60,0.7)"></div>',
+        iconSize: [16, 16],
+        iconAnchor: [8, 8],
+      });
+
+      validPts.forEach(s => {
+        const dt = new Date(s.obsDt?.replace(' ','T') || '');
+        const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        L.marker([s.lat, s.lng], { icon: goldIcon })
+          .addTo(map)
+          .bindPopup(`<b>${comName}</b><br>${s.locName || ''}<br>${dateStr}${s.howMany ? ' · ' + s.howMany : ''}`);
+      });
+
+      if (validPts.length > 1) {
+        const bounds = L.latLngBounds(validPts.map(s => [s.lat, s.lng]));
+        map.fitBounds(bounds, { padding: [30, 30] });
+      } else {
+        map.setView([validPts[0].lat, validPts[0].lng], 10);
+      }
+    }
+
+    async function loadSounds(sciName) {
+      const container = document.getElementById('soundsContainer');
+      if (!sciName) {
+        container.innerHTML = '<p style="color:var(--text-mid);font-size:0.9rem">No audio available.</p>';
+        return;
+      }
+      try {
+        const res = await fetch(`/api/sounds?species=${encodeURIComponent(sciName)}&type=song&max=3`);
+        if (!res.ok) throw new Error('Sounds API error');
+        const data = await res.json();
+
+        if (!data.recordings || !data.recordings.length) {
+          container.innerHTML = '<p style="color:var(--text-mid);font-size:0.9rem">No recordings available on Xeno-canto.</p>';
+          return;
+        }
+
+        container.innerHTML = data.recordings.map((r, i) => `
+          <div class="sound-card">
+            <button class="sound-play" onclick="toggleAudio(${i}, '${r.audioUrl}')">
+              <svg width="18" height="18" viewBox="0 0 24 24" id="playIcon${i}"><polygon points="6,4 20,12 6,20"/></svg>
+            </button>
+            <div class="sound-info">
+              <div class="type">${r.type || 'Song'} · ${r.duration || ''}</div>
+              <div class="meta">${r.location || ''} · ${r.recordist || ''} · ${r.license || ''}</div>
+            </div>
+            <audio id="audio${i}" src="${r.audioUrl}" preload="none"></audio>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = '<p style="color:var(--text-mid);font-size:0.9rem">Audio temporarily unavailable.</p>';
+      }
+    }
+
+    // Global audio toggle
+    window.toggleAudio = function(idx, url) {
+      const audio = document.getElementById('audio' + idx);
+      if (!audio) return;
+
+      // Stop any other playing audio
+      if (currentAudio && currentAudio !== audio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      if (audio.paused) {
+        audio.play();
+        currentAudio = audio;
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+        currentAudio = null;
+      }
+    };
+
+    loadProfile();
+  })();
+  </script>
+<section style="max-width:760px;margin:1.5rem auto;padding:0 2rem;color:var(--text);font-size:0.95rem;line-height:1.7">
+      <h2 style="font-family:var(--font-display);font-size:1.6rem;color:var(--forest-deep);margin:1.5rem 0 1rem">Sandhill Crane in Michigan</h2>
+      <p style="font-style:italic;color:var(--text-mid)">Antigone canadensis</p>
+      <p><strong>Identification.</strong> Large gray crane with red crown patch and elongated &#x27;bustle&#x27; of inner wing feathers. Loud, rattling, trumpeting call carries for miles. Often mistaken for Great Blue Heron in flight, but cranes fly with neck extended while herons fly with neck folded.</p>
+      <p><strong>Status in Michigan.</strong> Common breeding migrant in central and southern Michigan; spectacular fall staging. Sandhill Crane has recovered dramatically in Michigan since mid-20th century. Breeding pairs are now common in central and southern counties, particularly in marshes, fens, and wet agricultural fields. Fall staging at the Phyllis Haehnle Sanctuary near Jackson and the Bernard W. Baker Sanctuary near Battle Creek draws thousands of birds each year.</p>
+      <p><strong>Habitat.</strong> Open wetlands, fens, wet meadows, agricultural fields adjacent to marsh.</p>
+      <p><strong>Where to find Sandhill Crane.</strong> Phyllis Haehnle Memorial Sanctuary near Jackson and Bernard W. Baker Sanctuary near Battle Creek are the premier fall staging sites in Michigan, with peak counts in October sometimes exceeding 5,000 birds.</p>
+      <p><strong>Best Michigan counties for Sandhill Crane.</strong> <strong>Calhoun</strong>, <strong>Jackson</strong>, <strong>Washtenaw</strong>, <strong>Lenawee</strong>, <strong>Hillsdale</strong>. Click any county above to see recent Sandhill Crane sightings and hotspot information.</p>
+      <p><strong>Conservation.</strong> Mid-continent population has grown substantially. State special concern status was removed as populations recovered.</p>
+      <p>The sightings table below this section pulls live Sandhill Crane reports from eBird across all 83 Michigan counties, refreshed every 15 minutes. For comprehensive historical records and global range information, the eBird species profile and Cornell Lab of Ornithology Birds of the World account are the authoritative references.</p>
+      <p style="font-size:0.78rem;color:var(--text-light);margin:0.5rem 0 0">Edited by <a href="https://chrisizworski.com" style="color:var(--forest)">Chris Izworski</a>, Bay City, Michigan. Sightings data from <a href="https://ebird.org">eBird</a>, updated every 15 minutes.</p>
+    </section>
+</body>
+</html>

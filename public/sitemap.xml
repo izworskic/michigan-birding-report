@@ -86,19 +86,19 @@
   <url><loc>https://michiganbirdingreport.com/county/161</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
   <url><loc>https://michiganbirdingreport.com/county/163</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
   <url><loc>https://michiganbirdingreport.com/county/165</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/kirwar?name=Kirtlands%20Warbler&amp;sci=Setophaga%20kirtlandii</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/baleag?name=Bald%20Eagle&amp;sci=Haliaeetus%20leucocephalus</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/snoowl1?name=Snowy%20Owl&amp;sci=Bubo%20scandiacus</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/comloo?name=Common%20Loon&amp;sci=Gavia%20immer</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/sancra?name=Sandhill%20Crane&amp;sci=Antigone%20canadensis</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/pilwoo?name=Pileated%20Woodpecker&amp;sci=Dryocopus%20pileatus</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/scatan?name=Scarlet%20Tanager&amp;sci=Piranga%20olivacea</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/indbun?name=Indigo%20Bunting&amp;sci=Passerina%20cyanea</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/balori?name=Baltimore%20Oriole&amp;sci=Icterus%20galbula</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/norcar?name=Northern%20Cardinal&amp;sci=Cardinalis%20cardinalis</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/bkcchi?name=Black-capped%20Chickadee&amp;sci=Poecile%20atricapillus</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/amerob?name=American%20Robin&amp;sci=Turdus%20migratorius</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/grbher3?name=Great%20Blue%20Heron&amp;sci=Ardea%20herodias</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/wooduc?name=Wood%20Duck&amp;sci=Aix%20sponsa</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://michiganbirdingreport.com/species/rethaw?name=Red-tailed%20Hawk&amp;sci=Buteo%20jamaicensis</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/kirwar</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/baleag</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/snoowl1</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/comloo</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/sancra</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/pilwoo</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/scatan</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/indbun</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/balori</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/norcar</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/bkcchi</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/amerob</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/grbher3</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/wooduc</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://michiganbirdingreport.com/species/rethaw</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
 </urlset>
