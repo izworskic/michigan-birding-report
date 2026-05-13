@@ -212,7 +212,7 @@
         if(!species.length){feed.innerHTML='<p style="color:var(--text-mid)">No sightings in the past 14 days.</p>';return;}
         feed.innerHTML=species.map(sp=>{
           const img=sp.image?.url||'';
-          return `<a href="/species/${sp.speciesCode}?name=${encodeURIComponent(sp.comName)}&sci=${encodeURIComponent(sp.sciName||'')}" class="sp-row">
+          return `<a href="/species/${sp.speciesCode}" class="sp-row">
             ${img?`<img src="${img}" alt="${sp.comName}" loading="lazy" onerror="this.style.display='none'">`:'<div style="width:42px;height:42px;background:var(--bg-alt);border-radius:3px;display:flex;align-items:center;justify-content:center">🐦</div>'}
             <div>
               <div class="sn">${sp.comName}</div>

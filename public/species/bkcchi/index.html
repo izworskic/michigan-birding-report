@@ -279,8 +279,8 @@
     const path = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
     const code = path.split('/species/')[1] || params.get('code');
-    const name = params.get('name') || '';
-    const sci = params.get('sci') || '';
+    const name = params.get('name') || 'Black-capped Chickadee';
+    const sci = params.get('sci') || 'Poecile atricapillus';
 
     if (!code) {
       document.getElementById('pageContent').innerHTML = '<div class="loading-page"><p>No species specified. <a href="/">Return home</a></p></div>';

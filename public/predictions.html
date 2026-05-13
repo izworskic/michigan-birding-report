@@ -411,7 +411,7 @@
           (d.sightings||[]).forEach(s=>{
             if(!s.lat||!s.lng)return;
             L.marker([s.lat,s.lng],{icon})
-              .bindPopup(`<b>${s.comName}</b><br><span style="font-size:0.8rem;color:#555">${(s.locName||'').substring(0,30)}</span><br><a href="/species/${s.speciesCode}?name=${encodeURIComponent(s.comName)}&sci=${encodeURIComponent(s.sciName||'')}" style="font-size:0.75rem;color:#1a5c2a">Profile →</a>`)
+              .bindPopup(`<b>${s.comName}</b><br><span style="font-size:0.8rem;color:#555">${(s.locName||'').substring(0,30)}</span><br><a href="/species/${s.speciesCode}" style="font-size:0.75rem;color:#1a5c2a">Profile →</a>`)
               .addTo(pmap);
           });
         }).catch(()=>{});

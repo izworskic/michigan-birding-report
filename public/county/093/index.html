@@ -172,7 +172,7 @@
         grid.innerHTML = top.map(o => {
           const dt = new Date(o.obsDt?.replace(' ','T')||'');
           const ds = dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-          return `<a href="/species/${o.speciesCode}?name=${encodeURIComponent(o.comName)}&sci=${encodeURIComponent(o.sciName||'')}" class="sp-card">
+          return `<a href="/species/${o.speciesCode}" class="sp-card">
             <img src="https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(o.comName)}&rank=species&per_page=1" alt="" style="display:none" data-name="${o.comName}" class="lazy-inat">
             <div><div class="name">${o.comName}</div><div class="meta">${ds}${o.howMany ? ' · '+o.howMany : ''} · ${(o.locName||'').substring(0,25)}</div></div>
           </a>`;

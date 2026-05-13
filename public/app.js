@@ -15,7 +15,7 @@
     return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
   function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'…':s||'';}
-  function specUrl(s){return `/species/${s.speciesCode}?name=${encodeURIComponent(s.comName)}&sci=${encodeURIComponent(s.sciName||'')}`;}
+  function specUrl(s){return `/species/${s.speciesCode}`;}
 
   // -- Regions --
   const UP='003,013,033,041,043,053,061,071,083,095,097,103,109,131,153'.split(',');
