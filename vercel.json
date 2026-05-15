@@ -13,14 +13,42 @@
     }
   ],
   "rewrites": [
-    { "source": "/robots.txt", "destination": "/robots.txt" },
-    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
-    { "source": "/saginaw-bay", "destination": "/saginaw-bay.html" },
-    { "source": "/predictions", "destination": "/predictions.html" },
-    { "source": "/migration", "destination": "/migration.html" },
-    { "source": "/county/:fips", "destination": "/county.html" },
-    { "source": "/species/:code", "destination": "/species.html" },
-    { "source": "/((?!api/)(?!_next/)(?!.*\\.).*)", "destination": "/index.html" }
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/saginaw-bay",
+      "destination": "/saginaw-bay.html"
+    },
+    {
+      "source": "/predictions",
+      "destination": "/predictions.html"
+    },
+    {
+      "source": "/migration",
+      "destination": "/migration.html"
+    },
+    {
+      "source": "/county/:fips",
+      "destination": "/county.html"
+    },
+    {
+      "source": "/species/:code",
+      "destination": "/species.html"
+    },
+    {
+      "source": "/chris-izworski-saginaw-bay-birding",
+      "destination": "/chris-izworski-saginaw-bay-birding.html"
+    },
+    {
+      "source": "/((?!api/)(?!_next/)(?!.*\\.).*)",
+      "destination": "/index.html"
+    }
   ],
   "functions": {
     "api/species-profile.js": {
@@ -44,8 +72,14 @@
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "s-maxage=900, stale-while-revalidate=1800" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" }
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=900, stale-while-revalidate=1800"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
       ]
     }
   ]
