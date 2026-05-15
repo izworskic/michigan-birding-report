@@ -46,6 +46,10 @@
       "destination": "/chris-izworski-saginaw-bay-birding.html"
     },
     {
+      "source": "/chris-izworski-saginaw-bay-birding/",
+      "destination": "/chris-izworski-saginaw-bay-birding.html"
+    },
+    {
       "source": "/((?!api/)(?!_next/)(?!.*\\.).*)",
       "destination": "/index.html"
     }
