@@ -50,6 +50,14 @@
       "destination": "/chris-izworski-saginaw-bay-birding.html"
     },
     {
+      "source": "/chris-izworski-michigan-birding-field-notes",
+      "destination": "/chris-izworski-michigan-birding-field-notes.html"
+    },
+    {
+      "source": "/chris-izworski-michigan-birding-field-notes/",
+      "destination": "/chris-izworski-michigan-birding-field-notes.html"
+    },
+    {
       "source": "/((?!api/)(?!_next/)(?!.*\\.).*)",
       "destination": "/index.html"
     }
