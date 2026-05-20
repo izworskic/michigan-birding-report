@@ -53,6 +53,14 @@
       "destination": "/species.html"
     },
     {
+      "source": "/chris-izworski",
+      "destination": "/chris-izworski.html"
+    },
+    {
+      "source": "/chris-izworski/",
+      "destination": "/chris-izworski.html"
+    },
+    {
       "source": "/chris-izworski-saginaw-bay-birding",
       "destination": "/chris-izworski-saginaw-bay-birding.html"
     },
