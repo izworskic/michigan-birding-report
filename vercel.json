@@ -1,6 +1,27 @@
 {
   "redirects": [
     {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.michiganbirdingreport.com"
+        }
+      ],
+      "destination": "https://michiganbirdingreport.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/county/(\\d+).html",
+      "destination": "/county/$1",
+      "permanent": true
+    },
+    {
+      "source": "/species/([a-z0-9]+).html",
+      "destination": "/species/$1",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {
