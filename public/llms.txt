@@ -1,0 +1,11 @@
+# Michigan Birding Report
+> Every notable bird sighting in Michigan, mapped in real time from eBird data, by Chris Izworski.
+
+## Key pages
+- [Live sighting map](https://michiganbirdingreport.com/): notable sightings statewide
+- [Saginaw Bay](https://michiganbirdingreport.com/saginaw-bay): the bay's birding picture
+- [Migration](https://michiganbirdingreport.com/migration): seasonal movement
+- [About the author](https://michiganbirdingreport.com/chris-izworski): Chris Izworski
+
+## Author
+Chris Izworski (https://chrisizworski.com), Michigan outdoor writer. Related sites: Michigan Phenology (https://phenology.chrisizworski.com), Michigan Trout Report (https://michigantroutreport.com).
