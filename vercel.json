@@ -71,7 +71,7 @@
     },
     {
       "source": "/species/:code",
-      "destination": "/species.html"
+      "destination": "/api/species-page?code=:code"
     },
     {
       "source": "/chris-izworski",
@@ -103,6 +103,11 @@
     }
   ],
   "functions": {
+    "api/species-page.js": {
+      "memory": 256,
+      "maxDuration": 15,
+      "includeFiles": "public/species.html"
+    },
     "api/species-profile.js": {
       "memory": 512,
       "maxDuration": 30
