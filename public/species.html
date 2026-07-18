@@ -280,8 +280,79 @@
       return;
     }
 
-    // Update page title
-    if (name) document.title = `${name}: Michigan Birding Report`;
+    // Give named legacy links an immediate title while the profile loads.
+    if (name) document.title = `${name} in Michigan: Michigan Birding Report`;
+
+    function upsertMeta(selector, attribute, value) {
+      let element = document.head.querySelector(selector);
+      if (!element) {
+        element = document.createElement('meta');
+        const match = selector.match(/\[(?:name|property)="([^"]+)"\]/);
+        const key = selector.includes('[property=') ? 'property' : 'name';
+        if (match) element.setAttribute(key, match[1]);
+        document.head.appendChild(element);
+      }
+      element.setAttribute(attribute, value);
+    }
+
+    function updateDocumentMetadata(species) {
+      const speciesName = species.comName;
+      const scientific = species.sciName ? ` (${species.sciName})` : '';
+      const title = `${speciesName} in Michigan: Michigan Birding Report`;
+      const description = `${speciesName}${scientific} in Michigan: identification, habitat, seasonal activity, and recent eBird sightings.`;
+      const canonical = `${window.location.origin}/species/${encodeURIComponent(code)}`;
+      const image = species.image?.url || `${window.location.origin}/og-card.png`;
+
+      document.title = title;
+      upsertMeta('meta[name="description"]', 'content', description);
+      upsertMeta('meta[property="og:type"]', 'content', 'article');
+      upsertMeta('meta[property="og:title"]', 'content', title);
+      upsertMeta('meta[property="og:description"]', 'content', description);
+      upsertMeta('meta[property="og:url"]', 'content', canonical);
+      upsertMeta('meta[property="og:image"]', 'content', image);
+      upsertMeta('meta[name="twitter:card"]', 'content', 'summary_large_image');
+      upsertMeta('meta[name="twitter:title"]', 'content', title);
+      upsertMeta('meta[name="twitter:description"]', 'content', description);
+      upsertMeta('meta[name="twitter:image"]', 'content', image);
+
+      let canonicalLink = document.head.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement('link');
+        canonicalLink.rel = 'canonical';
+        document.head.appendChild(canonicalLink);
+      }
+      canonicalLink.href = canonical;
+
+      let structuredData = document.getElementById('speciesStructuredData');
+      if (!structuredData) {
+        structuredData = document.createElement('script');
+        structuredData.type = 'application/ld+json';
+        structuredData.id = 'speciesStructuredData';
+        document.head.appendChild(structuredData);
+      }
+      structuredData.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: title,
+        description,
+        url: canonical,
+        isPartOf: {
+          '@type': 'WebSite',
+          name: 'Michigan Birding Report',
+          url: window.location.origin,
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Chris Izworski',
+          url: 'https://chrisizworski.com',
+        },
+        about: {
+          '@type': 'Thing',
+          name: speciesName,
+          alternateName: species.sciName || undefined,
+        },
+      });
+    }
 
     let currentAudio = null;
 
@@ -291,6 +362,8 @@
         const res = await fetch(`/api/species-profile?code=${code}&name=${encodeURIComponent(name)}&sci=${encodeURIComponent(sci)}`);
         if (!res.ok) throw new Error('API ' + res.status);
         const d = await res.json();
+
+        updateDocumentMetadata(d);
 
         const imgSrc = d.image?.url || '/placeholder-bird.svg';
         const sightings = d.recentSightings || [];

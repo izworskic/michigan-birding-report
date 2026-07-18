@@ -8,8 +8,9 @@
  */
 
 const { Redis } = require('@upstash/redis');
-const { getSpeciesObservations, getRecentObservations, getNotableSightings } = require('../lib/ebird');
+const { getSpeciesObservations, getNotableSightings, getTaxonomy } = require('../lib/ebird');
 const { getBestImage, getINatPhotos } = require('../lib/media');
+const { SpeciesIdentityError, resolveSpeciesIdentity } = require('../lib/species-identity');
 
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 const PROFILE_TTL = 86400 * 60; // 60 days
@@ -35,13 +36,7 @@ function getSeason() {
 
 module.exports = async (req, res) => {
   try {
-    const code = req.query.code;        // eBird species code
-    const name = req.query.name;        // common name
-    const sciName = req.query.sci;      // scientific name
-    
-    if (!code || !name) {
-      return res.status(400).json({ error: 'code and name params required' });
-    }
+    const { code, name, sciName } = await resolveSpeciesIdentity(req.query, getTaxonomy);
 
     const season = getSeason();
     const cacheKey = `birding:profile:${code}:${season}`;
@@ -82,17 +77,20 @@ module.exports = async (req, res) => {
     ]);
 
     res.status(200).json({
+      ...profile,
       speciesCode: code,
       comName: name,
-      sciName: sciName || '',
+      sciName: sciName || profile?.sciName || '',
       season,
       image,
       inatPhotos,
       recentSightings,
       cached: !!profile?.generatedBy,
-      ...profile,
     });
   } catch (err) {
+    if (err instanceof SpeciesIdentityError) {
+      return res.status(err.statusCode).json({ error: err.message });
+    }
     console.error('Species profile error:', err);
     res.status(500).json({ error: err.message });
   }
