@@ -4,7 +4,7 @@
   "description": "Real-time birding intelligence for Michigan",
   "private": true,
   "scripts": {
-    "test": "node scripts/test-species-identity.js && node scripts/check-species-seo.mjs"
+    "test": "node scripts/test-species-identity.js && node scripts/test-species-page.js && node scripts/test-species-page-handler.js && node scripts/check-species-seo.mjs"
   },
   "dependencies": {
     "@upstash/redis": "^1.28.0"

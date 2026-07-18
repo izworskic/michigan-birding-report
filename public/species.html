@@ -237,6 +237,38 @@
       gap: 1rem;
       color: var(--text-mid);
     }
+    .species-loading-shell {
+      max-width: 760px;
+      min-height: 60vh;
+      margin: 0 auto;
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+    }
+    .species-loading-shell .back {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--gold-light);
+      font-size: 0.82rem;
+    }
+    .species-loading-shell h1 {
+      margin-bottom: 0.35rem;
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 7vw, 4rem);
+      line-height: 1.08;
+    }
+    .species-loading-shell > p:not(.species-sci) {
+      max-width: 620px;
+      margin: 0.9rem auto;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+    .species-loading-shell .loading-spinner {
+      margin: 2rem auto 0.75rem;
+    }
+    .species-loading-shell .loading-status {
+      font-size: 0.82rem;
+    }
   </style>
 </head>
 <body>
@@ -269,11 +301,12 @@
   <script>
   (function() {
     // Parse species info from URL: /species/kirwar?name=...&sci=...
+    const seededIdentity = window.__SPECIES_IDENTITY__ || {};
     const path = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
-    const code = path.split('/species/')[1] || params.get('code');
-    const name = params.get('name') || '';
-    const sci = params.get('sci') || '';
+    const code = seededIdentity.code || path.split('/species/')[1] || params.get('code');
+    const name = seededIdentity.name || params.get('name') || '';
+    const sci = seededIdentity.sciName || params.get('sci') || '';
 
     if (!code) {
       document.getElementById('pageContent').innerHTML = '<div class="loading-page"><p>No species specified. <a href="/">Return home</a></p></div>';
