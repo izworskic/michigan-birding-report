@@ -18,42 +18,22 @@
       "@id": "https://michiganbirdingreport.com/species#webpage",
       "url": "https://michiganbirdingreport.com/species",
       "name": "Michigan Bird Species",
-      "isPartOf": {
-        "@type": "WebSite",
-        "name": "Michigan Birding Report",
-        "url": "https://michiganbirdingreport.com"
-      },
-      "about": {
-        "@type": "Person",
-        "name": "Chris Izworski"
-      },
-      "description": "Track individual species across Michigan in real time. Each profile, curated by Chris Izworski, maps recent eBird detections, shows seasonal timing, and li"
+      "isPartOf": {"@type": "WebSite","name": "Michigan Birding Report","url": "https://michiganbirdingreport.com"},
+      "about": {"@type": "Person","name": "Chris Izworski"},
+      "description": "Track individual species across Michigan in real time with recent eBird detections, seasonal timing, recordings, and identification notes."
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://michiganbirdingreport.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Michigan Bird Species",
-          "item": "https://michiganbirdingreport.com/species"
-        }
+        {"@type":"ListItem","position":1,"name":"Home","item":"https://michiganbirdingreport.com"},
+        {"@type":"ListItem","position":2,"name":"Michigan Bird Species","item":"https://michiganbirdingreport.com/species"}
       ]
     },
     {
       "@type": "Person",
       "name": "Chris Izworski",
       "url": "https://chrisizworski.com",
-      "sameAs": [
-        "https://michiganbirdingreport.com/chris-izworski",
-        "https://github.com/izworskic"
-      ]
+      "sameAs": ["https://michiganbirdingreport.com/chris-izworski","https://github.com/izworskic"]
     }
   ]
 }
@@ -63,65 +43,61 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <style>
-    .site-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:0.75rem;padding:0.5rem 1rem;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);}
-    .site-bar .logo{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--forest);}
-    .site-bar nav{display:flex;gap:0.9rem;margin-left:auto;}
-    .site-bar nav a{font-size:0.72rem;font-weight:500;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.04em;}
-    .hub-wrap{max-width:900px;margin:3.5rem auto 2rem;padding:0 1rem;}
-    .hub-wrap h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--forest-deep);margin-bottom:0.5rem;}
-    .hub-intro{font-size:0.92rem;color:var(--text-mid);max-width:660px;line-height:1.6;margin-bottom:1.5rem;}
-    .hub-intro a{color:var(--forest);font-weight:600;}
-    .hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.4rem 1.25rem;}
-    .hub-grid a{display:block;padding:0.4rem 0;font-size:0.9rem;color:var(--forest);border-bottom:1px solid var(--border);}
-    .hub-grid a:hover{color:var(--forest-deep);}
+    .site-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:.75rem;padding:.5rem 1rem;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}
+    .site-bar .logo{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--forest)}
+    .site-bar nav{display:flex;gap:.9rem;margin-left:auto}.site-bar nav a{font-size:.72rem;font-weight:500;color:var(--text-mid);text-transform:uppercase;letter-spacing:.04em}
+    .hub-wrap{max-width:900px;margin:3.5rem auto 2rem;padding:0 1rem}.hub-wrap h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--forest-deep);margin-bottom:.35rem}
+    .hub-intro{font-size:.88rem;color:var(--text-mid);max-width:650px;line-height:1.5;margin-bottom:1rem}
+    .species-search{display:flex;gap:.5rem;margin:0 0 1.15rem;max-width:620px}.species-search input{flex:1;min-width:0;padding:.7rem .8rem;border:1px solid var(--border);border-radius:5px;font:inherit;background:#fff;color:var(--text)}
+    .species-search input:focus{outline:2px solid rgba(26,92,42,.18);border-color:var(--forest)}.species-search button{padding:.7rem .9rem;border:0;border-radius:5px;background:var(--forest);color:#fff;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap}
+    .hub-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--text-light);margin-bottom:.35rem}
+    .hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.4rem 1.25rem}.hub-grid a{display:block;padding:.4rem 0;font-size:.9rem;color:var(--forest);border-bottom:1px solid var(--border)}.hub-grid a:hover{color:var(--forest-deep)}
+    .no-match{display:none;font-size:.82rem;color:var(--text-mid);padding:.4rem 0}.no-match.show{display:block}
+    @media(max-width:600px){.site-bar nav{gap:.45rem}.site-bar nav a{font-size:.65rem}.species-search{flex-direction:column}.species-search button{width:100%}}
   </style>
 </head>
 <body>
   <div class="site-bar">
     <a href="/" class="logo">MBR</a>
     <nav>
-      <a href="/counties">Counties</a>
-      <a href="/species">Species</a>
-      <a href="/saginaw-bay">Bay</a>
-      <a href="/predictions">Predict</a>
-      <a href="/migration">Migration</a>
+      <a href="/counties">Counties</a><a href="/species" aria-current="page">Species</a><a href="/saginaw-bay">Bay</a><a href="/predictions">Today</a><a href="/migration">Migration</a>
     </nav>
   </div>
   <main class="hub-wrap">
-    <h1>Michigan Bird Species</h1>
-    <div class="hub-intro">Track individual species across Michigan in real time. Each profile, curated by <a href="/chris-izworski">Chris Izworski</a>, maps recent eBird detections, shows seasonal timing, and links to recordings and identification notes. Choose a species below to see where it is being seen statewide, from Snowy Owls on the Saginaw Bay ice to Kirtland’s Warblers in the jack pine of the northern Lower Peninsula.</div>
-    <div class="hub-grid">
-      <a href="/species/amerob">American Robin</a>
-      <a href="/species/baleag">Bald Eagle</a>
-      <a href="/species/balori">Baltimore Oriole</a>
-      <a href="/species/bkcchi">Black-capped Chickadee</a>
-      <a href="/species/comloo">Common Loon</a>
-      <a href="/species/grbher3">Great Blue Heron</a>
-      <a href="/species/indbun">Indigo Bunting</a>
-      <a href="/species/kirwar">Kirtland&#x27;s Warbler</a>
-      <a href="/species/norcar">Northern Cardinal</a>
-      <a href="/species/pilwoo">Pileated Woodpecker</a>
-      <a href="/species/rethaw">Red-tailed Hawk</a>
-      <a href="/species/sancra">Sandhill Crane</a>
-      <a href="/species/scatan">Scarlet Tanager</a>
-      <a href="/species/snoowl1">Snowy Owl</a>
-      <a href="/species/wooduc">Wood Duck</a>
+    <h1>Find a Michigan Bird</h1>
+    <div class="hub-intro">Search a bird by name, or choose a highlighted species to see recent Michigan sightings, photos, sounds, and seasonal context.</div>
+    <form class="species-search" id="speciesSearch" role="search">
+      <input id="speciesQuery" type="search" autocomplete="off" placeholder="Search any Michigan bird…" aria-label="Search any Michigan bird">
+      <button type="submit">Find bird</button>
+    </form>
+    <div class="hub-label">Highlighted species</div>
+    <div class="hub-grid" id="speciesGrid">
+      <a href="/species/amerob">American Robin</a><a href="/species/baleag">Bald Eagle</a><a href="/species/balori">Baltimore Oriole</a><a href="/species/bkcchi">Black-capped Chickadee</a><a href="/species/comloo">Common Loon</a><a href="/species/grbher3">Great Blue Heron</a><a href="/species/indbun">Indigo Bunting</a><a href="/species/kirwar">Kirtland's Warbler</a><a href="/species/norcar">Northern Cardinal</a><a href="/species/pilwoo">Pileated Woodpecker</a><a href="/species/rethaw">Red-tailed Hawk</a><a href="/species/sancra">Sandhill Crane</a><a href="/species/scatan">Scarlet Tanager</a><a href="/species/snoowl1">Snowy Owl</a><a href="/species/wooduc">Wood Duck</a>
     </div>
+    <div class="no-match" id="noMatch">Not in the highlighted list. Press <strong>Find bird</strong> to search the full Michigan birding intelligence tool.</div>
   </main>
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-brand">
-        <h3>Michigan Birding Report</h3>
-        <p>Built by <a href="https://chrisizworski.com">Chris Izworski</a> in Bay City, MI. Data: <a href="https://ebird.org">eBird</a>, <a href="https://birdcast.org">BirdCast</a>, <a href="https://xeno-canto.org">Xeno-canto</a>, <a href="https://inaturalist.org">iNaturalist</a>.</p>
-      </div>
-      <div class="footer-links">
-        <a href="/counties">Counties</a>
-        <a href="/species">Species</a>
-        <a href="/saginaw-bay">Saginaw Bay</a>
-        <a href="/predictions">Predictions</a>
-        <a href="/migration">Migration</a>
-      </div>
-    </div>
-  </footer>
+  <footer class="footer"><div class="footer-content"><div class="footer-brand"><h3>Michigan Birding Report</h3><p>Built by <a href="https://chrisizworski.com">Chris Izworski</a> in Bay City, MI. Data: <a href="https://ebird.org">eBird</a>, <a href="https://dashboard.birdcast.info">BirdCast</a>, <a href="https://xeno-canto.org">Xeno-canto</a>, <a href="https://inaturalist.org">iNaturalist</a>.</p></div><div class="footer-links"><a href="/counties">Counties</a><a href="/species">Species</a><a href="/saginaw-bay">Saginaw Bay</a><a href="/predictions">Today</a><a href="/migration">Migration</a></div></div></footer>
+  <script>
+  (function(){
+    const form=document.getElementById('speciesSearch');
+    const input=document.getElementById('speciesQuery');
+    const links=[...document.querySelectorAll('#speciesGrid a')];
+    const noMatch=document.getElementById('noMatch');
+    function filter(){
+      const q=input.value.trim().toLowerCase();
+      let visible=0;
+      links.forEach(a=>{const show=!q||a.textContent.toLowerCase().includes(q);a.style.display=show?'block':'none';if(show)visible++;});
+      noMatch.classList.toggle('show',Boolean(q)&&visible===0);
+    }
+    input.addEventListener('input',filter);
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      const q=input.value.trim();
+      if(!q)return;
+      const exact=links.find(a=>a.textContent.toLowerCase()===q.toLowerCase());
+      location.href=exact?exact.getAttribute('href'):`/predictions?name=${encodeURIComponent(q)}`;
+    });
+  })();
+  </script>
 </body>
 </html>
