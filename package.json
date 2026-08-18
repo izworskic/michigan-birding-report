@@ -4,8 +4,9 @@
   "description": "Real-time birding intelligence for Michigan",
   "private": true,
   "scripts": {
-    "test": "node scripts/test-species-identity.js && node scripts/test-species-page.js && node scripts/test-species-page-handler.js && node scripts/check-species-seo.mjs && node scripts/test-migration-intelligence.js && node scripts/check-migration-page.mjs && node scripts/benchmark-migration.mjs",
-    "benchmark:migration": "node scripts/benchmark-migration.mjs"
+    "test": "node scripts/test-species-identity.js && node scripts/test-species-page.js && node scripts/test-species-page-handler.js && node scripts/check-species-seo.mjs && node scripts/test-migration-intelligence.js && node scripts/check-migration-page.mjs && node scripts/benchmark-migration.mjs && node scripts/check-persona-routing.mjs && node scripts/benchmark-persona-routing.mjs",
+    "benchmark:migration": "node scripts/benchmark-migration.mjs",
+    "benchmark:personas": "node scripts/benchmark-persona-routing.mjs"
   },
   "dependencies": {
     "@upstash/redis": "^1.28.0"
