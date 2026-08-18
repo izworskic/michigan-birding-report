@@ -17,6 +17,65 @@
   function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'…':s||'';}
   function specUrl(s){return `/species/${s.speciesCode}`;}
 
+  // -- Task-first front door --
+  function installIntentRouter(){
+    const cond=document.getElementById('cond');
+    if(!cond || document.getElementById('birdIntentRouter')) return;
+
+    const style=document.createElement('style');
+    style.textContent=`
+      .bird-front-door{max-width:1040px;margin:3.25rem auto 0;padding:1.15rem 1rem .9rem;text-align:center}
+      .bird-front-door h1{font-family:var(--font-display);font-size:clamp(1.75rem,4vw,2.45rem);line-height:1.05;color:var(--forest-deep);margin:0 0 .25rem}
+      .bird-front-door>p{font-size:.86rem;color:var(--text-mid);margin:0 auto .85rem;max-width:600px}
+      .bird-intent-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.55rem;text-align:left}
+      .bird-intent{display:block;padding:.75rem .8rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:6px;text-decoration:none;color:inherit;box-shadow:var(--shadow-sm);transition:transform .15s,box-shadow .15s,border-color .15s}
+      .bird-intent:hover,.bird-intent:focus{transform:translateY(-1px);box-shadow:var(--shadow-md);border-color:var(--forest);outline:none}
+      .bird-intent strong{display:block;font-family:var(--font-display);font-size:1rem;color:var(--forest-deep);margin-bottom:.08rem}
+      .bird-intent span{display:block;font-size:.7rem;line-height:1.3;color:var(--text-mid)}
+      .bird-live-kicker{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;font-weight:600;color:var(--forest);margin:.95rem 0 .35rem;text-align:left}
+      @media(max-width:720px){.bird-intent-grid{grid-template-columns:1fr 1fr}.bird-front-door{padding-left:.65rem;padding-right:.65rem}.bird-intent{padding:.65rem}.bird-intent span{font-size:.68rem}}
+    `;
+    document.head.appendChild(style);
+
+    const wrap=document.createElement('section');
+    wrap.id='birdIntentRouter';
+    wrap.className='bird-front-door';
+    wrap.setAttribute('aria-labelledby','birdFrontDoorTitle');
+    wrap.innerHTML=`
+      <h1 id="birdFrontDoorTitle">Michigan Birding Report</h1>
+      <p>Live Michigan sightings, migration, and a fast path to where you want to bird.</p>
+      <div class="bird-intent-grid" aria-label="Choose what you want to do">
+        <a class="bird-intent" href="/counties" data-bird-intent="near-me"><strong>Birds near me</strong><span>Pick your county and see recent birds and hotspots.</span></a>
+        <a class="bird-intent" href="/predictions" data-bird-intent="today"><strong>Where should I bird today?</strong><span>Use weather, region, and recent activity to choose.</span></a>
+        <a class="bird-intent" href="/migration" data-bird-intent="migration"><strong>Track migration</strong><span>Tonight's setup, tomorrow morning, and what is moving.</span></a>
+        <a class="bird-intent" href="/species" data-bird-intent="species"><strong>Find a bird</strong><span>Species profiles, photos, sounds, and Michigan sightings.</span></a>
+      </div>
+      <div class="bird-live-kicker">Live notable sightings</div>`;
+    cond.parentNode.insertBefore(wrap,cond);
+
+    const search=document.getElementById('search');
+    if(search) search.placeholder='Find a bird…';
+
+    document.querySelectorAll('.site-bar nav a').forEach(a=>{
+      if(a.getAttribute('href')==='/predictions') a.textContent='Today';
+    });
+
+    document.querySelectorAll('.quick-links .ql').forEach(card=>{
+      const href=card.getAttribute('href');
+      const h=card.querySelector('h3');
+      const p=card.querySelector('p');
+      if(href==='/predictions' && h && p){
+        h.textContent='Where Should I Bird Today?';
+        p.textContent='Choose a Michigan region and see the weather-driven birding setup.';
+      }
+      if(href==='/migration' && h && p){
+        h.textContent='Migration Today';
+        p.textContent='See tonight’s movement setup and where to check after sunrise.';
+      }
+    });
+  }
+  installIntentRouter();
+
   // -- Regions --
   const UP='003,013,033,041,043,053,061,071,083,095,097,103,109,131,153'.split(',');
   const NLP='001,007,009,019,029,031,039,047,055,069,079,085,089,101,107,113,119,129,135,137,141,143,157,165'.split(',');
