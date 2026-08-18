@@ -21,8 +21,10 @@ assert.strictEqual(fall.active, true);
 assert.strictEqual(fall.key, 'fall');
 assert.strictEqual(fall.direction, 'southbound');
 
-assert.strictEqual(getMigrationSeason(new Date('2026-06-16T12:00:00Z')).active, false);
-assert.strictEqual(getMigrationSeason(new Date('2026-11-16T12:00:00Z')).active, false);
+assert.strictEqual(getMigrationSeason(new Date('2026-06-16T02:30:00Z')).active, true, 'June 15 remains spring migration in Michigan before local midnight');
+assert.strictEqual(getMigrationSeason(new Date('2026-06-16T04:30:00Z')).active, false, 'June 16 local date ends spring live window');
+assert.strictEqual(getMigrationSeason(new Date('2026-11-16T04:30:00Z')).active, true, 'November 15 remains fall migration in Michigan before local midnight');
+assert.strictEqual(getMigrationSeason(new Date('2026-11-16T05:30:00Z')).active, false, 'November 16 local date ends fall live window');
 
 const northFall = classifyFlightSetup({
   tonight: { windDir: 'NW', shortForecast: 'Mostly clear' }
@@ -43,9 +45,15 @@ const obs = summarizeObservations([
   { speciesCode:'amered', comName:'American Redstart', locName:'A', obsDt:'2026-08-18 08:00' },
   { speciesCode:'amered', comName:'American Redstart', locName:'B', obsDt:'2026-08-18 09:00' },
   { speciesCode:'swathr', comName:"Swainson's Thrush", locName:'C', obsDt:'2026-08-17 09:00' },
-]);
+], new Date('2026-08-19T02:30:00Z'));
 assert.strictEqual(obs.speciesCount, 2);
 assert.strictEqual(obs.recentSpecies[0].location, 'B');
+assert.strictEqual(obs.freshness, 'today', 'eBird local date stays today until Michigan midnight');
+
+const yesterdayObs = summarizeObservations([
+  { speciesCode:'amered', comName:'American Redstart', locName:'A', obsDt:'2026-08-18 08:00' },
+], new Date('2026-08-19T05:30:00Z'));
+assert.strictEqual(yesterdayObs.freshness, 'since yesterday', 'freshness flips after Michigan midnight');
 
 const morning = morningRecommendation(rainFall, obs);
 assert.strictEqual(morning.label, 'High-interest dawn check');
