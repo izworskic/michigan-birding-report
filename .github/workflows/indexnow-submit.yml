@@ -8,12 +8,15 @@ on:
       - .github/workflows/indexnow-submit.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   submit:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/migration-intelligence
       - name: Submit migration URL to IndexNow
         shell: bash
         run: |
@@ -22,8 +25,17 @@ jobs:
           KEY='f8a3b2c1d4e5f6a7b8c9d0e1f2a3b4c5'
           HTTP_CODE=$(curl -sS -o /tmp/indexnow-body.txt -w '%{http_code}' \
             "https://api.indexnow.org/indexnow?url=${URL}&key=${KEY}")
-          cat /tmp/indexnow-body.txt || true
+          BODY=$(cat /tmp/indexnow-body.txt || true)
+          printf 'URL: %s\nHTTP: %s\nBody: %s\n' "$URL" "$HTTP_CODE" "$BODY" > indexnow-submission-status.txt
           echo "IndexNow HTTP status: ${HTTP_CODE}"
           if [[ "${HTTP_CODE}" != "200" && "${HTTP_CODE}" != "202" ]]; then
             exit 1
           fi
+      - name: Record accepted submission
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add indexnow-submission-status.txt
+          git commit -m 'Record IndexNow submission result' || exit 0
+          git push origin HEAD:agent/migration-intelligence
