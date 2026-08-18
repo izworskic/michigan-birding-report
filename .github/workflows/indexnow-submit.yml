@@ -1,0 +1,29 @@
+name: One-time IndexNow submit
+
+on:
+  push:
+    branches:
+      - agent/migration-intelligence
+    paths:
+      - .github/workflows/indexnow-submit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit migration URL to IndexNow
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://michiganbirdingreport.com/migration'
+          KEY='f8a3b2c1d4e5f6a7b8c9d0e1f2a3b4c5'
+          HTTP_CODE=$(curl -sS -o /tmp/indexnow-body.txt -w '%{http_code}' \
+            "https://api.indexnow.org/indexnow?url=${URL}&key=${KEY}")
+          cat /tmp/indexnow-body.txt || true
+          echo "IndexNow HTTP status: ${HTTP_CODE}"
+          if [[ "${HTTP_CODE}" != "200" && "${HTTP_CODE}" != "202" ]]; then
+            exit 1
+          fi
