@@ -10,185 +10,34 @@
   <meta property="og:description" content="Real-time eBird sightings, species lists, and hotspots for every Michigan county. Curated by Chris Izworski.">
   <meta property="og:url" content="https://michiganbirdingreport.com/counties">
   <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebPage",
-      "@id": "https://michiganbirdingreport.com/counties#webpage",
-      "url": "https://michiganbirdingreport.com/counties",
-      "name": "Michigan Birding by County",
-      "isPartOf": {
-        "@type": "WebSite",
-        "name": "Michigan Birding Report",
-        "url": "https://michiganbirdingreport.com"
-      },
-      "about": {
-        "@type": "Person",
-        "name": "Chris Izworski"
-      },
-      "description": "Browse real-time bird sightings for all 83 Michigan counties. Each county page, curated by Chris Izworski in Bay City, pulls live eBird observations, a run"
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://michiganbirdingreport.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Michigan Birding by County",
-          "item": "https://michiganbirdingreport.com/counties"
-        }
-      ]
-    },
-    {
-      "@type": "Person",
-      "name": "Chris Izworski",
-      "url": "https://chrisizworski.com",
-      "sameAs": [
-        "https://michiganbirdingreport.com/chris-izworski",
-        "https://github.com/izworskic"
-      ]
-    }
-  ]
-}
+  {"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://michiganbirdingreport.com/counties#webpage","url":"https://michiganbirdingreport.com/counties","name":"Michigan Birding by County","isPartOf":{"@type":"WebSite","name":"Michigan Birding Report","url":"https://michiganbirdingreport.com"},"about":{"@type":"Person","name":"Chris Izworski"},"description":"Browse real-time bird sightings, species, and hotspots for all 83 Michigan counties."},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://michiganbirdingreport.com"},{"@type":"ListItem","position":2,"name":"Michigan Birding by County","item":"https://michiganbirdingreport.com/counties"}]},{"@type":"Person","name":"Chris Izworski","url":"https://chrisizworski.com","sameAs":["https://michiganbirdingreport.com/chris-izworski","https://github.com/izworskic"]}]}
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <style>
-    .site-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:0.75rem;padding:0.5rem 1rem;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);}
-    .site-bar .logo{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--forest);}
-    .site-bar nav{display:flex;gap:0.9rem;margin-left:auto;}
-    .site-bar nav a{font-size:0.72rem;font-weight:500;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.04em;}
-    .hub-wrap{max-width:900px;margin:3.5rem auto 2rem;padding:0 1rem;}
-    .hub-wrap h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--forest-deep);margin-bottom:0.5rem;}
-    .hub-intro{font-size:0.92rem;color:var(--text-mid);max-width:660px;line-height:1.6;margin-bottom:1.5rem;}
-    .hub-intro a{color:var(--forest);font-weight:600;}
-    .hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.4rem 1.25rem;}
-    .hub-grid a{display:block;padding:0.4rem 0;font-size:0.9rem;color:var(--forest);border-bottom:1px solid var(--border);}
-    .hub-grid a:hover{color:var(--forest-deep);}
+    .site-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:.75rem;padding:.5rem 1rem;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}.site-bar .logo{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--forest)}.site-bar nav{display:flex;gap:.9rem;margin-left:auto}.site-bar nav a{font-size:.72rem;font-weight:500;color:var(--text-mid);text-transform:uppercase;letter-spacing:.04em}
+    .hub-wrap{max-width:900px;margin:3.5rem auto 2rem;padding:0 1rem}.hub-wrap h1{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--forest-deep);margin-bottom:.35rem}.hub-intro{font-size:.88rem;color:var(--text-mid);max-width:650px;line-height:1.5;margin-bottom:1rem}
+    .county-search{max-width:580px;margin-bottom:1.1rem}.county-search input{width:100%;box-sizing:border-box;padding:.7rem .8rem;border:1px solid var(--border);border-radius:5px;font:inherit;background:#fff;color:var(--text)}.county-search input:focus{outline:2px solid rgba(26,92,42,.18);border-color:var(--forest)}
+    .hub-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--text-light);margin-bottom:.35rem}.hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.4rem 1.25rem}.hub-grid a{display:block;padding:.4rem 0;font-size:.9rem;color:var(--forest);border-bottom:1px solid var(--border)}.hub-grid a:hover{color:var(--forest-deep)}.county-empty{display:none;font-size:.85rem;color:var(--text-mid);padding:.6rem 0}.county-empty.show{display:block}
+    @media(max-width:600px){.site-bar nav{gap:.45rem}.site-bar nav a{font-size:.65rem}}
   </style>
 </head>
 <body>
-  <div class="site-bar">
-    <a href="/" class="logo">MBR</a>
-    <nav>
-      <a href="/counties">Counties</a>
-      <a href="/species">Species</a>
-      <a href="/saginaw-bay">Bay</a>
-      <a href="/predictions">Predict</a>
-      <a href="/migration">Migration</a>
-    </nav>
-  </div>
+  <div class="site-bar"><a href="/" class="logo">MBR</a><nav><a href="/counties" aria-current="page">Counties</a><a href="/species">Species</a><a href="/saginaw-bay">Bay</a><a href="/predictions">Today</a><a href="/migration">Migration</a></nav></div>
   <main class="hub-wrap">
-    <h1>Michigan Birding by County</h1>
-    <div class="hub-intro">Browse real-time bird sightings for all 83 Michigan counties. Each county page, curated by <a href="/chris-izworski">Chris Izworski</a> in Bay City, pulls live eBird observations, a running species list, and the top hotspots, refreshed every 15 minutes. Pick a county below to see what is being reported right now across the Lower Peninsula, the Upper Peninsula, and the Saginaw Bay shoreline.</div>
-    <div class="hub-grid">
-      <a href="/county/003">Alger County</a>
-      <a href="/county/005">Allegan County</a>
-      <a href="/county/007">Alpena County</a>
-      <a href="/county/009">Antrim County</a>
-      <a href="/county/011">Arenac County</a>
-      <a href="/county/013">Baraga County</a>
-      <a href="/county/015">Barry County</a>
-      <a href="/county/017">Bay County</a>
-      <a href="/county/019">Benzie County</a>
-      <a href="/county/021">Berrien County</a>
-      <a href="/county/023">Branch County</a>
-      <a href="/county/025">Calhoun County</a>
-      <a href="/county/027">Cass County</a>
-      <a href="/county/029">Charlevoix County</a>
-      <a href="/county/031">Cheboygan County</a>
-      <a href="/county/033">Chippewa County</a>
-      <a href="/county/035">Clare County</a>
-      <a href="/county/037">Clinton County</a>
-      <a href="/county/039">Crawford County</a>
-      <a href="/county/041">Delta County</a>
-      <a href="/county/043">Dickinson County</a>
-      <a href="/county/045">Eaton County</a>
-      <a href="/county/047">Emmet County</a>
-      <a href="/county/049">Genesee County</a>
-      <a href="/county/051">Gladwin County</a>
-      <a href="/county/053">Gogebic County</a>
-      <a href="/county/055">Grand Traverse County</a>
-      <a href="/county/057">Gratiot County</a>
-      <a href="/county/059">Hillsdale County</a>
-      <a href="/county/061">Houghton County</a>
-      <a href="/county/063">Huron County</a>
-      <a href="/county/065">Ingham County</a>
-      <a href="/county/067">Ionia County</a>
-      <a href="/county/069">Iosco County</a>
-      <a href="/county/071">Iron County</a>
-      <a href="/county/073">Isabella County</a>
-      <a href="/county/075">Jackson County</a>
-      <a href="/county/077">Kalamazoo County</a>
-      <a href="/county/079">Kalkaska County</a>
-      <a href="/county/081">Kent County</a>
-      <a href="/county/083">Keweenaw County</a>
-      <a href="/county/085">Lake County</a>
-      <a href="/county/087">Lapeer County</a>
-      <a href="/county/089">Leelanau County</a>
-      <a href="/county/091">Lenawee County</a>
-      <a href="/county/093">Livingston County</a>
-      <a href="/county/095">Luce County</a>
-      <a href="/county/097">Mackinac County</a>
-      <a href="/county/099">Macomb County</a>
-      <a href="/county/101">Manistee County</a>
-      <a href="/county/103">Marquette County</a>
-      <a href="/county/105">Mason County</a>
-      <a href="/county/107">Mecosta County</a>
-      <a href="/county/109">Menominee County</a>
-      <a href="/county/111">Midland County</a>
-      <a href="/county/113">Missaukee County</a>
-      <a href="/county/115">Monroe County</a>
-      <a href="/county/117">Montcalm County</a>
-      <a href="/county/119">Montmorency County</a>
-      <a href="/county/121">Muskegon County</a>
-      <a href="/county/123">Newaygo County</a>
-      <a href="/county/125">Oakland County</a>
-      <a href="/county/127">Oceana County</a>
-      <a href="/county/129">Ogemaw County</a>
-      <a href="/county/131">Ontonagon County</a>
-      <a href="/county/133">Osceola County</a>
-      <a href="/county/135">Oscoda County</a>
-      <a href="/county/137">Otsego County</a>
-      <a href="/county/139">Ottawa County</a>
-      <a href="/county/141">Presque Isle County</a>
-      <a href="/county/143">Roscommon County</a>
-      <a href="/county/145">Saginaw County</a>
-      <a href="/county/151">Sanilac County</a>
-      <a href="/county/153">Schoolcraft County</a>
-      <a href="/county/155">Shiawassee County</a>
-      <a href="/county/147">St. Clair County</a>
-      <a href="/county/149">St. Joseph County</a>
-      <a href="/county/157">Tuscola County</a>
-      <a href="/county/159">Van Buren County</a>
-      <a href="/county/161">Washtenaw County</a>
-      <a href="/county/163">Wayne County</a>
-      <a href="/county/165">Wexford County</a>
+    <h1>Birds Near Me in Michigan</h1>
+    <div class="hub-intro">Pick a county to see recent birds, current species activity, and local hotspots.</div>
+    <div class="county-search" role="search"><input id="countySearch" type="search" autocomplete="off" placeholder="Search county — Bay, Iosco, Marquette…" aria-label="Search Michigan counties"></div>
+    <div class="hub-label">All 83 counties</div>
+    <div class="hub-grid" id="countyGrid">
+      <a href="/county/003">Alger County</a><a href="/county/005">Allegan County</a><a href="/county/007">Alpena County</a><a href="/county/009">Antrim County</a><a href="/county/011">Arenac County</a><a href="/county/013">Baraga County</a><a href="/county/015">Barry County</a><a href="/county/017">Bay County</a><a href="/county/019">Benzie County</a><a href="/county/021">Berrien County</a><a href="/county/023">Branch County</a><a href="/county/025">Calhoun County</a><a href="/county/027">Cass County</a><a href="/county/029">Charlevoix County</a><a href="/county/031">Cheboygan County</a><a href="/county/033">Chippewa County</a><a href="/county/035">Clare County</a><a href="/county/037">Clinton County</a><a href="/county/039">Crawford County</a><a href="/county/041">Delta County</a><a href="/county/043">Dickinson County</a><a href="/county/045">Eaton County</a><a href="/county/047">Emmet County</a><a href="/county/049">Genesee County</a><a href="/county/051">Gladwin County</a><a href="/county/053">Gogebic County</a><a href="/county/055">Grand Traverse County</a><a href="/county/057">Gratiot County</a><a href="/county/059">Hillsdale County</a><a href="/county/061">Houghton County</a><a href="/county/063">Huron County</a><a href="/county/065">Ingham County</a><a href="/county/067">Ionia County</a><a href="/county/069">Iosco County</a><a href="/county/071">Iron County</a><a href="/county/073">Isabella County</a><a href="/county/075">Jackson County</a><a href="/county/077">Kalamazoo County</a><a href="/county/079">Kalkaska County</a><a href="/county/081">Kent County</a><a href="/county/083">Keweenaw County</a><a href="/county/085">Lake County</a><a href="/county/087">Lapeer County</a><a href="/county/089">Leelanau County</a><a href="/county/091">Lenawee County</a><a href="/county/093">Livingston County</a><a href="/county/095">Luce County</a><a href="/county/097">Mackinac County</a><a href="/county/099">Macomb County</a><a href="/county/101">Manistee County</a><a href="/county/103">Marquette County</a><a href="/county/105">Mason County</a><a href="/county/107">Mecosta County</a><a href="/county/109">Menominee County</a><a href="/county/111">Midland County</a><a href="/county/113">Missaukee County</a><a href="/county/115">Monroe County</a><a href="/county/117">Montcalm County</a><a href="/county/119">Montmorency County</a><a href="/county/121">Muskegon County</a><a href="/county/123">Newaygo County</a><a href="/county/125">Oakland County</a><a href="/county/127">Oceana County</a><a href="/county/129">Ogemaw County</a><a href="/county/131">Ontonagon County</a><a href="/county/133">Osceola County</a><a href="/county/135">Oscoda County</a><a href="/county/137">Otsego County</a><a href="/county/139">Ottawa County</a><a href="/county/141">Presque Isle County</a><a href="/county/143">Roscommon County</a><a href="/county/145">Saginaw County</a><a href="/county/151">Sanilac County</a><a href="/county/153">Schoolcraft County</a><a href="/county/155">Shiawassee County</a><a href="/county/147">St. Clair County</a><a href="/county/149">St. Joseph County</a><a href="/county/157">Tuscola County</a><a href="/county/159">Van Buren County</a><a href="/county/161">Washtenaw County</a><a href="/county/163">Wayne County</a><a href="/county/165">Wexford County</a>
     </div>
+    <div class="county-empty" id="countyEmpty">No county matches that search.</div>
   </main>
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-brand">
-        <h3>Michigan Birding Report</h3>
-        <p>Built by <a href="https://chrisizworski.com">Chris Izworski</a> in Bay City, MI. Data: <a href="https://ebird.org">eBird</a>, <a href="https://birdcast.org">BirdCast</a>, <a href="https://xeno-canto.org">Xeno-canto</a>, <a href="https://inaturalist.org">iNaturalist</a>.</p>
-      </div>
-      <div class="footer-links">
-        <a href="/counties">Counties</a>
-        <a href="/species">Species</a>
-        <a href="/saginaw-bay">Saginaw Bay</a>
-        <a href="/predictions">Predictions</a>
-        <a href="/migration">Migration</a>
-      </div>
-    </div>
-  </footer>
+  <footer class="footer"><div class="footer-content"><div class="footer-brand"><h3>Michigan Birding Report</h3><p>Built by <a href="https://chrisizworski.com">Chris Izworski</a> in Bay City, MI. Data: <a href="https://ebird.org">eBird</a>, <a href="https://dashboard.birdcast.info">BirdCast</a>, <a href="https://xeno-canto.org">Xeno-canto</a>, <a href="https://inaturalist.org">iNaturalist</a>.</p></div><div class="footer-links"><a href="/counties">Counties</a><a href="/species">Species</a><a href="/saginaw-bay">Saginaw Bay</a><a href="/predictions">Today</a><a href="/migration">Migration</a></div></div></footer>
+  <script>
+  (function(){const input=document.getElementById('countySearch');const links=[...document.querySelectorAll('#countyGrid a')];const empty=document.getElementById('countyEmpty');input.addEventListener('input',function(){const q=input.value.trim().toLowerCase().replace(/ county$/,'');let visible=0;links.forEach(a=>{const name=a.textContent.toLowerCase().replace(/ county$/,'');const show=!q||name.includes(q);a.style.display=show?'block':'none';if(show)visible++;});empty.classList.toggle('show',visible===0);});})();
+  </script>
 </body>
 </html>
