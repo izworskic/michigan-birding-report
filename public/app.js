@@ -1,6 +1,41 @@
 (function(){
   'use strict';
 
+  // -- Owned-domain network measurement --
+  function installOwnedNetworkMeasurement(){
+    window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};
+    if(!document.querySelector('script[src="/_vercel/insights/script.js"]')){
+      const s=document.createElement('script');
+      s.defer=true;
+      s.src='/_vercel/insights/script.js';
+      document.head.appendChild(s);
+    }
+    const owned={
+      'chrisizworski.com':'chris-home',
+      'michigantroutreport.com':'trout-report',
+      'greatlakeslevels.org':'great-lakes-levels',
+      'freighterviewfarms.com':'freighter-view-farms'
+    };
+    const links=[...document.querySelectorAll('.footer a')].filter(a=>{
+      try{return Boolean(owned[new URL(a.href,location.href).hostname]);}catch{return false;}
+    });
+    const destinations=[];
+    links.forEach(a=>{
+      const host=new URL(a.href,location.href).hostname;
+      const destination=owned[host];
+      a.dataset.ownedNetworkDestination=destination;
+      if(!destinations.includes(destination)) destinations.push(destination);
+    });
+    if(destinations.length){
+      window.va('event',{name:'Network Amplification Exposure',data:{source:'birding',surface:'owned-domain-footer',destinations:destinations.join(',')}});
+    }
+    document.addEventListener('click',e=>{
+      const a=e.target.closest('[data-owned-network-destination]');
+      if(!a)return;
+      window.va('event',{name:'Contextual Tool Handoff',data:{source:'birding',destination:a.dataset.ownedNetworkDestination,surface:'owned-domain-footer'}});
+    });
+  }
+
   // -- Helpers --
   function fmtDate(dt) {
     if (!dt) return '';
@@ -198,4 +233,5 @@
   const cf=document.getElementById('cfooter');
   if(cf) cf.innerHTML=Object.entries(counties).map(([f,n])=>`<a href="/county/${f}">${n}</a>`).join('');
 
+  installOwnedNetworkMeasurement();
 })();
