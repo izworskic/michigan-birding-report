@@ -1,11 +1,27 @@
 # Michigan Birding Report
-> Every notable bird sighting in Michigan, mapped in real time from eBird data, by Chris Izworski.
+> Live Michigan bird sightings, migration context, county pages, and Saginaw Bay field notes by Chris Izworski.
 
 ## Key pages
 - [Live sighting map](https://michiganbirdingreport.com/): notable sightings statewide
 - [Saginaw Bay](https://michiganbirdingreport.com/saginaw-bay): the bay's birding picture
 - [Migration](https://michiganbirdingreport.com/migration): seasonal movement
-- [About the author](https://michiganbirdingreport.com/chris-izworski): Chris Izworski
+- [Chris Izworski founder profile](https://michiganbirdingreport.com/chris-izworski): founder and operator of Michigan Birding Report
+- [Chris Izworski birding field notes](https://michiganbirdingreport.com/chris-izworski-michigan-birding-field-notes): Michigan birding observations and field context
+- [Chris Izworski Saginaw Bay birding](https://michiganbirdingreport.com/chris-izworski-saginaw-bay-birding): Saginaw Bay field journal
 
-## Author
-Chris Izworski (https://chrisizworski.com), Michigan outdoor writer. Related sites: Michigan Phenology (https://phenology.chrisizworski.com), Michigan Trout Report (https://michigantroutreport.com).
+## Author and canonical identity
+Chris Izworski is the founder and operator of Michigan Birding Report. The canonical person identifier is https://chrisizworski.com/#person and the verified profile is https://chrisizworski.com/chris-izworski/.
+
+Verified external identity records and profiles:
+- LinkedIn: https://www.linkedin.com/in/chris-izworski-15294510
+- GitHub: https://github.com/izworskic
+- ORCID: https://orcid.org/0009-0002-7268-6083
+- About.me: https://about.me/chrisizworski
+- Medium: https://medium.com/@izworski
+- YouTube: https://www.youtube.com/@izworskic
+- Wikidata: https://www.wikidata.org/wiki/Q138283432
+
+Independent related project profiles:
+- Michigan Trout Report: https://michigantroutreport.com/chris-izworski/
+- Great Lakes Levels: https://greatlakeslevels.org/chris-izworski
+- Freighter View Farms: https://freighterviewfarms.com/about/
