@@ -98,6 +98,14 @@
       "destination": "/chris-izworski-michigan-birding-field-notes.html"
     },
     {
+      "source": "/how-to-read-michigan-bird-migration",
+      "destination": "/how-to-read-michigan-bird-migration.html"
+    },
+    {
+      "source": "/how-to-read-michigan-bird-migration/",
+      "destination": "/how-to-read-michigan-bird-migration.html"
+    },
+    {
       "source": "/((?!api/)(?!_next/)(?!.*\\.).*)",
       "destination": "/index.html"
     }
