@@ -1,4 +1,5 @@
 {
+  "buildCommand": "node scripts/inject-ga4.mjs",
   "redirects": [
     {
       "source": "/(.*)",
@@ -45,135 +46,47 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/robots.txt",
-      "destination": "/robots.txt"
-    },
-    {
-      "source": "/sitemap.xml",
-      "destination": "/sitemap.xml"
-    },
-    {
-      "source": "/saginaw-bay",
-      "destination": "/saginaw-bay.html"
-    },
-    {
-      "source": "/predictions",
-      "destination": "/predictions.html"
-    },
-    {
-      "source": "/migration",
-      "destination": "/migration.html"
-    },
-    {
-      "source": "/county/:fips",
-      "destination": "/county.html"
-    },
-    {
-      "source": "/species/:code",
-      "destination": "/api/species-page?code=:code"
-    },
-    {
-      "source": "/chris-izworski",
-      "destination": "/chris-izworski.html"
-    },
-    {
-      "source": "/chris-izworski/",
-      "destination": "/chris-izworski.html"
-    },
-    {
-      "source": "/chris-izworski-saginaw-bay-birding",
-      "destination": "/chris-izworski-saginaw-bay-birding.html"
-    },
-    {
-      "source": "/chris-izworski-saginaw-bay-birding/",
-      "destination": "/chris-izworski-saginaw-bay-birding.html"
-    },
-    {
-      "source": "/chris-izworski-michigan-birding-field-notes",
-      "destination": "/chris-izworski-michigan-birding-field-notes.html"
-    },
-    {
-      "source": "/chris-izworski-michigan-birding-field-notes/",
-      "destination": "/chris-izworski-michigan-birding-field-notes.html"
-    },
-    {
-      "source": "/how-to-read-michigan-bird-migration",
-      "destination": "/how-to-read-michigan-bird-migration.html"
-    },
-    {
-      "source": "/how-to-read-michigan-bird-migration/",
-      "destination": "/how-to-read-michigan-bird-migration.html"
-    },
-    {
-      "source": "/((?!api/)(?!_next/)(?!.*\\.).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/saginaw-bay", "destination": "/saginaw-bay.html" },
+    { "source": "/predictions", "destination": "/predictions.html" },
+    { "source": "/migration", "destination": "/migration.html" },
+    { "source": "/county/:fips", "destination": "/county.html" },
+    { "source": "/species/:code", "destination": "/api/species-page?code=:code" },
+    { "source": "/chris-izworski", "destination": "/chris-izworski.html" },
+    { "source": "/chris-izworski/", "destination": "/chris-izworski.html" },
+    { "source": "/chris-izworski-saginaw-bay-birding", "destination": "/chris-izworski-saginaw-bay-birding.html" },
+    { "source": "/chris-izworski-saginaw-bay-birding/", "destination": "/chris-izworski-saginaw-bay-birding.html" },
+    { "source": "/chris-izworski-michigan-birding-field-notes", "destination": "/chris-izworski-michigan-birding-field-notes.html" },
+    { "source": "/chris-izworski-michigan-birding-field-notes/", "destination": "/chris-izworski-michigan-birding-field-notes.html" },
+    { "source": "/how-to-read-michigan-bird-migration", "destination": "/how-to-read-michigan-bird-migration.html" },
+    { "source": "/how-to-read-michigan-bird-migration/", "destination": "/how-to-read-michigan-bird-migration.html" },
+    { "source": "/((?!api/)(?!_next/)(?!.*\\.).*)", "destination": "/index.html" }
   ],
   "functions": {
-    "api/species-page.js": {
-      "memory": 256,
-      "maxDuration": 15,
-      "includeFiles": "public/species.html"
-    },
-    "api/species-profile.js": {
-      "memory": 512,
-      "maxDuration": 30
-    },
-    "api/predict.js": {
-      "memory": 256,
-      "maxDuration": 20
-    },
-    "api/recommend.js": {
-      "memory": 256,
-      "maxDuration": 15
-    },
-    "api/migration-intelligence.js": {
-      "memory": 256,
-      "maxDuration": 20
-    },
-    "api/**/*.js": {
-      "memory": 256,
-      "maxDuration": 10
-    }
+    "api/species-page.js": { "memory": 256, "maxDuration": 15, "includeFiles": "public/species.html" },
+    "api/species-profile.js": { "memory": 512, "maxDuration": 30 },
+    "api/predict.js": { "memory": 256, "maxDuration": 20 },
+    "api/recommend.js": { "memory": 256, "maxDuration": 15 },
+    "api/migration-intelligence.js": { "memory": 256, "maxDuration": 20 },
+    "api/**/*.js": { "memory": 256, "maxDuration": 10 }
   },
   "headers": [
     {
       "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "(?<sub>.*)\\.vercel\\.app"
-        }
-      ],
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
+      "has": [{ "type": "host", "value": "(?<sub>.*)\\.vercel\\.app" }],
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     },
     {
       "source": "/api/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "s-maxage=900, stale-while-revalidate=1800"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
+        { "key": "Cache-Control", "value": "s-maxage=900, stale-while-revalidate=1800" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     },
     {
       "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     }
   ],
   "$schema": "https://openapi.vercel.sh/vercel.json"
