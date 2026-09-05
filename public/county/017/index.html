@@ -155,7 +155,7 @@
         // Map
         const center = COORDS[fips] || [44.3, -84.7];
         const map = L.map('countyMap', { scrollWheelZoom: false }).setView(center, 9);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_2y8f_1_1ee5e3a872c91d0ebf5d7b88', {
           attribution: '&copy; OSM &copy; CARTO', maxZoom: 14
         }).addTo(map);
         const icon = L.divIcon({ className:'', html:'<div style="width:12px;height:12px;background:#1a5c2a;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>', iconSize:[12,12], iconAnchor:[6,6] });

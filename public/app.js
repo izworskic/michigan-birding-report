@@ -151,7 +151,7 @@
 
   // -- Map --
   map = L.map('map',{scrollWheelZoom:false,zoomControl:true}).setView([44.3,-84.7],6);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_2y8f_1_1ee5e3a872c91d0ebf5d7b88',{
     attribution:'© OSM © CARTO',maxZoom:14
   }).addTo(map);
 

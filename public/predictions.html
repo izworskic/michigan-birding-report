@@ -401,7 +401,7 @@
     // Predictions page sightings map
     if (document.getElementById('predMap')) {
       const pmap = L.map('predMap', {scrollWheelZoom:false}).setView([44.3,-84.7],6);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_2y8f_1_1ee5e3a872c91d0ebf5d7b88',{
         attribution:'© OSM © CARTO',maxZoom:14
       }).addTo(pmap);
       const icon = L.divIcon({className:'',html:'<div style="width:10px;height:10px;background:#1a5c2a;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></div>',iconSize:[10,10],iconAnchor:[5,5]});
