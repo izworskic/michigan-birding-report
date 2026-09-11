@@ -3,11 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Michigan County Birding: Michigan Birding Report</title>
-  <meta name="description" id="pageMeta" content="Real-time bird sightings and birding hotspots for Michigan counties.">
+  <title id="pageTitle">Birding in Alcona County, Michigan: Michigan Birding Report</title>
+  <meta name="description" id="pageMeta" content="Real-time bird sightings, species list, and hotspots for Alcona County, Michigan. Updated from eBird every 15 minutes. Curated by Chris Izworski.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Michigan Birding Report">
-  <link rel="canonical" id="canonical" href="https://michiganbirdingreport.com/county/">
+  <meta property="og:title" content="Birding in Alcona County, Michigan">
+  <meta property="og:description" content="Bird sightings and hotspots for Alcona County, Michigan.">
+  <meta property="og:url" content="https://michiganbirdingreport.com/county/001">
+  <meta property="og:image" content="https://michiganbirdingreport.com/placeholder-bird.svg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Birding in Alcona County, Michigan">
+  <meta name="twitter:description" content="Bird sightings and hotspots for Alcona County, Michigan.">
+  <link rel="canonical" id="canonical" href="https://michiganbirdingreport.com/county/001">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -34,7 +41,7 @@
     .nearby-link:hover { border-color: var(--forest); }
     @media (max-width: 768px) { #countyMap { height: 250px; } .species-grid { grid-template-columns: 1fr; } }
   </style>
-  <script type="application/ld+json" id="jsonLd"></script>
+  <script type="application/ld+json" id="jsonLd">{"@context": "https://schema.org", "@type": "WebPage", "name": "Birding in Alcona County, Michigan: Michigan Birding Report", "description": "Real-time bird sightings, species list, and hotspots for Alcona County, Michigan. Updated from eBird every 15 minutes. Curated by Chris Izworski.", "url": "https://michiganbirdingreport.com/county/001", "isPartOf": {"@type": "WebSite", "name": "Michigan Birding Report", "url": "https://michiganbirdingreport.com"}, "author": {"@type": "Person", "name": "Chris Izworski", "url": "https://chrisizworski.com"}, "about": {"@type": "AdministrativeArea", "name": "Alcona County, Michigan", "containedInPlace": {"@type": "State", "name": "Michigan"}}}</script>
 </head>
 <body>
   <nav class="top-nav">
@@ -48,8 +55,8 @@
   </nav>
   <div class="county-hero">
     <a href="/" style="font-size:0.8rem;color:var(--gold-light)">← Michigan Birding Report</a>
-    <h1 id="countyName">Loading...</h1>
-    <p class="lead" id="countyLead"></p>
+    <h1 id="countyName">Alcona County Birding</h1>
+    <p class="lead" id="countyLead">Real-time bird sightings from eBird for Alcona County, Michigan</p>
     <div class="county-stats">
       <div class="county-stat"><div class="num" id="spCount">-</div><div class="lbl">Species</div></div>
       <div class="county-stat"><div class="num" id="obsCount">-</div><div class="lbl">Observations</div></div>
@@ -73,6 +80,16 @@
     </div>
     <p style="font-size:0.6rem;color:var(--text-light);margin-top:0.5rem">As an Amazon Associate I earn from qualifying purchases.</p>
   </div>
+  <section style="max-width:760px;margin:1.5rem auto;padding:0 2rem;color:var(--text);font-size:0.95rem;line-height:1.7">
+      <h2 style="font-family:var(--font-display);font-size:1.6rem;color:var(--forest-deep);margin:1.5rem 0 1rem">Birding in Alcona County, Michigan</h2>
+      <p>Alcona County sits on the Lake Huron side of the northeastern Lower Peninsula, in the region Michigan calls the Sunrise Side, where Great Lakes shoreline gives way inland to jack pine plains and mixed forest around Hubbard Lake. The county's birding character is shaped by that split between open Lake Huron beach and interior pine barrens, which produces a distinctive mix of species across the spring, summer, fall, and winter seasons. This page summarizes the resident and migrant species you can expect in Alcona County, with hotspot recommendations and links to recent eBird sightings.</p>
+      <p>Key birding hotspots in Alcona County include <strong>Negwegon State Park</strong>, an undeveloped Lake Huron shoreline park at the southern tip of Thunder Bay shared with neighboring Alpena County, and <strong>Hubbard Lake</strong>, where the nature preserve and public access sites along the north end and south bay cover the county's largest inland lake. The jack pine tracts of western Alcona County are the county's other signature destination for birders specifically seeking pine-barren specialists. Each of these locations draws birders from across the Sunrise Side and the broader northeastern Lower Peninsula.</p>
+      <p>Notable species in Alcona County include the <em>Kirtland's Warbler</em>, which nests almost nowhere else in the world outside young jack pine stands in this part of Michigan, along with other jack-pine specialists such as <em>Upland Sandpiper</em>, <em>Eastern Bluebird</em>, <em>Hermit Thrush</em>, <em>Nashville Warbler</em>, and <em>Clay-colored Sparrow</em>. Along the Lake Huron shoreline at Negwegon, migrant warblers concentrate in May and again in August and September, and the park's beach and south point draw shorebirds and waterfowl through the season. These species are not the only birds present in the county, but they represent the birds most likely to draw visiting birders to Alcona County specifically rather than to other Michigan counties. The live sightings feed below this section pulls the most recent eBird reports from the past 14 days and is the right reference for planning a current trip.</p>
+      <p>The Sunrise Side context matters for understanding what you will and will not see in Alcona County. Its jack pine plains hold breeding birds that are scarce or entirely absent elsewhere in the Lower Peninsula, led by the Kirtland's Warbler, whose global nesting range is largely confined to a handful of north-central and northeastern Michigan counties including this one. Access to the working jack pine tracts is generally limited to dirt roads, and visitors should stay on them rather than walking into nesting habitat. In return, the county's Lake Huron shoreline behaves much like the rest of the Sunrise Side coast, funneling migrants along the water in spring and fall. Birders planning a trip should expect a noticeably different list on the pine plains than along the beach a few miles away.</p>
+      <p>The interactive map, statistics, and recent species list below this section pull live data from the eBird Application Programming Interface and refresh on each page load. Sightings posted to eBird in Alcona County propagate to this page within 15 minutes of public release. For comprehensive historical records of birds reported in Alcona County, eBird itself remains the authoritative reference.</p>
+      <p>Birders planning a visit to Alcona County should also consult the <a href="/predictions">Michigan Birding Predictions</a> page for week-ahead arrival forecasts and the <a href="/migration">Migration Tracker</a> for current statewide movement data. The <a href="/saginaw-bay">Saginaw Bay overview</a> provides additional context for birding in the heart of Michigan's most important waterfowl corridor.</p>
+      <p style="font-size:0.78rem;color:var(--text-light);margin:0.5rem 0 0">Edited by <a href="https://chrisizworski.com" style="color:var(--forest)">Chris Izworski</a>, Bay City, Michigan. Sightings data from <a href="https://ebird.org">eBird</a>, updated every 15 minutes.</p>
+    </section>
   <footer class="footer"><div class="footer-content"><div class="footer-brand"><h3>Michigan Birding Report</h3><p>Built by <a href="https://chrisizworski.com">Chris Izworski</a>, Bay City, Michigan. Chris is a <a href="https://chrisizworski.com/michigan-911-executive-director/">former Michigan 911 director</a>, <a href="https://chrisizworski.com/chris-izworski-trout-fishing/">avid Michigan outdoorsman</a>, and creator of the <a href="https://trout.chrisizworski.com">Michigan Trout Report</a>. Data from <a href="https://ebird.org">eBird</a>.</p></div></div></footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script>
