@@ -32,6 +32,72 @@ function evidenceBand(count, maxCount) {
   return { rank: 1, label: 'some current evidence' };
 }
 
+function summarizeChoice(place, extra = {}) {
+  if (!place) return null;
+  return {
+    locId: place.locId,
+    name: place.name,
+    lat: place.lat,
+    lon: place.lon,
+    distanceMi: place.distanceMi,
+    recentSpeciesCount: place.recentSpeciesCount,
+    notableCount: place.notableCount,
+    evidenceBand: place.evidenceBand,
+    latest: place.latest,
+    targetSpecies: place.targetSpecies,
+    ebirdUrl: place.ebirdUrl,
+    ...extra,
+  };
+}
+
+function pickDecisionChoices(rankedPlaces) {
+  if (!Array.isArray(rankedPlaces) || !rankedPlaces.length) {
+    return {
+      strongestCurrentEvidence: null,
+      closerStrongOption: null,
+      rule: 'A closer option is only shown when it remains in the strong current-evidence band and is meaningfully closer than the strongest-evidence hotspot.',
+    };
+  }
+
+  const strongest = [...rankedPlaces].sort((a, b) =>
+    b.recentSpeciesCount - a.recentSpeciesCount ||
+    b.notableCount - a.notableCount ||
+    (a.distanceMi ?? 999) - (b.distanceMi ?? 999) ||
+    String(b.latest || '').localeCompare(String(a.latest || ''))
+  )[0];
+
+  let closer = null;
+  if (Number.isFinite(strongest?.distanceMi)) {
+    const minSavings = Math.max(2, strongest.distanceMi * 0.15);
+    closer = rankedPlaces
+      .filter(place =>
+        place.locId !== strongest.locId &&
+        place.evidenceRank >= 2 &&
+        Number.isFinite(place.distanceMi) &&
+        strongest.distanceMi - place.distanceMi >= minSavings
+      )
+      .sort((a, b) =>
+        (a.distanceMi ?? 999) - (b.distanceMi ?? 999) ||
+        b.recentSpeciesCount - a.recentSpeciesCount ||
+        b.notableCount - a.notableCount ||
+        String(b.latest || '').localeCompare(String(a.latest || ''))
+      )[0] || null;
+  }
+
+  const distanceSavedMi = closer && Number.isFinite(strongest.distanceMi)
+    ? Math.round((strongest.distanceMi - closer.distanceMi) * 10) / 10
+    : null;
+
+  return {
+    strongestCurrentEvidence: summarizeChoice(strongest),
+    closerStrongOption: summarizeChoice(closer, {
+      distanceSavedMi,
+      speciesTradeoff: strongest && closer ? strongest.recentSpeciesCount - closer.recentSpeciesCount : null,
+    }),
+    rule: 'A closer option is only shown when it remains in the strong current-evidence band and is meaningfully closer than the strongest-evidence hotspot.',
+  };
+}
+
 async function getRecentNearby(lat, lng, { distKm = 40, back = 3, maxResults = 300 } = {}) {
   if (!EBIRD_KEY) throw new Error('EBIRD_API_KEY is not configured');
   const params = new URLSearchParams({
@@ -146,7 +212,7 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
   });
 
   const maxRecentSpecies = preparedPlaces.reduce((max, p) => Math.max(max, p.recentSpeciesCount || 0), 0);
-  const rankedPlaces = preparedPlaces.map(place => {
+  const rankedAll = preparedPlaces.map(place => {
     const band = evidenceBand(place.recentSpeciesCount, maxRecentSpecies);
     const parts = [`${band.label}: ${place.recentSpeciesCount} distinct recent species records represented`];
     if (place.notableCount) parts.push(`${place.notableCount} notable species`);
@@ -163,7 +229,10 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
     (a.distanceMi ?? 999) - (b.distanceMi ?? 999) ||
     b.recentSpeciesCount - a.recentSpeciesCount ||
     String(b.latest || '').localeCompare(String(a.latest || ''))
-  ).slice(0, 6);
+  );
+
+  const rankedPlaces = rankedAll.slice(0, 6);
+  const decisionChoices = pickDecisionChoices(rankedAll);
 
   const notables = [...notableBySpecies.values()]
     .sort((a, b) => String(b.obsDt || '').localeCompare(String(a.obsDt || '')))
@@ -189,6 +258,7 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
     reportingWindowDays: back,
     observationSemantics: 'recent-species-records-at-ebird-hotspots',
     rankingRule: 'Group hotspots by recent species evidence relative to the strongest nearby hotspot; within comparable evidence, notable sightings and proximity outrank tiny recency differences.',
+    decisionChoices,
     speciesCount: uniqueSpecies.size,
     hotspotRecordCount: (observations || []).length,
     nearbyHotspotCount: (hotspots || []).length,
@@ -237,4 +307,4 @@ module.exports = async function handler(req, res) {
   }
 };
 
-module.exports._test = { buildAction, haversineMiles, evidenceBand };
+module.exports._test = { buildAction, haversineMiles, evidenceBand, pickDecisionChoices };
