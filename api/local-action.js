@@ -24,6 +24,14 @@ function haversineMiles(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+function evidenceBand(count, maxCount) {
+  if (!maxCount || maxCount < 1) return { rank: 0, label: 'limited current evidence' };
+  const ratio = count / maxCount;
+  if (ratio >= 0.8) return { rank: 3, label: 'top current evidence' };
+  if (ratio >= 0.6) return { rank: 2, label: 'strong current evidence' };
+  return { rank: 1, label: 'some current evidence' };
+}
+
 async function getRecentNearby(lat, lng, { distKm = 40, back = 3, maxResults = 300 } = {}) {
   if (!EBIRD_KEY) throw new Error('EBIRD_API_KEY is not configured');
   const params = new URLSearchParams({
@@ -115,14 +123,12 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
     }
   }
 
-  const rankedPlaces = [...places.values()].map(place => {
+  const preparedPlaces = [...places.values()].map(place => {
     const species = [...place.species.values()].sort((a, b) => String(b.obsDt || '').localeCompare(String(a.obsDt || '')));
     const notable = [...place.notable.values()].sort((a, b) => String(b.obsDt || '').localeCompare(String(a.obsDt || '')));
     const distanceMi = Number.isFinite(place.lat) && Number.isFinite(place.lon)
       ? haversineMiles(lat, lng, place.lat, place.lon)
       : null;
-    const notableNames = notable.slice(0, 2).map(s => s.name);
-    const why = `${species.length} recently reported species represented${notableNames.length ? `, including notable ${notableNames.join(' and ')}` : ''}`;
     return {
       locId: place.locId,
       name: place.name,
@@ -135,13 +141,28 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
       allTimeSpecies: place.allTimeSpecies,
       targetSpecies: [...notable, ...species.filter(s => !notable.some(n => n.speciesCode && n.speciesCode === s.speciesCode))].slice(0, 6),
       notableSpecies: notable.slice(0, 4),
-      why,
       ebirdUrl: place.locId ? `https://ebird.org/hotspot/${encodeURIComponent(place.locId)}` : 'https://ebird.org/hotspots',
     };
+  });
+
+  const maxRecentSpecies = preparedPlaces.reduce((max, p) => Math.max(max, p.recentSpeciesCount || 0), 0);
+  const rankedPlaces = preparedPlaces.map(place => {
+    const band = evidenceBand(place.recentSpeciesCount, maxRecentSpecies);
+    const parts = [`${band.label}: ${place.recentSpeciesCount} distinct recent species records represented`];
+    if (place.notableCount) parts.push(`${place.notableCount} notable species`);
+    if (Number.isFinite(place.distanceMi)) parts.push(`${place.distanceMi.toFixed(1)} mi away`);
+    return {
+      ...place,
+      evidenceBand: band.label,
+      evidenceRank: band.rank,
+      why: parts.join(' · '),
+    };
   }).sort((a, b) =>
+    b.evidenceRank - a.evidenceRank ||
+    b.notableCount - a.notableCount ||
+    (a.distanceMi ?? 999) - (b.distanceMi ?? 999) ||
     b.recentSpeciesCount - a.recentSpeciesCount ||
-    String(b.latest || '').localeCompare(String(a.latest || '')) ||
-    (a.distanceMi ?? 999) - (b.distanceMi ?? 999)
+    String(b.latest || '').localeCompare(String(a.latest || ''))
   ).slice(0, 6);
 
   const notables = [...notableBySpecies.values()]
@@ -167,6 +188,7 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
   return {
     reportingWindowDays: back,
     observationSemantics: 'recent-species-records-at-ebird-hotspots',
+    rankingRule: 'Group hotspots by recent species evidence relative to the strongest nearby hotspot; within comparable evidence, notable sightings and proximity outrank tiny recency differences.',
     speciesCount: uniqueSpecies.size,
     hotspotRecordCount: (observations || []).length,
     nearbyHotspotCount: (hotspots || []).length,
@@ -215,4 +237,4 @@ module.exports = async function handler(req, res) {
   }
 };
 
-module.exports._test = { buildAction, haversineMiles };
+module.exports._test = { buildAction, haversineMiles, evidenceBand };
