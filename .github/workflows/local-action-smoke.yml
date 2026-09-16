@@ -13,31 +13,48 @@ jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for proximity-aware ranking release
+        shell: bash
+        run: |
+          set -euo pipefail
+          body=''
+          for attempt in $(seq 1 24); do
+            body="$(curl --retry 2 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&ranking-smoke=1' || true)"
+            if node -e 'try{const d=JSON.parse(process.argv[1]);process.exit(d.rankingRule&&d.topPlaces?.[0]?.evidenceBand?0:1)}catch{process.exit(1)}' "$body"; then
+              break
+            fi
+            sleep 5
+          done
+          node -e 'const d=JSON.parse(process.argv[1]);if(!d.rankingRule||!d.topPlaces?.[0]?.evidenceBand)process.exit(1);console.log(JSON.stringify({rankingRule:d.rankingRule,topEvidenceBand:d.topPlaces[0].evidenceBand}))' "$body"
+
       - name: Verify local action works in Michigan and Ohio
         shell: bash
         run: |
           set -euo pipefail
           fetch() { curl --retry 5 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' "$1"; }
-          mi="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&smoke=mi')"
-          oh="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=39.9612&lng=-82.9988&distKm=40&back=3&smoke=oh')"
+          mi="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&smoke=mi-v2')"
+          oh="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=39.9612&lng=-82.9988&distKm=40&back=3&smoke=oh-v2')"
           node - <<'NODE' "$mi" "$oh"
           for (const [label, raw] of [['MI', process.argv[2]], ['OH', process.argv[3]]]) {
             const d = JSON.parse(raw);
             if (d.ok !== true) process.exit(1);
             if (d.observationSemantics !== 'recent-species-records-at-ebird-hotspots') process.exit(1);
-            if (!Array.isArray(d.topPlaces) || d.topPlaces.length < 1) process.exit(1);
+            if (!d.rankingRule || !Array.isArray(d.topPlaces) || d.topPlaces.length < 1) process.exit(1);
             const top = d.topPlaces[0];
             if (!top.name || !Number.isFinite(top.lat) || !Number.isFinite(top.lon)) process.exit(1);
             if (!Number.isFinite(top.recentSpeciesCount) || top.recentSpeciesCount < 1) process.exit(1);
-            if (!Number.isFinite(top.distanceMi) || !Array.isArray(top.targetSpecies)) process.exit(1);
+            if (!Number.isFinite(top.distanceMi) || !Array.isArray(top.targetSpecies) || !top.evidenceBand) process.exit(1);
             console.log(JSON.stringify({
               label,
               speciesCount: d.speciesCount,
               nearbyHotspotCount: d.nearbyHotspotCount,
               notableCount: Array.isArray(d.notableSightings) ? d.notableSightings.length : null,
+              rankingRule: d.rankingRule,
               topPlace: {
                 name: top.name,
+                evidenceBand: top.evidenceBand,
                 recentSpeciesCount: top.recentSpeciesCount,
+                notableCount: top.notableCount,
                 distanceMi: top.distanceMi,
                 targetSpecies: top.targetSpecies.slice(0, 3).map(x => x.name)
               }
