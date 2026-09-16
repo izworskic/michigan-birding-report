@@ -1,0 +1,46 @@
+name: Local birding action smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'api/local-action.js'
+      - 'lib/ebird.js'
+      - '.github/workflows/local-action-smoke.yml'
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify local action works in Michigan and Ohio
+        shell: bash
+        run: |
+          set -euo pipefail
+          fetch() { curl --retry 5 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' "$1"; }
+          mi="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&smoke=mi')"
+          oh="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=39.9612&lng=-82.9988&distKm=40&back=3&smoke=oh')"
+          node - <<'NODE' "$mi" "$oh"
+          for (const [label, raw] of [['MI', process.argv[2]], ['OH', process.argv[3]]]) {
+            const d = JSON.parse(raw);
+            if (d.ok !== true) process.exit(1);
+            if (d.observationSemantics !== 'recent-species-records-at-ebird-hotspots') process.exit(1);
+            if (!Array.isArray(d.topPlaces) || d.topPlaces.length < 1) process.exit(1);
+            const top = d.topPlaces[0];
+            if (!top.name || !Number.isFinite(top.lat) || !Number.isFinite(top.lon)) process.exit(1);
+            if (!Number.isFinite(top.recentSpeciesCount) || top.recentSpeciesCount < 1) process.exit(1);
+            if (!Number.isFinite(top.distanceMi) || !Array.isArray(top.targetSpecies)) process.exit(1);
+            console.log(JSON.stringify({
+              label,
+              speciesCount: d.speciesCount,
+              nearbyHotspotCount: d.nearbyHotspotCount,
+              notableCount: Array.isArray(d.notableSightings) ? d.notableSightings.length : null,
+              topPlace: {
+                name: top.name,
+                recentSpeciesCount: top.recentSpeciesCount,
+                distanceMi: top.distanceMi,
+                targetSpecies: top.targetSpecies.slice(0, 3).map(x => x.name)
+              }
+            }));
+          }
+          NODE
