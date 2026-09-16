@@ -1,0 +1,22 @@
+name: Temporary config health check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/config-health-check.yml'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify production environment configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          body="$(curl --retry 5 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' 'https://michiganbirdingreport.com/api/config-health?check=20260916')"
+          node - <<'NODE' "$body"
+          const d=JSON.parse(process.argv[2]);
+          console.log(JSON.stringify(d));
+          if(d.ok!==true) process.exit(1);
+          NODE
