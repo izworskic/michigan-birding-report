@@ -32,8 +32,8 @@ jobs:
         run: |
           set -euo pipefail
           fetch() { curl --retry 5 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' "$1"; }
-          mi="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&smoke=mi-v2')"
-          oh="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=39.9612&lng=-82.9988&distKm=40&back=3&smoke=oh-v2')"
+          mi="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&smoke=mi-v3')"
+          oh="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=39.9612&lng=-82.9988&distKm=40&back=3&smoke=oh-v3')"
           node - <<'NODE' "$mi" "$oh"
           for (const [label, raw] of [['MI', process.argv[2]], ['OH', process.argv[3]]]) {
             const d = JSON.parse(raw);
@@ -50,6 +50,14 @@ jobs:
               nearbyHotspotCount: d.nearbyHotspotCount,
               notableCount: Array.isArray(d.notableSightings) ? d.notableSightings.length : null,
               rankingRule: d.rankingRule,
+              rankedAlternatives: d.topPlaces.map(p => ({
+                name: p.name,
+                evidenceBand: p.evidenceBand,
+                recentSpeciesCount: p.recentSpeciesCount,
+                notableCount: p.notableCount,
+                distanceMi: p.distanceMi,
+                latest: p.latest
+              })),
               topPlace: {
                 name: top.name,
                 evidenceBand: top.evidenceBand,
