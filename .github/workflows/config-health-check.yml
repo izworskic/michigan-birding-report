@@ -10,13 +10,15 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify production environment configuration
+      - name: Verify production eBird observations use configured environment key
         shell: bash
         run: |
           set -euo pipefail
-          body="$(curl --retry 5 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' 'https://michiganbirdingreport.com/api/config-health?check=20260916')"
+          body="$(curl --retry 5 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' 'https://michiganbirdingreport.com/api/observations?region=US-MI-161&back=3&max=200&security-smoke=20260916')"
           node - <<'NODE' "$body"
           const d=JSON.parse(process.argv[2]);
-          console.log(JSON.stringify(d));
-          if(d.ok!==true) process.exit(1);
+          if(d.region!=='US-MI-161'||!Number.isFinite(d.speciesCount)||d.speciesCount<1||!Array.isArray(d.observations)) process.exit(1);
+          const sample=d.observations.find(o=>o&&o.comName&&o.locName);
+          if(!sample) process.exit(1);
+          console.log(JSON.stringify({region:d.region,speciesCount:d.speciesCount,sample:{species:sample.comName,location:sample.locName}}));
           NODE
