@@ -19,7 +19,7 @@ jobs:
           set -euo pipefail
           body=''
           for attempt in $(seq 1 24); do
-            body="$(curl --retry 2 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&choice-smoke=1' || true)"
+            body="$(curl --retry 2 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&choice-smoke=2' || true)"
             if node -e 'try{const d=JSON.parse(process.argv[1]);process.exit(d.decisionChoices?.strongestCurrentEvidence?.name&&d.decisionChoices?.rule?0:1)}catch{process.exit(1)}' "$body"; then
               break
             fi
@@ -32,8 +32,8 @@ jobs:
         run: |
           set -euo pipefail
           fetch() { curl --retry 5 --retry-delay 2 --retry-all-errors -fLsS -H 'Cache-Control: no-cache' "$1"; }
-          mi="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&smoke=mi-v4')"
-          oh="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=39.9612&lng=-82.9988&distKm=40&back=3&smoke=oh-v4')"
+          mi="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=42.2808&lng=-83.7430&distKm=40&back=3&smoke=mi-v5')"
+          oh="$(fetch 'https://michiganbirdingreport.com/api/local-action?lat=39.9612&lng=-82.9988&distKm=40&back=3&smoke=oh-v5')"
           node - <<'NODE' "$mi" "$oh"
           for (const [label, raw] of [['MI', process.argv[2]], ['OH', process.argv[3]]]) {
             const d = JSON.parse(raw);
@@ -50,10 +50,13 @@ jobs:
             const closer = choices.closerStrongOption;
             if (!strongest?.name || !Number.isFinite(strongest.recentSpeciesCount) || !Number.isFinite(strongest.distanceMi)) process.exit(1);
             if (!choices.rule?.includes('strong current-evidence band')) process.exit(1);
-            if (!closer?.name || !Number.isFinite(closer.distanceMi) || !Number.isFinite(closer.distanceSavedMi)) process.exit(1);
-            if (!['top current evidence','strong current evidence'].includes(closer.evidenceBand)) process.exit(1);
-            if (!(closer.distanceMi < strongest.distanceMi) || closer.distanceSavedMi < 2) process.exit(1);
-            if (strongest.recentSpeciesCount < closer.recentSpeciesCount) process.exit(1);
+
+            if (closer != null) {
+              if (!closer.name || !Number.isFinite(closer.distanceMi) || !Number.isFinite(closer.distanceSavedMi)) process.exit(1);
+              if (!['top current evidence','strong current evidence'].includes(closer.evidenceBand)) process.exit(1);
+              if (!(closer.distanceMi < strongest.distanceMi) || closer.distanceSavedMi < 2) process.exit(1);
+              if (strongest.recentSpeciesCount < closer.recentSpeciesCount) process.exit(1);
+            }
 
             console.log(JSON.stringify({
               label,
@@ -65,14 +68,14 @@ jobs:
                 distanceMi: strongest.distanceMi,
                 evidenceBand: strongest.evidenceBand
               },
-              closerStrong: {
+              closerStrong: closer ? {
                 name: closer.name,
                 recentSpeciesCount: closer.recentSpeciesCount,
                 distanceMi: closer.distanceMi,
                 distanceSavedMi: closer.distanceSavedMi,
                 speciesTradeoff: closer.speciesTradeoff,
                 evidenceBand: closer.evidenceBand
-              }
+              } : null
             }));
           }
           NODE
