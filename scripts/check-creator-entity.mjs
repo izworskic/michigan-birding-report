@@ -12,6 +12,7 @@ assert.ok(home.includes(`"@id":"${person}"`), 'homepage must use the canonical P
 assert.ok(home.includes(`"url":"${homepageUrl}"`), 'canonical Person url must be the homepage');
 assert.ok(home.includes(`"author":{"@id":"${person}"}`), 'homepage content must reference the canonical author');
 assert.ok(home.includes(`"publisher":{"@id":"${person}"}`), 'homepage content must reference the canonical publisher');
+assert.ok(home.includes(`<h1 class="feed-title" id="feedTitle">Notable Sightings This Week</h1>`), 'homepage must emit the existing feed heading as its visible H1');
 assert.ok(home.includes(`Built by <a href="${profile}">Chris Izworski</a>`), 'visible creator credit must link to the canonical profile');
 
 for (const path of [

@@ -60,7 +60,7 @@
     .filters { display:flex;gap:0.35rem;padding:0.6rem 1rem;background:var(--bg);border-bottom:1px solid var(--border-light);flex-wrap:wrap; }
 
     .content { max-width:900px;margin:0 auto;padding:1rem; }
-    .feed-title { font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--forest-deep);margin-bottom:0.75rem; }
+    .feed-title { font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--forest-deep);margin:0 0 0.75rem; }
 
     .feed { display:flex;flex-direction:column;gap:0.5rem; }
     .f-card { display:flex;gap:0.6rem;padding:0.6rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:5px;text-decoration:none;color:inherit;align-items:center;transition:box-shadow 0.15s; }
@@ -124,7 +124,7 @@
   </div>
 
   <div class="content">
-    <div class="feed-title" id="feedTitle">Notable Sightings This Week</div>
+    <h1 class="feed-title" id="feedTitle">Notable Sightings This Week</h1>
     <div class="feed" id="feed">
       <div class="loading-state"><div class="loading-spinner"></div><p>Loading from eBird...</p></div>
     </div>
