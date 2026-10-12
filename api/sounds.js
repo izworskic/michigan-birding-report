@@ -3,18 +3,15 @@
  * Returns song/call recordings for a given species
  */
 
-const { Redis } = require('@upstash/redis');
+const { ToolState } = require('../lib/tool-state.cjs');
 
 const XC_KEY = process.env.XENOCANTO_API_KEY || '0f4687bd8bc5990130ba747b2bae175d7febe290';
 const CACHE_TTL = 86400 * 7; // 7 days for sounds
 
 let redis;
-function getRedis() {
+function getState() {
   if (!redis) {
-    redis = new Redis({
-      url: process.env.UPSTASH_REDIS_URL,
-      token: process.env.UPSTASH_REDIS_TOKEN,
-    });
+    redis = new ToolState();
   }
   return redis;
 }
@@ -32,7 +29,7 @@ module.exports = async (req, res) => {
     const cacheKey = `birding:xc:${species}:${type}`;
 
     try {
-      const r = getRedis();
+      const r = getState();
       const cached = await r.get(cacheKey);
       if (cached) {
         const data = typeof cached === 'string' ? JSON.parse(cached) : cached;
@@ -72,7 +69,7 @@ module.exports = async (req, res) => {
     };
 
     try {
-      const r = getRedis();
+      const r = getState();
       await r.set(cacheKey, JSON.stringify(result), { ex: CACHE_TTL });
     } catch (e) { /* continue */ }
 

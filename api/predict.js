@@ -6,7 +6,7 @@
  *   ?mode=bird&name=Scarlet Tanager    → What's this bird doing right now?
  */
 
-const { Redis } = require('@upstash/redis');
+const { ToolState } = require('../lib/tool-state.cjs');
 const { getWeather } = require('../lib/weather');
 const { getNotableSightings, getRecentObservations } = require('../lib/ebird');
 const { getBestImage } = require('../lib/media');
@@ -16,12 +16,9 @@ const FORECAST_TTL = 3600;   // 1 hour for regional forecasts
 const BIRD_TTL = 86400 * 30; // 30 days for individual bird predictions (per season)
 
 let redis;
-function getRedis() {
+function getState() {
   if (!redis) {
-    redis = new Redis({
-      url: process.env.UPSTASH_REDIS_URL,
-      token: process.env.UPSTASH_REDIS_TOKEN,
-    });
+    redis = new ToolState();
   }
   return redis;
 }
@@ -56,7 +53,7 @@ async function handleForecast(req, res) {
   const cacheKey = `birding:forecast:${region}:${new Date().toISOString().slice(0,13)}`; // hourly
 
   try {
-    const r = getRedis();
+    const r = getState();
     const cached = await r.get(cacheKey);
     if (cached) {
       const data = typeof cached === 'string' ? JSON.parse(cached) : cached;
@@ -143,7 +140,7 @@ Return ONLY valid JSON. No markdown.`;
     };
 
     try {
-      const r = getRedis();
+      const r = getState();
       await r.set(cacheKey, JSON.stringify(result), { ex: FORECAST_TTL });
     } catch (e) { /* continue */ }
 
@@ -181,7 +178,7 @@ async function handleBirdQuery(req, res) {
   const cacheKey = `birding:birdask:${name.toLowerCase().replace(/[^a-z]/g, '')}:${season}`;
 
   try {
-    const r = getRedis();
+    const r = getState();
     const cached = await r.get(cacheKey);
     if (cached) {
       const data = typeof cached === 'string' ? JSON.parse(cached) : cached;
@@ -251,7 +248,7 @@ Return ONLY valid JSON.`;
     };
 
     try {
-      const r = getRedis();
+      const r = getState();
       await r.set(cacheKey, JSON.stringify(result), { ex: BIRD_TTL });
     } catch (e) { /* continue */ }
 
