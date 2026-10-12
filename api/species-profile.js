@@ -7,7 +7,7 @@
  * Real-time sightings from eBird overlay on top (not cached here).
  */
 
-const { Redis } = require('@upstash/redis');
+const { ToolState } = require('../lib/tool-state.cjs');
 const { getSpeciesObservations, getNotableSightings, getTaxonomy } = require('../lib/ebird');
 const { getBestImage, getINatPhotos } = require('../lib/media');
 const { SpeciesIdentityError, resolveSpeciesIdentity } = require('../lib/species-identity');
@@ -16,12 +16,9 @@ const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 const PROFILE_TTL = 86400 * 60; // 60 days
 
 let redis;
-function getRedis() {
+function getState() {
   if (!redis) {
-    redis = new Redis({
-      url: process.env.UPSTASH_REDIS_URL,
-      token: process.env.UPSTASH_REDIS_TOKEN,
-    });
+    redis = new ToolState();
   }
   return redis;
 }
@@ -44,12 +41,12 @@ module.exports = async (req, res) => {
     // Check for cached profile TEXT (images are always fetched fresh)
     let profile = null;
     try {
-      const r = getRedis();
+      const r = getState();
       const cached = await r.get(cacheKey);
       if (cached) {
         profile = typeof cached === 'string' ? JSON.parse(cached) : cached;
       }
-    } catch (e) { console.warn('Redis read:', e.message); }
+    } catch (e) { console.warn('private state read:', e.message); }
 
     // Generate profile text with Haiku if not cached
     if (!profile) {
@@ -64,9 +61,9 @@ module.exports = async (req, res) => {
         ...profile,
       };
       try {
-        const r = getRedis();
+        const r = getState();
         await r.set(cacheKey, JSON.stringify(textOnly), { ex: PROFILE_TTL });
-      } catch (e) { console.warn('Redis write:', e.message); }
+      } catch (e) { console.warn('private state write:', e.message); }
     }
 
     // ALWAYS fetch images and sightings fresh (never cached with profile)

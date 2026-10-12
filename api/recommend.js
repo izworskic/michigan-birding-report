@@ -4,18 +4,15 @@
  */
 
 const { getNotableSightings, getRecentObservations } = require('../lib/ebird');
-const { Redis } = require('@upstash/redis');
+const { ToolState } = require('../lib/tool-state.cjs');
 
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 const CACHE_TTL = 3600; // 1 hour
 
 let redis;
-function getRedis() {
+function getState() {
   if (!redis) {
-    redis = new Redis({
-      url: process.env.UPSTASH_REDIS_URL,
-      token: process.env.UPSTASH_REDIS_TOKEN,
-    });
+    redis = new ToolState();
   }
   return redis;
 }
@@ -35,7 +32,7 @@ module.exports = async (req, res) => {
 
     // Check cache
     try {
-      const r = getRedis();
+      const r = getState();
       const cached = await r.get(cacheKey);
       if (cached) {
         const data = typeof cached === 'string' ? JSON.parse(cached) : cached;
@@ -103,7 +100,7 @@ Keep it under 200 words. Write in a warm, knowledgeable tone. No bullet points o
 
     // Cache
     try {
-      const r = getRedis();
+      const r = getState();
       await r.set(cacheKey, JSON.stringify(result), { ex: CACHE_TTL });
     } catch (e) { /* continue */ }
 

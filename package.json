@@ -9,6 +9,6 @@
     "benchmark:personas": "node scripts/benchmark-persona-routing.mjs"
   },
   "dependencies": {
-    "@upstash/redis": "^1.28.0"
+    "@vercel/oidc": "3.8.8"
   }
 }
