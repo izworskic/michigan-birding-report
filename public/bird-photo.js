@@ -22,7 +22,11 @@
     img.src=photo.url;
     img.onerror=()=>{img.remove();const fail=document.createElement('span');fail.className='bird-photo-empty';fail.textContent='Photo unavailable';el.prepend(fail);};
     el.appendChild(img);
-    const credit=document.createElement('span');credit.className='bird-photo-credit';
+    const credit=document.createElement('a');credit.className='bird-photo-credit';
+    const provenance=String(photo.sourceUrl||'');
+    if(/^https:\/\/www\.inaturalist\.org\/(?:photos|observations)\/\d+/.test(provenance)){
+      credit.href=provenance;credit.target='_blank';credit.rel='noopener noreferrer';
+    }
     credit.textContent='Photo: '+(photo.attribution||'iNaturalist')+' · '+(photo.license||'License unknown');
     credit.title=credit.textContent+' · '+(photo.sourceUrl||'iNaturalist');
     el.appendChild(credit);
