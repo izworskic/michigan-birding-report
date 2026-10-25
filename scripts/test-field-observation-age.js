@@ -1,6 +1,18 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {observationAge,buildAction}=require('../api/local-action.js')._test;
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+// Isolate pure adapter logic from eBird/Vercel state imports. This test never accesses
+// an API key, network or private deployment data, and works in checkout-only CI.
+const source=fs.readFileSync(path.join(__dirname,'../api/local-action.js'),'utf8');
+const mod={exports:{}};
+const compile=vm.runInThisContext('(function(require,module,exports,process){'+source+'\\n})'.replace('\\n','\n'),{filename:'api/local-action.js'});
+compile((name)=>{
+ if(name==='../lib/ebird')return {getNearbyHotspots(){throw Error('network fetch forbidden in unit test')},getNotableNearby(){throw Error('network fetch forbidden in unit test')}};
+ throw Error('Unexpected import in pure test: '+name);
+},mod,mod.exports,{env:{}});
+const {observationAge,buildAction}=mod.exports._test;
 const now=Date.UTC(2026,9,25,12);
 assert.deepEqual(observationAge('2026-10-24 07:15',now),{observedOn:'2026-10-24',ageDays:1,ageBand:'last three calendar dates'});
 assert.equal(observationAge('2026-10-19',now).ageBand,'three to seven days old');
