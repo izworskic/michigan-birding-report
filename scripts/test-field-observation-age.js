@@ -7,7 +7,8 @@ const vm=require('node:vm');
 // an API key, network or private deployment data, and works in checkout-only CI.
 const source=fs.readFileSync(path.join(__dirname,'../api/local-action.js'),'utf8');
 const mod={exports:{}};
-const compile=vm.runInThisContext('(function(require,module,exports,process){'+source+'\\n})'.replace('\\n','\n'),{filename:'api/local-action.js'});
+const wrapped=['(function(require,module,exports,process){',source,'})'].join(String.fromCharCode(10));
+const compile=vm.runInThisContext(wrapped,{filename:'api/local-action.js'});
 compile((name)=>{
  if(name==='../lib/ebird')return {getNearbyHotspots(){throw Error('network fetch forbidden in unit test')},getNotableNearby(){throw Error('network fetch forbidden in unit test')}};
  throw Error('Unexpected import in pure test: '+name);
