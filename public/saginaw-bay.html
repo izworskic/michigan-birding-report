@@ -14,6 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/bird-photo.css">
   <style>
     .bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:0.75rem;padding:0.5rem 1rem;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);}
     .bar .logo{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--forest);}
@@ -44,8 +45,9 @@
 
     .sp-feed{display:flex;flex-direction:column;gap:0.4rem;}
     .sp-row{display:flex;gap:0.5rem;padding:0.5rem;background:var(--bg-card);border:1px solid var(--border-light);border-radius:4px;text-decoration:none;color:inherit;align-items:center;transition:box-shadow 0.15s;}
+    .sp-row{align-items:flex-start;}
     .sp-row:hover{box-shadow:var(--shadow-md);}
-    .sp-row img{width:42px;height:42px;border-radius:3px;object-fit:cover;flex-shrink:0;background:var(--bg-alt);}
+    .sp-row .bird-photo-img{width:96px;height:86px;border-radius:6px;object-fit:cover;}
     .sp-row .sn{font-family:var(--font-display);font-size:0.9rem;font-weight:600;color:var(--text);}
     .sp-row .sm{font-size:0.68rem;color:var(--text-light);}
 
@@ -86,7 +88,7 @@
     </div>
 
     <div class="sec-title">Species Reported in Seven Counties (14 Days)</div>
-    <div class="sec-sub">These are county-wide community checklist records, not sightings confirmed at the map pins. Dates are when observed, not when this page was loaded.</div><p class="sec-sub">Before traveling, verify lawful access at the <a href="https://www.michigan.gov/dnr/things-to-do/hunting/where/wetland-wonders/nayanquing-point-swa" target="_blank" rel="noopener">Nayanquing Point public viewing platform</a> or <a href="https://www.michigan.gov/recsearch/parks/baycity" target="_blank" rel="noopener">Tobico Marsh / Bay City State Park</a>; seasonal hunting closures may change access. <a href="https://chrisizworski.com/waterfowl-freeze-line/">Compare official dated managed-wetland counts</a>.</p>
+    <div class="sec-sub">These are county-wide community checklist records, not sightings confirmed at the map pins. Photos show an example of each species—not the bird reported on that date. Dates are when observed, not when this page was loaded.</div><p class="sec-sub">Before traveling, verify lawful access at the <a href="https://www.michigan.gov/dnr/things-to-do/hunting/where/wetland-wonders/nayanquing-point-swa" target="_blank" rel="noopener">Nayanquing Point public viewing platform</a> or <a href="https://www.michigan.gov/recsearch/parks/baycity" target="_blank" rel="noopener">Tobico Marsh / Bay City State Park</a>; seasonal hunting closures may change access. <a href="https://chrisizworski.com/waterfowl-freeze-line/">Compare official dated managed-wetland counts</a>.</p>
     <div class="sp-feed" id="spFeed">
       <div class="loading-state"><div class="loading-spinner"></div></div>
     </div>
@@ -111,6 +113,7 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="/bird-photo.js"></script>
   <script>
   (function(){
     const HOTSPOTS = [
@@ -209,15 +212,18 @@
         const feed = document.getElementById('spFeed');
         if(!species.length){feed.innerHTML='<p style="color:var(--text-mid)">No dated county reports were returned in the last 14 days; bird presence remains unknown.</p>';return;}
         feed.innerHTML=species.map(sp=>{
-          const img=sp.image?.url||'';
-          return `<a href="/species/${sp.speciesCode}" class="sp-row">
-            ${img?`<img src="${img}" alt="${sp.comName}" loading="lazy" onerror="this.style.display='none'">`:'<div style="width:42px;height:42px;background:var(--bg-alt);border-radius:3px;display:flex;align-items:center;justify-content:center">🐦</div>'}
-            <div>
-              <div class="sn">${sp.comName}</div>
+          const code=encodeURIComponent(sp.speciesCode||'');
+          const safeName=String(sp.comName||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+          return `<div class="sp-row">
+            ${window.BirdPhotos.slot(sp)}
+            <div class="sp-content">
+              <a href="/species/${code}" class="bird-species-link">${safeName}</a>
               <div class="sm">${fmtDate(sp.obsDt)} · ${daysOld(sp.obsDt)} · eBird community report</div>
+              <div class="sm">Photo is a species reference, not a photograph of this sighting.</div>
             </div>
-          </a>`;
+          </div>`;
         }).join('');
+        window.BirdPhotos.hydrate(feed);
       })
       .catch(()=>{
         document.getElementById('obCount').textContent='Unable to load sightings';

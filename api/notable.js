@@ -4,7 +4,6 @@
  */
 
 const { getNotableSightings } = require('../lib/ebird');
-const { getBestImage } = require('../lib/media');
 
 module.exports = async (req, res) => {
   try {
@@ -23,27 +22,15 @@ module.exports = async (req, res) => {
 
     const unique = Array.from(seen.values()).slice(0, 30);
 
-    // Attach images
-    const enriched = await Promise.all(
-      unique.map(async (s) => {
-        const img = await getBestImage(s.speciesCode, s.comName);
-        return {
-          speciesCode: s.speciesCode,
-          comName: s.comName,
-          sciName: s.sciName,
-          locName: s.locName,
-          obsDt: s.obsDt,
-          howMany: s.howMany || null,
-          lat: s.lat,
-          lng: s.lng,
-          obsValid: s.obsValid,
-          obsReviewed: s.obsReviewed,
-          locationPrivate: s.locationPrivate,
-          subnational2Code: s.subnational2Code,
-          image: img,
-        };
-      })
-    );
+    // Keep observations fast. Browser lazy-loads verified, licensed reference
+    // photos through /api/species-photo as cards enter the viewport.
+    const enriched = unique.map(s => ({
+      speciesCode:s.speciesCode,comName:s.comName,sciName:s.sciName,
+      lat:s.lat,lng:s.lng,locName:s.locName,locId:s.locId,
+      obsDt:s.obsDt,howMany:s.howMany,obsReviewed:s.obsReviewed,obsValid:s.obsValid,
+      locationPrivate:s.locationPrivate,subnational2Code:s.subnational2Code,
+      image:null
+    }));
 
     res.status(200).json({
       region,

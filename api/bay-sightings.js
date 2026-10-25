@@ -1,5 +1,4 @@
 const { getRecentObservations } = require('../lib/ebird');
-const { getBestImage } = require('../lib/media');
 
 const BAY_COUNTIES = ['US-MI-017', 'US-MI-011', 'US-MI-157', 'US-MI-063', 'US-MI-145', 'US-MI-111', 'US-MI-069'];
 
@@ -56,12 +55,8 @@ module.exports = async (req, res) => {
     const speciesList = Array.from(speciesMap.values())
       .sort((a, b) => (a.taxonOrder || 0) - (b.taxonOrder || 0));
 
-    // Fetch images for top 20 species
-    const topForImages = speciesList.slice(0, 20);
-    const images = await Promise.all(
-      topForImages.map(s => getBestImage(s.comName).catch(() => null))
-    );
-    topForImages.forEach((s, i) => { s.image = images[i]; });
+    // Reference portraits are loaded on demand from /api/species-photo.
+    // Do not stall dated observations or burst the iNaturalist API here.
 
     res.status(200).json({
       speciesCount: speciesList.length,

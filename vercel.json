@@ -112,6 +112,7 @@
     }
   ],
   "functions": {
+    "api/species-photo.js": { "memory": 256, "maxDuration": 20 },
     "api/species-page.js": {
       "memory": 256,
       "maxDuration": 15,
