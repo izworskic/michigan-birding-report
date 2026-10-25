@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/bird-photo.css">
   <style>
     .county-hero { padding: 7rem 2rem 2.5rem; background: linear-gradient(165deg, var(--forest-deep) 0%, #1a5c2a 100%); text-align: center; color: #fff; }
     .county-hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 0.3rem; }
@@ -26,7 +27,7 @@
     .species-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 1rem; margin-bottom: 2rem; }
     .sp-card { display: flex; gap: 0.6rem; padding: 0.6rem; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 5px; text-decoration: none; color: inherit; transition: box-shadow 0.2s, transform 0.2s; box-shadow: var(--shadow-sm); align-items: center; }
     .sp-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .sp-card img { width: 52px; height: 52px; border-radius: 4px; object-fit: cover; flex-shrink: 0; background: var(--bg-alt); }
+    .sp-card .bird-photo-img { width: 96px; height: 86px; border-radius: 6px; object-fit: cover; }
     .sp-card .name { font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; color: var(--text); }
     .sp-card .meta { font-size: 0.7rem; color: var(--text-light); }
     .nearby-counties { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
@@ -59,6 +60,7 @@
     <div id="topHotspot"></div>
     <div id="countyMap"></div>
     <h2 style="font-family:var(--font-display);font-size:1.5rem;color:var(--forest-deep);margin-bottom:1rem">Recent Species</h2>
+    <p class="bird-reference-note">Species portraits are representative photographs, not photos submitted with these eBird sightings. Photo credits and licenses appear below each image.</p>
     <div class="species-grid" id="speciesGrid">
       <div class="loading-state"><div class="loading-spinner"></div><p>Loading sightings...</p></div>
     </div>
@@ -75,6 +77,7 @@
   </div>
   <footer class="footer"><div class="footer-content"><div class="footer-brand"><h3>Michigan Birding Report</h3><p>Built by <a href="https://chrisizworski.com">Chris Izworski</a>, Bay City, Michigan. Chris is a <a href="https://chrisizworski.com/michigan-911-executive-director/">former Michigan 911 director</a>, <a href="https://chrisizworski.com/chris-izworski-trout-fishing/">avid Michigan outdoorsman</a>, and creator of the <a href="https://trout.chrisizworski.com">Michigan Trout Report</a>. Data from <a href="https://ebird.org">eBird</a>.</p></div></div></footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="/bird-photo.js"></script>
   <script>
   (function() {
     const COUNTIES = {"001":"Alcona","003":"Alger","005":"Allegan","007":"Alpena","009":"Antrim","011":"Arenac","013":"Baraga","015":"Barry","017":"Bay","019":"Benzie","021":"Berrien","023":"Branch","025":"Calhoun","027":"Cass","029":"Charlevoix","031":"Cheboygan","033":"Chippewa","035":"Clare","037":"Clinton","039":"Crawford","041":"Delta","043":"Dickinson","045":"Eaton","047":"Emmet","049":"Genesee","051":"Gladwin","053":"Gogebic","055":"Grand Traverse","057":"Gratiot","059":"Hillsdale","061":"Houghton","063":"Huron","065":"Ingham","067":"Ionia","069":"Iosco","071":"Iron","073":"Isabella","075":"Jackson","077":"Kalamazoo","079":"Kalkaska","081":"Kent","083":"Keweenaw","085":"Lake","087":"Lapeer","089":"Leelanau","091":"Lenawee","093":"Livingston","095":"Luce","097":"Mackinac","099":"Macomb","101":"Manistee","103":"Marquette","105":"Mason","107":"Mecosta","109":"Menominee","111":"Midland","113":"Missaukee","115":"Monroe","117":"Montcalm","119":"Montmorency","121":"Muskegon","123":"Newaygo","125":"Oakland","127":"Oceana","129":"Ogemaw","131":"Ontonagon","133":"Osceola","135":"Oscoda","137":"Otsego","139":"Ottawa","141":"Presque Isle","143":"Roscommon","145":"Saginaw","147":"St. Clair","149":"St. Joseph","151":"Sanilac","153":"Schoolcraft","155":"Shiawassee","157":"Tuscola","159":"Van Buren","161":"Washtenaw","163":"Wayne","165":"Wexford"};
@@ -149,26 +152,22 @@
         const grid = document.getElementById('speciesGrid');
         if (!obs.length) { grid.innerHTML = '<p style="color:var(--text-mid)">No sightings in the past 14 days.</p>'; return; }
 
-        // Fetch images for top species
+        // Load only photographs that the visitor scrolls to. Images are
+        // species reference portraits, not evidence photos of these reports.
         const top = obs.slice(0, 30);
         grid.innerHTML = top.map(o => {
           const dt = new Date(o.obsDt?.replace(' ','T')||'');
-          const ds = dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-          return `<a href="/species/${o.speciesCode}" class="sp-card">
-            <img src="https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(o.comName)}&rank=species&per_page=1" alt="" style="display:none" data-name="${o.comName}" class="lazy-inat">
-            <div><div class="name">${o.comName}</div><div class="meta">${ds}${o.howMany ? ' · '+o.howMany : ''} · ${(o.locName||'').substring(0,25)}</div></div>
-          </a>`;
+          const ds = Number.isFinite(dt.getTime())?dt.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'Date unavailable';
+          const safeText=x=>String(x||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+          return `<div class="sp-card">
+            ${window.BirdPhotos.slot(o)}
+            <div>
+              <a class="bird-species-link" href="/species/${encodeURIComponent(o.speciesCode||'')}">${safeText(o.comName)}</a>
+              <div class="meta">${ds}${o.howMany ? ' · '+o.howMany : ''} · ${safeText((o.locName||'').substring(0,25))}</div>
+            </div>
+          </div>`;
         }).join('');
-
-        // Lazy load iNat images
-        document.querySelectorAll('.lazy-inat').forEach(async img => {
-          try {
-            const r = await fetch(`https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(img.dataset.name)}&rank=species&per_page=1`);
-            const d = await r.json();
-            const url = d.results?.[0]?.default_photo?.square_url;
-            if (url) { img.src = url; img.style.display = 'block'; }
-          } catch {}
-        });
+        window.BirdPhotos.hydrate(grid);
       } catch (e) {
         document.getElementById('speciesGrid').innerHTML = '<p style="color:var(--text-mid)">Unable to load sightings.</p>';
       }
