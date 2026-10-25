@@ -51,13 +51,14 @@ async function main(){
     const html=read(page);
     assert.match(html,/\/bird-photo\.js/);
     assert.match(html,/\/bird-photo\.css/);
-    assert.match(html,/BirdPhotos\.hydrate/,{message:page+' must hydrate photo slots'});
+    if(page!=='public/index.html') assert.match(html,/BirdPhotos\.hydrate/,page+' must hydrate photo slots');
     const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
     for(const entry of scripts){
       if(entry[0].includes('type="application/ld+json"'))continue;
       new Function(entry[1]);
     }
   }
+  assert.match(read('public/app.js'),/BirdPhotos\.hydrate/,'homepage app must hydrate photo slots');
   for(const script of ['api/species-photo.js','api/bay-sightings.js','api/notable.js','public/bird-photo.js','public/app.js']){
     new Function(read(script));
   }
