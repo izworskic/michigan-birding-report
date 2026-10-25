@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saginaw Bay Birding: Hotspot Map &amp; Real-Time Sightings | Michigan Birding Report</title>
-  <meta name="description" content="Live bird sightings mapped at 8 Saginaw Bay hotspots. See exactly where birds are being seen at Tobico Marsh, Nayanquing Point, Tawas Point, and more.">
+  <title>Saginaw Bay Birding: Hotspots &amp; Dated Sightings | Michigan Birding Report</title>
+  <meta name="description" content="Eight Saginaw Bay birding hotspots and dated eBird reports. See observation age, source limitations and published viewing locations without treating reports as live bird positions.">
   <link rel="canonical" href="https://michiganbirdingreport.com/saginaw-bay">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Saginaw Bay Birding","url":"https://michiganbirdingreport.com/saginaw-bay","isPartOf":{"@type":"WebSite","name":"Michigan Birding Report","url":"https://michiganbirdingreport.com"}}
@@ -67,26 +67,26 @@
   <div class="bay-head">
     <a href="/" style="font-size:0.75rem;color:var(--forest)">← Home</a>
     <h1>Saginaw Bay Birding</h1>
-    <p>Real-time sightings from 8 hotspots across 7 counties. Green pins are hotspots. Gold dots are individual bird observations from eBird.</p>
+    <p>Eight eBird hotspots with dated regional reports across seven counties. The map shows published hotspot positions—not bird locations. Recent reports can be delayed, repeated or unavailable.</p>
   </div>
 
   <div class="wx" id="wx">Loading conditions...</div>
 
   <div id="bayMap"></div>
   <div class="map-info">
-    <span><span class="legend-dot" style="background:#1a5c2a"></span>Hotspot <span class="legend-dot" style="background:#d4a03c;margin-left:0.5rem"></span>Bird sighting</span>
+    <span><span class="legend-dot" style="background:#1a5c2a"></span>eBird hotspot <span class="legend-dot" style="background:#d4a03c;margin-left:0.5rem"></span>Recent hotspot reports (halo)</span>
     <span id="obCount">Loading...</span>
   </div>
 
   <div class="bay-content">
     <div class="sec-title">Hotspot Activity</div>
-    <div class="sec-sub">Ranked by recent species count. Tap to view on eBird.</div>
+    <div class="sec-sub">Dated eBird reports matched by hotspot ID; reporting intensity is not bird abundance. Hotspots are not verified public-access permits. Tap to inspect original eBird history.</div>
     <div class="hs-list" id="hsList">
       <div class="loading-state"><div class="loading-spinner"></div></div>
     </div>
 
-    <div class="sec-title">Species Reported (14 Days)</div>
-    <div class="sec-sub">Tap any species for its full profile with photos, audio, and Michigan sighting map.</div>
+    <div class="sec-title">Species Reported in Seven Counties (14 Days)</div>
+    <div class="sec-sub">These are county-wide community checklist records, not sightings confirmed at the map pins. Dates are when observed, not when this page was loaded.</div><p class="sec-sub">Before traveling, verify lawful access at the <a href="https://www.michigan.gov/dnr/things-to-do/hunting/where/wetland-wonders/nayanquing-point-swa" target="_blank" rel="noopener">Nayanquing Point public viewing platform</a> or <a href="https://www.michigan.gov/recsearch/parks/baycity" target="_blank" rel="noopener">Tobico Marsh / Bay City State Park</a>; seasonal hunting closures may change access. <a href="https://chrisizworski.com/waterfowl-freeze-line/">Compare official dated managed-wetland counts</a>.</p>
     <div class="sp-feed" id="spFeed">
       <div class="loading-state"><div class="loading-spinner"></div></div>
     </div>
@@ -160,63 +160,61 @@
       })
       .catch(()=>{document.getElementById('wx').textContent='Weather unavailable.';});
 
-    // Load sightings with coordinates
+    // Load dated public checklist records; API does not expose bird coordinates
     fetch('/api/bay-sightings?back=14')
       .then(r=>r.json())
       .then(d=>{
-        // Layer 2: observation dots (gold)
-        const obIcon = L.divIcon({
-          className:'',
-          html:'<div style="width:8px;height:8px;background:#d4a03c;border:1.5px solid #fff;border-radius:50%;box-shadow:0 0 3px rgba(0,0,0,0.15)"></div>',
-          iconSize:[8,8],iconAnchor:[4,4]
-        });
-        const obs = d.observations || [];
-        obs.forEach(o=>{
-          L.marker([o.lat,o.lng],{icon:obIcon})
-            .bindPopup(`<b>${o.comName}</b><br><span style="font-size:0.8rem;color:#555">${(o.locName||'').substring(0,30)}</span><br><span style="font-size:0.75rem;color:#888">${fmtDate(o.obsDt)}${o.howMany?' · '+o.howMany:''}</span>`)
-            .addTo(map);
-        });
-        document.getElementById('obCount').textContent=`${d.speciesCount} species · ${obs.length} observations mapped`;
-
-        // Hotspot leaderboard: count species per hotspot location
+        // eBird county reports are NOT public bird locations. Only aggregate
+        // records whose locId matches a published eBird hotspot; plot a halo at
+        // that hotspot's published centroid, never at a record's coordinates.
+        const obs = Array.isArray(d.observations) ? d.observations : [];
         const hsCounts = {};
-        HOTSPOTS.forEach(h=>{hsCounts[h.name]={count:0,top:[]};});
+        HOTSPOTS.forEach(h=>{hsCounts[h.id]={count:0,top:[],latest:null};});
         obs.forEach(o=>{
-          const ln = o.locName||'';
-          for(const h of HOTSPOTS){
-            if(ln.includes(h.name.split(' ')[0]) || ln.includes(h.name)){
-              hsCounts[h.name].count++;
-              if(hsCounts[h.name].top.length<3 && !hsCounts[h.name].top.includes(o.comName))
-                hsCounts[h.name].top.push(o.comName);
-              break;
-            }
-          }
+          if(!o || !hsCounts[o.locId])return;
+          const item=hsCounts[o.locId];
+          item.count++;
+          if(o.comName && item.top.length<3 && !item.top.includes(o.comName))item.top.push(o.comName);
+          if(/^\d{4}-\d{2}-\d{2}/.test(o.obsDt||'') && (!item.latest || o.obsDt>item.latest))item.latest=o.obsDt;
         });
+        let mapped=0;
+        HOTSPOTS.forEach(h=>{
+          const item=hsCounts[h.id];if(!item.count)return;
+          mapped+=item.count;
+          L.circleMarker([h.lat,h.lng],{radius:Math.min(22,10+Math.sqrt(item.count)),color:'#ba9041',fillColor:'#d4a03c',weight:2,fillOpacity:0.18,opacity:0.8,interactive:false}).addTo(map);
+        });
+        document.getElementById('obCount').textContent=mapped+' dated records at listed hotspots · '+obs.length+' regional observation records examined';
+        const daysOld=dt=>{
+          if(!dt || !/^\d{4}-\d{2}-\d{2}/.test(dt))return 'observation date unknown';
+          const day=Date.parse(dt.slice(0,10)+'T00:00:00Z');
+          if(!Number.isFinite(day))return 'observation date unknown';
+          const age=Math.floor((Date.now()-day)/86400000);
+          return age>=0?age+' calendar days old':'observation date unverified';
+        };
         const ranked = HOTSPOTS
-          .map(h=>({...h, count:hsCounts[h.name].count, top:hsCounts[h.name].top}))
+          .map(h=>({...h,count:hsCounts[h.id].count,top:hsCounts[h.id].top,latest:hsCounts[h.id].latest}))
           .sort((a,b)=>b.count-a.count);
-
         document.getElementById('hsList').innerHTML=ranked.map(h=>
           `<a href="https://ebird.org/hotspot/${h.id}" target="_blank" rel="noopener" class="hs-item">
-            <div>
-              <div class="hn">${h.name}</div>
-              <div class="hd">${h.top.length?h.top.join(', '):h.desc}</div>
+            <div><div class="hn">${h.name}</div>
+              <div class="hd">${h.latest?'Latest dated record '+fmtDate(h.latest)+' · '+daysOld(h.latest):'No matching dated records at this hotspot; wildlife status unknown'}</div>
+              <div class="hd">Community checklist source · ${h.top.length?h.top.join(', '):'No recorded species in this sample'} · Public access not verified by eBird</div>
             </div>
-            <div class="hc">${h.count||'-'}</div>
+            <div class="hc" aria-label="${h.count} reported records">${h.count||'—'}</div>
           </a>`
         ).join('');
 
         // Species feed
         const species = d.species || [];
         const feed = document.getElementById('spFeed');
-        if(!species.length){feed.innerHTML='<p style="color:var(--text-mid)">No sightings in the past 14 days.</p>';return;}
+        if(!species.length){feed.innerHTML='<p style="color:var(--text-mid)">No dated county reports were returned in the last 14 days; bird presence remains unknown.</p>';return;}
         feed.innerHTML=species.map(sp=>{
           const img=sp.image?.url||'';
           return `<a href="/species/${sp.speciesCode}" class="sp-row">
             ${img?`<img src="${img}" alt="${sp.comName}" loading="lazy" onerror="this.style.display='none'">`:'<div style="width:42px;height:42px;background:var(--bg-alt);border-radius:3px;display:flex;align-items:center;justify-content:center">🐦</div>'}
             <div>
               <div class="sn">${sp.comName}</div>
-              <div class="sm">${fmtDate(sp.obsDt)} · ${(sp.locName||'').substring(0,25)}</div>
+              <div class="sm">${fmtDate(sp.obsDt)} · ${daysOld(sp.obsDt)} · eBird community report</div>
             </div>
           </a>`;
         }).join('');

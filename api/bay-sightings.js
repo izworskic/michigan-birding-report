@@ -20,19 +20,17 @@ module.exports = async (req, res) => {
     const allObs = results.flat();
 
     // Deduplicate by species, keeping the most recent observation per species
-    // But also keep ALL observations for mapping
+    // Retain dated public checklist records, not individual bird coordinates.
+    // The consumer now joins locId only to a curated eBird hotspot centroid.
     const speciesMap = new Map();
-    const mappableObs = [];
+    const publicReports = [];
 
     for (const o of allObs) {
-      // Collect all observations with coordinates for the map
-      if (o.lat && o.lng) {
-        mappableObs.push({
+      if (o.locId) {
+        publicReports.push({
           speciesCode: o.speciesCode,
           comName: o.comName,
           sciName: o.sciName,
-          lat: o.lat,
-          lng: o.lng,
           locName: o.locName,
           locId: o.locId,
           obsDt: o.obsDt,
@@ -67,11 +65,13 @@ module.exports = async (req, res) => {
 
     res.status(200).json({
       speciesCount: speciesList.length,
-      observationCount: mappableObs.length,
+      observationCount: publicReports.length,
       counties: BAY_COUNTIES.length,
       back,
+      observationSemantics: 'county-public-ebird-reports-without-precise-coordinates',
+      sourceConfidence: 'Community checklist evidence; observer effort, reporting lag and location precision vary',
       species: speciesList,
-      observations: mappableObs, // ALL obs with lat/lng for mapping
+      observations: publicReports, // Dated community checklist records without individual coordinates
     });
 
   } catch (err) {

@@ -44,6 +44,9 @@ function summarizeChoice(place, extra = {}) {
     notableCount: place.notableCount,
     evidenceBand: place.evidenceBand,
     latest: place.latest,
+    observationAge: place.observationAge,
+    sourceConfidence: place.sourceConfidence,
+    accessVerified: false,
     targetSpecies: place.targetSpecies,
     ebirdUrl: place.ebirdUrl,
     ...extra,
@@ -117,6 +120,16 @@ async function getRecentNearby(lat, lng, { distKm = 40, back = 3, maxResults = 3
   return response.json();
 }
 
+// Report-age measures eBird observation events, not the time this API was fetched.
+function observationAge(raw,now=Date.now()){
+  const day=typeof raw==='string'?raw.slice(0,10):'';
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(day))return {observedOn:null,ageDays:null,ageBand:'date unavailable'};
+  const stamp=Date.parse(day+'T00:00:00Z'),d=new Date(stamp);
+  if(!Number.isFinite(stamp)||d.toISOString().slice(0,10)!==day)return {observedOn:null,ageDays:null,ageBand:'date unavailable'};
+  const utcDay=Math.floor(now/86400000)*86400000,age=Math.floor((utcDay-stamp)/86400000);
+  if(age<0)return {observedOn:null,ageDays:null,ageBand:'date unavailable'};
+  return {observedOn:day,ageDays:age,ageBand:age<=2?'last three calendar dates':age<=7?'three to seven days old':'historical'};
+}
 function normalizeHotspot(h) {
   return {
     locId: h.locId || null,
@@ -204,6 +217,9 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
       recentSpeciesCount: species.length,
       notableCount: notable.length,
       latest: place.latest,
+      observationAge: observationAge(place.latest),
+      sourceConfidence: 'eBird community checklist record; observer effort and reporting lag vary',
+      accessVerified: false,
       allTimeSpecies: place.allTimeSpecies,
       targetSpecies: [...notable, ...species.filter(s => !notable.some(n => n.speciesCode && n.speciesCode === s.speciesCode))].slice(0, 6),
       notableSpecies: notable.slice(0, 4),
@@ -215,6 +231,7 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
   const rankedAll = preparedPlaces.map(place => {
     const band = evidenceBand(place.recentSpeciesCount, maxRecentSpecies);
     const parts = [`${band.label}: ${place.recentSpeciesCount} distinct recent species records represented`];
+    parts.push('latest observed '+(place.observationAge.observedOn||'date unverified')+' · '+place.observationAge.ageBand+'; not a same-day presence guarantee');
     if (place.notableCount) parts.push(`${place.notableCount} notable species`);
     if (Number.isFinite(place.distanceMi)) parts.push(`${place.distanceMi.toFixed(1)} mi away`);
     return {
@@ -257,6 +274,7 @@ function buildAction(lat, lng, observations, hotspots, notableSightings, back) {
   return {
     reportingWindowDays: back,
     observationSemantics: 'recent-species-records-at-ebird-hotspots',
+    evidenceInterpretation: 'Source: eBird public community checklist events. Age reflects event date, not fetch time. Rankings are relative reporting density within the requested window, not predicted bird presence. Hotspot inclusion does not independently verify public access.',
     rankingRule: 'Group hotspots by recent species evidence relative to the strongest nearby hotspot; within comparable evidence, notable sightings and proximity outrank tiny recency differences.',
     decisionChoices,
     speciesCount: uniqueSpecies.size,
@@ -307,4 +325,4 @@ module.exports = async function handler(req, res) {
   }
 };
 
-module.exports._test = { buildAction, haversineMiles, evidenceBand, pickDecisionChoices };
+module.exports._test = { buildAction, haversineMiles, evidenceBand, pickDecisionChoices, observationAge };
