@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
     const enriched = unique.map(s => ({
       speciesCode:s.speciesCode,comName:s.comName,sciName:s.sciName,
       lat:s.lat,lng:s.lng,locName:s.locName,locId:s.locId,
-      obsDt:s.obsDt,howMany:s.howMany,obsReviewed:s.obsReviewed,
+      obsDt:s.obsDt,howMany:s.howMany,obsReviewed:s.obsReviewed,obsValid:s.obsValid,
       locationPrivate:s.locationPrivate,subnational2Code:s.subnational2Code,
       image:null
     }));
