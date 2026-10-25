@@ -190,16 +190,18 @@
       return;
     }
     el.innerHTML=list.map(s=>{
-      const img=s.image?.url||'';
-      return `<a href="${specUrl(s)}" class="f-card">
-        ${img?`<img class="f-img" src="${img}" alt="${s.comName}" loading="lazy" onerror="this.style.display='none'">`:'<div class="f-img" style="display:flex;align-items:center;justify-content:center;font-size:1.3rem">🐦</div>'}
+      const safe=x=>String(x||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      return `<div class="f-card">
+        ${window.BirdPhotos.slot(s)}
         <div class="f-body">
-          <div class="f-name">${s.comName}</div>
-          <div class="f-loc">📍 ${trunc(s.locName,35)}</div>
+          <a class="bird-species-link" href="${specUrl(s)}">${safe(s.comName)}</a>
+          <div class="f-loc">${safe(trunc(s.locName,35))}</div>
           <div class="f-when">${fmtDate(s.obsDt)}${s.howMany?' · '+s.howMany+' reported':''}</div>
+          <div class="f-when">Reference photo; not a photo of this sighting.</div>
         </div>
-      </a>`;
+      </div>`;
     }).join('');
+    window.BirdPhotos.hydrate(el);
   }
 
   // -- Load --
