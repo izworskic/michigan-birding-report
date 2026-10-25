@@ -160,7 +160,7 @@
       })
       .catch(()=>{document.getElementById('wx').textContent='Weather unavailable.';});
 
-    // Load sightings with coordinates
+    // Load dated public checklist records; API does not expose bird coordinates
     fetch('/api/bay-sightings?back=14')
       .then(r=>r.json())
       .then(d=>{
@@ -197,7 +197,7 @@
         document.getElementById('hsList').innerHTML=ranked.map(h=>
           `<a href="https://ebird.org/hotspot/${h.id}" target="_blank" rel="noopener" class="hs-item">
             <div><div class="hn">${h.name}</div>
-              <div class="hd">${h.latest?'Latest dated record '+fmtDate(h.latest)+' · '+daysOld(h.latest):'No matching recent dated records; wildlife status unknown'}</div>
+              <div class="hd">${h.latest?'Latest dated record '+fmtDate(h.latest)+' · '+daysOld(h.latest):'No matching dated records at this hotspot; wildlife status unknown'}</div>
               <div class="hd">Community checklist source · ${h.top.length?h.top.join(', '):'No recorded species in this sample'} · Public access not verified by eBird</div>
             </div>
             <div class="hc" aria-label="${h.count} reported records">${h.count||'—'}</div>
@@ -214,7 +214,7 @@
             ${img?`<img src="${img}" alt="${sp.comName}" loading="lazy" onerror="this.style.display='none'">`:'<div style="width:42px;height:42px;background:var(--bg-alt);border-radius:3px;display:flex;align-items:center;justify-content:center">🐦</div>'}
             <div>
               <div class="sn">${sp.comName}</div>
-              <div class="sm">${fmtDate(sp.obsDt)} · ${(sp.locName||'').substring(0,25)}</div>
+              <div class="sm">${fmtDate(sp.obsDt)} · ${daysOld(sp.obsDt)} · eBird community report</div>
             </div>
           </a>`;
         }).join('');
