@@ -22,6 +22,9 @@ const checks = [
   ['spring and fall windows', /March 1–June 15/.test(logic) && /August 1–November 15/.test(logic)],
   ['no browser geolocation', !/navigator\.geolocation/.test(html)],
   ['radar not scraped', /birdcastIngested:\s*false/.test(api)],
+  ['spring field stops come from first-party API', /springFieldStop:\s*fieldStop/.test(api)],
+  ['official source and Google Maps handoff', /Official visitor guidance/.test(html) && /Locate on Google Maps/.test(html)],
+  ['bird observations provider failure is exposed', /observationsAvailable/.test(api) && /eBird county feed unavailable/.test(html)],
 ];
 
 const failed = checks.filter(([, ok]) => !ok);
