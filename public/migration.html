@@ -98,11 +98,13 @@
     .habitat-choices button{border:1px solid #9bb29f;background:#fff;color:#234932;border-radius:5px;font:700 .75rem/1.3 system-ui,sans-serif;padding:.6rem .75rem;cursor:pointer}
     .habitat-choices button[aria-pressed="true"]{background:#1e5239;border-color:#1e5239;color:#fff}
     .habitat-choices button:focus-visible{outline:3px solid #b17b24;outline-offset:3px}
-    .departure-read{grid-column:1/-1;border-top:1px solid #cbd9ca;padding-top:.7rem}
+    .departure-read{grid-column:1/-1;border-top:1px solid #cbd9ca;padding-top:.7rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
     .departure-read strong{display:block;color:#1b3f2b;font-size:.96rem;line-height:1.4}
     .departure-read p{font-size:.77rem;color:#526152;line-height:1.5;margin:.2rem 0 0}
+    .departure-read a{white-space:nowrap;color:#1c4e35;font-weight:800;font-size:.77rem;text-underline-offset:3px}
+    .departure-read a:focus-visible{outline:3px solid #b17b24;outline-offset:4px}
     .map-unavailable{padding:.75rem 1rem;margin-top:.4rem;background:#f3f4ee;border-left:3px solid #8ca391;font-size:.82rem;color:#385240;line-height:1.5}
-    @media(max-width:700px){.habitat-deck{grid-template-columns:minmax(0,1fr);gap:.65rem;padding:1rem}.departure-read{grid-column:auto}}
+    @media(max-width:700px){.habitat-deck{grid-template-columns:minmax(0,1fr);gap:.65rem;padding:1rem}.departure-read{grid-column:auto;display:block}.departure-read a{display:inline-block;margin-top:.65rem}}
     @media(prefers-reduced-motion:reduce){.region-card{scroll-behavior:auto}}
     #migrationMap { height:380px;border:1px solid var(--mig-border);border-radius:9px;overflow:hidden;background:#edf1ea; }
     .map-caption { font-size:.7rem;color:#78857d;margin-top:.35rem; }
@@ -252,7 +254,7 @@
           <button type="button" data-habitat="songbird" aria-pressed="false">Songbirds &amp; wooded edges</button>
           <button type="button" data-habitat="raptor" aria-pressed="false">Raptors &amp; hawk watch</button>
         </div>
-        <div class="departure-read" role="status" aria-live="polite"><strong id="habitatResultTitle">Six Michigan migration corridors</strong><p id="habitatResultDetail">These choices are habitat-based, not a ranking of live migration intensity. Regional evidence loads below.</p></div>
+        <div class="departure-read" role="status" aria-live="polite"><div><strong id="habitatResultTitle">Six Michigan migration corridors</strong><p id="habitatResultDetail">These choices are habitat-based, not a ranking of live migration intensity. Regional evidence loads below.</p></div><a href="#regionGrid">Read the field stops →</a></div>
       </div>
       <div id="migrationMap" aria-label="Map of Michigan migration focal regions"></div>
       <div id="mapUnavailable" class="map-unavailable" hidden>Map tiles are unavailable. The region list still includes source links, county bird reports and official visitor access.</div>
@@ -505,7 +507,7 @@
     }
 
     function addRegionMarker(region) {
-      if (!map || !Number.isFinite(region.lat) || !Number.isFinite(region.lng)) return;
+      if (!map || mapRoot.hidden || !Number.isFinite(region.lat) || !Number.isFinite(region.lng)) return;
       const marker = L.marker([region.lat, region.lng]).addTo(map);
       marker.bindPopup(`<strong>${esc(region.name)}</strong><br>${esc(region.morning?.label || '')}<br><a href="#region-${esc(region.id)}">Compare this region</a>`);
       marker.on('click', () => {
