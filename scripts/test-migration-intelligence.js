@@ -79,6 +79,9 @@ assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-11 09:00' }, spr
 assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-01' }, springNow), false, 'old observations do not support a spring trip');
 assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-13' }, springNow), false, 'future reports cannot support a trip');
 assert.strictEqual(reportIsRecent({ latestObservation: null }, springNow), false);
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-00' }, springNow), false, 'zero date is not a sighting');
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-02-30' }, new Date('2027-03-02T16:00:00Z')), false, 'impossible date must never normalize into recent evidence');
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-11junk' }, springNow), false, 'malformed sighting timestamp is not proof');
 for (const region of REGIONS) {
   const stop = springFieldStop({ regionId: region.id, season: spring,
     flight: { key: 'favorable' }, observationsAvailable: true,
@@ -94,6 +97,11 @@ const offline = springFieldStop({ regionId: 'muskegon', season: spring,
   observations: { speciesCount: 50, latestObservation: '2027-05-11' }, now: springNow });
 assert.strictEqual(offline.verdict, 'Check conditions before the drive', 'no confidence without successful eBird fetch');
 assert.match(offline.access, /visitor pass/i, 'Muskegon pass must be explicit');
+assert.match(offline.actionUrl, /apply-visitor-pass\/$/, 'Muskegon needs an official direct permit action');
+assert.match(offline.actionLabel, /birdwatching pass/i);
+const fs = require('fs');
+const migrationPage = fs.readFileSync(require('path').join(__dirname, '../public/migration.html'), 'utf8');
+assert.ok(migrationPage.includes('stop.actionUrl') && migrationPage.includes('stop.actionLabel'), 'the migration card must expose the direct pass action');
 assert.match(SPRING_FIELD_STOPS['western-lake-erie'].access, /Roberts Road/, 'Pointe Mouillee requires access recheck');
 
 console.log('Migration intelligence logic: PASS');
