@@ -407,7 +407,7 @@
         attribution:'&copy; OpenStreetMap contributors'
       }).addTo(map);
       tileLayer.on('tileerror', () => {
-        if (++tileErrors >= 4) {
+        if (++tileErrors === 4) {
           mapRoot.hidden = true;
           mapFallback.hidden = false;
           map.remove();
