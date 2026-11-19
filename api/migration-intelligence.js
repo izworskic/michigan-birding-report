@@ -7,6 +7,7 @@
  */
 
 const { getWeather } = require('../lib/weather');
+const { springFieldStop } = require('../lib/spring-field-stops');
 const { getRecentObservations, getNotableSightings } = require('../lib/ebird');
 const {
   REGIONS,
@@ -18,7 +19,7 @@ const {
   summarizeState,
 } = require('../lib/migration');
 
-async function buildRegion(region, season) {
+async function buildRegion(region, season, now) {
   const [weatherResult, observationsResult] = await Promise.allSettled([
     getWeather(region.weatherKey),
     getRecentObservations(region.countyCode, { back: 3, maxResults: 100 }),
@@ -26,9 +27,14 @@ async function buildRegion(region, season) {
 
   const weather = weatherResult.status === 'fulfilled' ? weatherResult.value : null;
   const observations = observationsResult.status === 'fulfilled' ? observationsResult.value : [];
-  const observationSummary = summarizeObservations(observations);
+  const observationSummary = summarizeObservations(observations, now);
+  const observationsAvailable = observationsResult.status === 'fulfilled' && Array.isArray(observationsResult.value);
   const flight = classifyFlightSetup(weather, season);
-  const morning = morningRecommendation(flight, observationSummary);
+  const morning = observationsAvailable
+    ? morningRecommendation(flight, observationSummary)
+    : { label: 'Check reports before traveling', reason: 'The eBird county feed could not be checked. Weather alone is not evidence of birds on the ground.' };
+  const fieldStop = springFieldStop({ regionId: region.id, season, flight,
+    observations: observationSummary, observationsAvailable, now });
 
   return {
     id: region.id,
@@ -51,6 +57,8 @@ async function buildRegion(region, season) {
     flight,
     morning,
     observations: observationSummary,
+    observationsAvailable,
+    springFieldStop: fieldStop,
   };
 }
 
@@ -65,7 +73,7 @@ module.exports = async function handler(req, res) {
     const season = getMigrationSeason(now);
 
     const [regions, notableResult] = await Promise.all([
-      Promise.all(REGIONS.map(region => buildRegion(region, season))),
+      Promise.all(REGIONS.map(region => buildRegion(region, season, now))),
       getNotableSightings('US-MI', { back: 3, maxResults: 12 }).catch(() => []),
     ]);
 

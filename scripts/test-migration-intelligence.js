@@ -72,4 +72,43 @@ const pulse = summarizeState([
 ], fall);
 assert.match(pulse.headline, /Broad/);
 
+const { SPRING_FIELD_STOPS, reportIsRecent, springFieldStop } = require('../lib/spring-field-stops');
+assert.strictEqual(Object.keys(SPRING_FIELD_STOPS).length, REGIONS.length, 'one public field stop per supported region');
+const springNow = new Date('2027-05-12T16:00:00Z');
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-11 09:00' }, springNow), true);
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-01' }, springNow), false, 'old observations do not support a spring trip');
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-13' }, springNow), false, 'future reports cannot support a trip');
+assert.strictEqual(reportIsRecent({ latestObservation: null }, springNow), false);
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-00' }, springNow), false, 'zero date is not a sighting');
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-02-30' }, new Date('2027-03-02T16:00:00Z')), false, 'impossible date must never normalize into recent evidence');
+assert.strictEqual(reportIsRecent({ latestObservation: '2027-05-11junk' }, springNow), false, 'malformed sighting timestamp is not proof');
+for (const region of REGIONS) {
+  const stop = springFieldStop({ regionId: region.id, season: spring,
+    flight: { key: 'favorable' }, observationsAvailable: true,
+    observations: { speciesCount: 21, latestObservation: '2027-05-11 09:00' }, now: springNow });
+  assert.ok(stop && stop.name && stop.habitat, 'every region gets a spring field stop');
+  assert.ok(stop.officialUrl.startsWith('https://'), 'operator link must be sourced');
+  assert.ok(stop.arrival.length > 100 && stop.arrivalUrl.startsWith('https://'), 'every stop needs useful official arrival guidance');
+  assert.ok(stop.photo?.imageUrl.startsWith('https://commons.wikimedia.org/wiki/Special:Redirect/file/'), 'every field stop must have vetted Commons photography');
+  assert.ok(stop.photo?.sourceUrl.startsWith('https://commons.wikimedia.org/wiki/File:'), 'photography needs a source page');
+  assert.ok(/^(CC0|Public Domain|CC BY)/.test(stop.photo?.license || ''), 'no rights-restricted photography');
+  assert.ok(stop.photo.credit && stop.photo.alt && stop.photo.caption, 'visible photo credits and accessible descriptions required');
+  assert.ok(stop.googleMapsUrl.startsWith('https://www.google.com/maps/search/?api=1&query='));
+  assert.strictEqual(stop.verdict, 'Worth an early field check');
+  assert.strictEqual(springFieldStop({ regionId: region.id, season: fall }), null, 'do not show spring copy in fall');
+}
+const offline = springFieldStop({ regionId: 'muskegon', season: spring,
+  flight: { key: 'favorable' }, observationsAvailable: false,
+  observations: { speciesCount: 50, latestObservation: '2027-05-11' }, now: springNow });
+assert.strictEqual(offline.verdict, 'Check conditions before the drive', 'no confidence without successful eBird fetch');
+assert.match(offline.access, /visitor pass/i, 'Muskegon pass must be explicit');
+assert.match(offline.actionUrl, /apply-visitor-pass\/$/, 'Muskegon needs an official direct permit action');
+assert.match(offline.actionLabel, /birdwatching pass/i);
+const fs = require('fs');
+const migrationPage = fs.readFileSync(require('path').join(__dirname, '../public/migration.html'), 'utf8');
+assert.ok(migrationPage.includes('stop.actionUrl') && migrationPage.includes('stop.actionLabel'), 'the migration card must expose the direct pass action');
+assert.ok(migrationPage.includes('spring-stop-photo') && migrationPage.includes('stop.photo.sourceUrl'), 'all six photos need visible attributions');
+assert.ok(migrationPage.includes('Where to begin:') && migrationPage.includes('stop.arrivalUrl'), 'arrival actions must appear on each field card');
+assert.match(SPRING_FIELD_STOPS['western-lake-erie'].access, /Roberts Road/, 'Pointe Mouillee requires access recheck');
+
 console.log('Migration intelligence logic: PASS');
