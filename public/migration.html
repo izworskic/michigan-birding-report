@@ -103,6 +103,10 @@
     .departure-read p{font-size:.77rem;color:#526152;line-height:1.5;margin:.2rem 0 0}
     .departure-read a{white-space:nowrap;color:#1c4e35;font-weight:800;font-size:.77rem;text-underline-offset:3px}
     .departure-read a:focus-visible{outline:3px solid #b17b24;outline-offset:4px}
+    .habitat-shortlist{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.4rem .9rem}
+    .habitat-shortlist a{display:inline-flex;align-items:center;gap:.35rem;color:#174a32;font-size:.77rem;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+    .habitat-shortlist a:focus-visible{outline:3px solid #b17b24;outline-offset:4px}
+    .habitat-shortlist strong{font-weight:600;color:#5b6c5d}
     .map-unavailable{padding:.75rem 1rem;margin-top:.4rem;background:#f3f4ee;border-left:3px solid #8ca391;font-size:.82rem;color:#385240;line-height:1.5}
     @media(max-width:700px){.habitat-deck{grid-template-columns:minmax(0,1fr);gap:.65rem;padding:1rem}.departure-read{grid-column:auto;display:block}.departure-read a{display:inline-block;margin-top:.65rem}}
     @media(prefers-reduced-motion:reduce){.region-card{scroll-behavior:auto}}
@@ -255,6 +259,7 @@
           <button type="button" data-habitat="raptor" aria-pressed="false">Raptors &amp; hawk watch</button>
         </div>
         <div class="departure-read" role="status" aria-live="polite"><div><strong id="habitatResultTitle">Six Michigan migration corridors</strong><p id="habitatResultDetail">These choices are habitat-based, not a ranking of live migration intensity. Regional evidence loads below.</p></div><a href="#regionGrid">Read the field stops →</a></div>
+        <div id="habitatShortlist" class="habitat-shortlist" aria-label="Matching places to explore"></div>
       </div>
       <div id="migrationMap" aria-label="Map of Michigan migration focal regions"></div>
       <div id="mapUnavailable" class="map-unavailable" hidden>Map tiles are unavailable. The region list still includes source links, county bird reports and official visitor access.</div>
@@ -445,7 +450,10 @@
         ? `${filtered.length} Michigan corridors to compare`
         : `${filtered.length} corridors with ${habitatNames[activeHabitat].toLowerCase()} habitat`;
       document.getElementById('habitatResultDetail').textContent = habitatDescriptions[activeHabitat] +
-        ' Select a field stop, then check current radar, recent reports and access before traveling.';
+        ' Check current radar, recent reports and operator access before you drive.';
+      document.getElementById('habitatShortlist').innerHTML = filtered.slice(0, 4).map(region =>
+        `<a href="#region-${esc(region.id)}">${esc(region.springFieldStop?.name || region.name)} <span aria-hidden="true">→</span></a>`
+      ).join('') + (filtered.length > 4 ? '<strong>and other matching regions below</strong>' : '');
       regionGrid.innerHTML = filtered.map(regionCard).join('') ||
         '<div class="error-box">No regions match this habitat preference. Try All six corridors.</div>';
       markers.forEach((marker, id) => {
@@ -590,7 +598,8 @@
         document.getElementById('pulseHeadline').textContent = 'Open BirdCast for the current migration picture';
         document.getElementById('pulseDetail').textContent = 'The Michigan decision layer could not refresh. BirdCast remains available for official migration radar and forecasts.';
         document.getElementById('habitatResultTitle').textContent = 'Live corridor recommendations unavailable';
-        document.getElementById('habitatResultDetail').textContent = 'The habitat links and official sources remain useful, but no weather-based field recommendation can be made.';
+        document.getElementById('habitatResultDetail').textContent = 'The source links remain useful, but no current weather-based field recommendation can be made.';
+        document.getElementById('habitatShortlist').innerHTML = '';
         regionGrid.innerHTML = '<div class="error-box">Regional recommendations are temporarily unavailable. <a href="https://dashboard.birdcast.info/region/US-MI" target="_blank" rel="noopener">Open the Michigan BirdCast dashboard.</a></div>';
         groupGrid.innerHTML = '<div class="error-box">Seasonal groups are temporarily unavailable.</div>';
         notableList.innerHTML = '<div class="error-box">Recent notable sightings are temporarily unavailable.</div>';
