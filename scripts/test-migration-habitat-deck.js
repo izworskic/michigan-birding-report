@@ -34,6 +34,7 @@ assert.ok(page.includes('regionGrid.innerHTML = filtered.map(regionCard)'), 'vis
 assert.ok(page.includes("document.getElementById('habitatShortlist').innerHTML = filtered.slice(0, 4)"), 'the answer must name real regions at the decision point');
 assert.ok(page.includes('href="#regionGrid"'), 'the first-screen visitor decision must offer a direct path to the dossier list');
 assert.ok(page.includes('map.removeLayer(marker)'), 'the map must follow the card filter instead of showing discarded places');
+assert.ok(page.includes('if (!regionalResponseReceived)') && page.includes('Your habitat preference is set.'), 'loading state must never masquerade as no matching birds');
 assert.ok(page.includes("button.setAttribute('aria-pressed'"), 'keyboard control needs explicit selected state');
 assert.ok(page.includes("mapRoot.hidden = true"), 'missing map library/tiles must not leave a large empty map');
 assert.ok(page.includes('<noscript>') && page.includes('Whitefish Point Bird Observatory') &&
