@@ -402,7 +402,7 @@
         <div class="region-actions">
           <a class="primary" href="${esc(region.countyPage)}">Open county birding →</a>
           <a href="${esc(region.birdcast)}" target="_blank" rel="noopener">BirdCast county radar</a>
-          ${stop ? `<a href="${esc(stop.officialUrl)}" target="_blank" rel="noopener">Official visitor guidance</a><a href="${esc(stop.googleMapsUrl)}" target="_blank" rel="noopener">Locate on Google Maps</a>` : ''}
+          ${stop ? `<a href="${esc(stop.officialUrl)}" target="_blank" rel="noopener">Official visitor guidance</a>${stop.actionUrl && stop.actionLabel ? `<a href="${esc(stop.actionUrl)}" target="_blank" rel="noopener">${esc(stop.actionLabel)}</a>` : ''}<a href="${esc(stop.googleMapsUrl)}" target="_blank" rel="noopener">Locate on Google Maps</a>` : ''}
         </div>
       </article>`;
     }
