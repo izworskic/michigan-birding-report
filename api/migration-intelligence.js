@@ -46,6 +46,7 @@ async function buildRegion(region, season, now) {
     lng: region.lng,
     focus: region.focus,
     why: region.why,
+    habitatLenses: region.habitatLenses,
     birdcast: region.birdcast,
     countyPage: `/county/${region.countyFips}`,
     weather: weather ? {
