@@ -113,6 +113,15 @@
     .spring-field-stop p { color:#59685e;font-size:.77rem;line-height:1.5;margin:.3rem 0; }
     .spring-field-stop .access { font-size:.72rem;color:#675b40; }
     .spring-field-stop .report { color:#375968;font-weight:700;font-size:.73rem; }
+    .spring-stop-grid{display:grid;grid-template-columns:minmax(0,1fr) 126px;gap:12px;align-items:start}
+    .spring-stop-copy{min-width:0}
+    .spring-stop-photo{margin:0;min-width:0}
+    .spring-stop-photo img{display:block;width:100%;height:98px;object-fit:cover;border-radius:7px;background:#e5e9e3}
+    .spring-stop-photo figcaption{margin-top:5px;font-size:.61rem;line-height:1.4;color:#667368}
+    .spring-stop-photo figcaption a{color:#355843;text-decoration:underline;text-underline-offset:2px}
+    .spring-field-stop .arrival{border-left:3px solid #a1b8a1;padding-left:9px;color:#384d3f;font-size:.75rem}
+    .spring-field-stop .access{margin-top:7px}
+    @media(max-width:450px){.spring-stop-grid{grid-template-columns:minmax(0,1fr) 105px;gap:9px}.spring-stop-photo img{height:85px}}
     .recent-row { display:flex;gap:.35rem;flex-wrap:wrap; }
     .bird-chip { display:inline-flex;padding:.2rem .42rem;border-radius:4px;background:#edf4f6;color:#285867;text-decoration:none;font-size:.67rem;font-weight:600; }
     .region-actions { display:flex;gap:.45rem;flex-wrap:wrap;margin-top:auto;padding-top:.15rem; }
@@ -377,13 +386,20 @@
         : 'NWS weather unavailable';
       const count = region.observations?.speciesCount || 0;
       const stop = region.springFieldStop;
+      const photoHtml = stop?.photo ? `<figure class="spring-stop-photo">
+        <img src="${esc(stop.photo.imageUrl)}" alt="${esc(stop.photo.alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+        <figcaption>${esc(stop.photo.caption)} <a href="${esc(stop.photo.sourceUrl)}" target="_blank" rel="noopener">${esc(stop.photo.credit)} · ${esc(stop.photo.license)}</a></figcaption>
+      </figure>` : '';
       const fieldStopHtml = stop ? `<div class="spring-field-stop">
         <div class="kicker">Spring field stop · visitor planning</div>
-        <strong>${esc(stop.name)}</strong>
-        <p>${esc(stop.habitat)}</p>
-        <p class="report">${esc(stop.verdict)} · ${esc(stop.reportStatus)}</p>
-        <p>${esc(stop.reason)}</p>
-        <p class="access">Before going: ${esc(stop.access)}</p>
+        <div class="spring-stop-grid"><div class="spring-stop-copy">
+          <strong>${esc(stop.name)}</strong>
+          <p>${esc(stop.habitat)}</p>
+          <p class="report">${esc(stop.verdict)} · ${esc(stop.reportStatus)}</p>
+          <p>${esc(stop.reason)}</p>
+          <p class="arrival"><b>Where to begin:</b> ${esc(stop.arrival)}</p>
+          <p class="access">Before going: ${esc(stop.access)}</p>
+        </div>${photoHtml}</div>
       </div>` : '';
       return `<article class="region-card" id="region-${esc(region.id)}">
         <div class="region-top">
@@ -402,7 +418,7 @@
         <div class="region-actions">
           <a class="primary" href="${esc(region.countyPage)}">Open county birding →</a>
           <a href="${esc(region.birdcast)}" target="_blank" rel="noopener">BirdCast county radar</a>
-          ${stop ? `<a href="${esc(stop.officialUrl)}" target="_blank" rel="noopener">Official visitor guidance</a>${stop.actionUrl && stop.actionLabel ? `<a href="${esc(stop.actionUrl)}" target="_blank" rel="noopener">${esc(stop.actionLabel)}</a>` : ''}<a href="${esc(stop.googleMapsUrl)}" target="_blank" rel="noopener">Locate on Google Maps</a>` : ''}
+          ${stop ? `<a href="${esc(stop.officialUrl)}" target="_blank" rel="noopener">Official visitor guidance</a>${stop.arrivalUrl ? `<a href="${esc(stop.arrivalUrl)}" target="_blank" rel="noopener">Arrival & access details</a>` : ''}${stop.actionUrl && stop.actionLabel ? `<a href="${esc(stop.actionUrl)}" target="_blank" rel="noopener">${esc(stop.actionLabel)}</a>` : ''}<a href="${esc(stop.googleMapsUrl)}" target="_blank" rel="noopener">Locate on Google Maps</a>` : ''}
         </div>
       </article>`;
     }
