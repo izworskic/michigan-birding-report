@@ -5,6 +5,10 @@ const { REGIONS } = require('../lib/migration');
 const page = fs.readFileSync('public/migration.html', 'utf8');
 const api = fs.readFileSync('api/migration-intelligence.js', 'utf8');
 const lensIds = ['all', 'water', 'songbird', 'raptor'];
+const visitorScript = [...page.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)]
+  .map(match => match[1]).find(script => script.includes("const habitatDeck ="));
+assert.ok(visitorScript, 'client-side visitor departure script must exist');
+assert.doesNotThrow(() => new Function(visitorScript), 'departure JavaScript must parse, not just match source text');
 
 function chooseHabitat(value) {
   assert.ok(lensIds.includes(value), 'unknown visitor habitat');
