@@ -31,6 +31,8 @@ assert.ok(api.includes('habitatLenses: region.habitatLenses'), 'API must publish
 assert.ok(page.includes('id="habitatDeck"') && page.includes('id="habitatResultTitle"'), 'departure control and answer must exist');
 assert.ok(page.includes("loadedRegions.filter(region => activeHabitat === 'all'"), 'filter changes the actual dossiers');
 assert.ok(page.includes('regionGrid.innerHTML = filtered.map(regionCard)'), 'visible card list follows the chosen habitat');
+assert.ok(page.includes("document.getElementById('habitatShortlist').innerHTML = filtered.slice(0, 4)"), 'the answer must name real regions at the decision point');
+assert.ok(page.includes('href="#regionGrid"'), 'the first-screen visitor decision must offer a direct path to the dossier list');
 assert.ok(page.includes('map.removeLayer(marker)'), 'the map must follow the card filter instead of showing discarded places');
 assert.ok(page.includes("button.setAttribute('aria-pressed'"), 'keyboard control needs explicit selected state');
 assert.ok(page.includes("mapRoot.hidden = true"), 'missing map library/tiles must not leave a large empty map');
