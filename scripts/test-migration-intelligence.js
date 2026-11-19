@@ -88,6 +88,11 @@ for (const region of REGIONS) {
     observations: { speciesCount: 21, latestObservation: '2027-05-11 09:00' }, now: springNow });
   assert.ok(stop && stop.name && stop.habitat, 'every region gets a spring field stop');
   assert.ok(stop.officialUrl.startsWith('https://'), 'operator link must be sourced');
+  assert.ok(stop.arrival.length > 100 && stop.arrivalUrl.startsWith('https://'), 'every stop needs useful official arrival guidance');
+  assert.ok(stop.photo?.imageUrl.startsWith('https://commons.wikimedia.org/wiki/Special:Redirect/file/'), 'every field stop must have vetted Commons photography');
+  assert.ok(stop.photo?.sourceUrl.startsWith('https://commons.wikimedia.org/wiki/File:'), 'photography needs a source page');
+  assert.ok(/^(CC0|Public Domain|CC BY)/.test(stop.photo?.license || ''), 'no rights-restricted photography');
+  assert.ok(stop.photo.credit && stop.photo.alt && stop.photo.caption, 'visible photo credits and accessible descriptions required');
   assert.ok(stop.googleMapsUrl.startsWith('https://www.google.com/maps/search/?api=1&query='));
   assert.strictEqual(stop.verdict, 'Worth an early field check');
   assert.strictEqual(springFieldStop({ regionId: region.id, season: fall }), null, 'do not show spring copy in fall');
@@ -102,6 +107,8 @@ assert.match(offline.actionLabel, /birdwatching pass/i);
 const fs = require('fs');
 const migrationPage = fs.readFileSync(require('path').join(__dirname, '../public/migration.html'), 'utf8');
 assert.ok(migrationPage.includes('stop.actionUrl') && migrationPage.includes('stop.actionLabel'), 'the migration card must expose the direct pass action');
+assert.ok(migrationPage.includes('spring-stop-photo') && migrationPage.includes('stop.photo.sourceUrl'), 'all six photos need visible attributions');
+assert.ok(migrationPage.includes('Where to begin:') && migrationPage.includes('stop.arrivalUrl'), 'arrival actions must appear on each field card');
 assert.match(SPRING_FIELD_STOPS['western-lake-erie'].access, /Roberts Road/, 'Pointe Mouillee requires access recheck');
 
 console.log('Migration intelligence logic: PASS');
