@@ -91,6 +91,25 @@
     .step h3 { font-size:.96rem;color:var(--mig-ink);margin:0 0 .2rem; }
     .step p { font-size:.78rem;color:#657269;line-height:1.45;margin:0; }
 
+    .habitat-deck{margin:0 0 1rem;padding:1.25rem 1.3rem;background:#eff3eb;border-left:5px solid #52745b;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:1rem 1.6rem;align-items:center}
+    .habitat-intro h3{font:600 clamp(1.25rem,2.5vw,1.7rem)/1.14 var(--font-display);color:#173a2a;margin:.15rem 0 .4rem}
+    .habitat-intro p{font-size:.79rem;line-height:1.5;color:#4b5c50;margin:0}
+    .habitat-choices{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center}
+    .habitat-choices button{border:1px solid #9bb29f;background:#fff;color:#234932;border-radius:5px;font:700 .75rem/1.3 system-ui,sans-serif;padding:.6rem .75rem;cursor:pointer}
+    .habitat-choices button[aria-pressed="true"]{background:#1e5239;border-color:#1e5239;color:#fff}
+    .habitat-choices button:focus-visible{outline:3px solid #b17b24;outline-offset:3px}
+    .departure-read{grid-column:1/-1;border-top:1px solid #cbd9ca;padding-top:.7rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+    .departure-read strong{display:block;color:#1b3f2b;font-size:.96rem;line-height:1.4}
+    .departure-read p{font-size:.77rem;color:#526152;line-height:1.5;margin:.2rem 0 0}
+    .departure-read a{white-space:nowrap;color:#1c4e35;font-weight:800;font-size:.77rem;text-underline-offset:3px}
+    .departure-read a:focus-visible{outline:3px solid #b17b24;outline-offset:4px}
+    .habitat-shortlist{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.4rem .9rem}
+    .habitat-shortlist a{display:inline-flex;align-items:center;gap:.35rem;color:#174a32;font-size:.77rem;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+    .habitat-shortlist a:focus-visible{outline:3px solid #b17b24;outline-offset:4px}
+    .habitat-shortlist strong{font-weight:600;color:#5b6c5d}
+    .map-unavailable{padding:.75rem 1rem;margin-top:.4rem;background:#f3f4ee;border-left:3px solid #8ca391;font-size:.82rem;color:#385240;line-height:1.5}
+    @media(max-width:700px){.habitat-deck{grid-template-columns:minmax(0,1fr);gap:.65rem;padding:1rem}.departure-read{grid-column:auto;display:block}.departure-read a{display:inline-block;margin-top:.65rem}}
+    @media(prefers-reduced-motion:reduce){.region-card{scroll-behavior:auto}}
     #migrationMap { height:380px;border:1px solid var(--mig-border);border-radius:9px;overflow:hidden;background:#edf1ea; }
     .map-caption { font-size:.7rem;color:#78857d;margin-top:.35rem; }
 
@@ -222,6 +241,35 @@
       </aside>
     </div>
 
+    <section class="section" id="where" aria-labelledby="whereTitle">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Tomorrow morning</div>
+          <h2 id="whereTitle">Where should I bird in Michigan?</h2>
+          <p>Six focal migration corridors. No mystery score: every recommendation shows the weather signal and recent reporting behind it.</p>
+        </div>
+        <div class="section-note">Tap a card or map marker to compare regions.</div>
+      </div>
+      <div class="habitat-deck" id="habitatDeck" aria-label="Find a Michigan birding habitat">
+        <div class="habitat-intro"><div class="kicker">Your morning in the field</div><h3>What do you want to watch for?</h3><p>Start with habitat. Then compare tonight's weather, recent county sightings and access at each stop.</p></div>
+        <div class="habitat-choices" role="group" aria-label="Birding habitat preference">
+          <button type="button" data-habitat="all" aria-pressed="true">All six corridors</button>
+          <button type="button" data-habitat="water" aria-pressed="false">Waterbirds &amp; shorebirds</button>
+          <button type="button" data-habitat="songbird" aria-pressed="false">Songbirds &amp; wooded edges</button>
+          <button type="button" data-habitat="raptor" aria-pressed="false">Raptors &amp; hawk watch</button>
+        </div>
+        <div class="departure-read" role="status" aria-live="polite"><div><strong id="habitatResultTitle">Six Michigan migration corridors</strong><p id="habitatResultDetail">These choices are habitat-based, not a ranking of live migration intensity. Regional evidence loads below.</p></div><a href="#regionGrid">Read the field stops →</a></div>
+        <div id="habitatShortlist" class="habitat-shortlist" aria-label="Matching places to explore"></div>
+      </div>
+      <div id="migrationMap" aria-label="Map of Michigan migration focal regions"></div>
+      <div id="mapUnavailable" class="map-unavailable" hidden>Map tiles are unavailable. The region list still includes source links, county bird reports and official visitor access.</div>
+      <div class="map-caption">Map locations are regional planning anchors, not individual bird locations.</div>
+      <div class="region-grid" id="regionGrid">
+        <div class="loading">Loading six Michigan migration corridors…</div>
+      </div>
+      <noscript><div class="map-unavailable">The six regional dossiers require JavaScript. You can still plan an outing using the <a href="https://dashboard.birdcast.info/region/US-MI">official Michigan BirdCast dashboard</a> and these public visitor sources: <a href="https://www.michigan.gov/recsearch/parks/BayCity">Bay City State Park</a>, <a href="https://www.michigan.gov/recsearch/parks/TawasPoint">Tawas Point</a>, <a href="https://wpbo.org/visit/">Whitefish Point Bird Observatory</a>, <a href="https://www.michigan.gov/dnr/things-to-do/hunting/where/wetland-wonders/pointe-mouillee-sga/manager-update">Pointe Mouillee DNR</a>, <a href="https://mcresourcerecoverycenter.com/about-us/rec-birdwatching/apply-visitor-pass/">Muskegon birding pass</a> and <a href="https://www.nps.gov/slbe/planyourvisit/trails.htm">Sleeping Bear Dunes trails</a>. Check access before traveling.</div></noscript>
+    </section>
+
     <section class="section" aria-labelledby="decisionTitle">
       <div class="section-head">
         <div>
@@ -249,21 +297,7 @@
       </div>
     </section>
 
-    <section class="section" id="where" aria-labelledby="whereTitle">
-      <div class="section-head">
-        <div>
-          <div class="kicker">Tomorrow morning</div>
-          <h2 id="whereTitle">Where should I bird in Michigan?</h2>
-          <p>Six focal migration corridors. No mystery score: every recommendation shows the weather signal and recent reporting behind it.</p>
-        </div>
-        <div class="section-note">Tap a card or map marker to compare regions.</div>
-      </div>
-      <div id="migrationMap" aria-label="Map of Michigan migration focal regions"></div>
-      <div class="map-caption">Map locations are regional planning anchors, not individual bird locations.</div>
-      <div class="region-grid" id="regionGrid">
-        <div class="loading">Loading six Michigan migration corridors…</div>
-      </div>
-    </section>
+
 
     <section class="section" aria-labelledby="movingTitle">
       <div class="section-head">
@@ -370,12 +404,81 @@
     const notableList = document.getElementById('notableList');
     const groupGrid = document.getElementById('groupGrid');
 
-    const map = L.map('migrationMap', { scrollWheelZoom:false }).setView([44.6,-85.1], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom:18,
-      attribution:'&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    const mapRoot = document.getElementById('migrationMap');
+    const mapFallback = document.getElementById('mapUnavailable');
+    const map = window.L ? L.map('migrationMap', { scrollWheelZoom:false }).setView([44.6,-85.1], 6) : null;
+    if (map) {
+      let tileErrors = 0;
+      const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom:18,
+        attribution:'&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      tileLayer.on('tileerror', () => {
+        if (++tileErrors === 4) {
+          mapRoot.hidden = true;
+          mapFallback.hidden = false;
+          map.remove();
+        }
+      });
+    } else {
+      mapRoot.hidden = true;
+      mapFallback.hidden = false;
+    }
     const markers = new Map();
+    const habitatDeck = document.getElementById('habitatDeck');
+    const habitatButtons = Array.from(habitatDeck.querySelectorAll('[data-habitat]'));
+    const habitatNames = {
+      all: 'All six corridors',
+      water: 'Waterbirds & shorebirds',
+      songbird: 'Songbirds & wooded edges',
+      raptor: 'Raptors & hawk watch'
+    };
+    const habitatDescriptions = {
+      all: 'Compare all six migration corridors, from wetland shorelines to inland wooded edges.',
+      water: 'Wetlands, bays, mudflats and open-water stopovers. This does not mean shorebirds have been reported today.',
+      songbird: 'Wooded shorelines, brush and forest edges where migrating songbirds may stop.',
+      raptor: 'Peninsula and open-sky watch sites where raptors can concentrate when conditions suit them.'
+    };
+    let activeHabitat = 'all';
+    let loadedRegions = [];
+    let regionalResponseReceived = false;
+    function applyHabitat() {
+      const filtered = loadedRegions.filter(region => activeHabitat === 'all' || (region.habitatLenses || []).includes(activeHabitat));
+      habitatButtons.forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.habitat === activeHabitat));
+      });
+      if (!regionalResponseReceived) {
+        document.getElementById('habitatResultTitle').textContent = 'Checking Michigan habitat reports';
+        document.getElementById('habitatResultDetail').textContent = 'Your habitat preference is set. The weather and bird-report layer is still loading.';
+        return;
+      }
+      if (!loadedRegions.length) {
+        document.getElementById('habitatResultTitle').textContent = 'No regional reports available';
+        document.getElementById('habitatResultDetail').textContent = 'Use the official BirdCast dashboard and public park sources instead of an unsupported regional call.';
+        regionGrid.innerHTML = '<div class="error-box">The regional report list is empty. <a href="https://dashboard.birdcast.info/region/US-MI">Check BirdCast.</a></div>';
+        return;
+      }
+      document.getElementById('habitatResultTitle').textContent = activeHabitat === 'all'
+        ? `${filtered.length} Michigan corridors to compare`
+        : `${filtered.length} corridors with ${habitatNames[activeHabitat].toLowerCase()} habitat`;
+      document.getElementById('habitatResultDetail').textContent = habitatDescriptions[activeHabitat] +
+        ' Check current radar, recent reports and operator access before you drive.';
+      document.getElementById('habitatShortlist').innerHTML = filtered.slice(0, 4).map(region =>
+        `<a href="#region-${esc(region.id)}">${esc(region.springFieldStop?.name || region.name)} <span aria-hidden="true">→</span></a>`
+      ).join('') + (filtered.length > 4 ? '<strong>and other matching regions below</strong>' : '');
+      regionGrid.innerHTML = filtered.map(regionCard).join('') ||
+        '<div class="error-box">No regions match this habitat preference. Try All six corridors.</div>';
+      markers.forEach((marker, id) => {
+        if (!map || mapRoot.hidden) return;
+        if (filtered.some(region => region.id === id)) marker.addTo(map);
+        else map.removeLayer(marker);
+      });
+    }
+    habitatButtons.forEach(button => button.addEventListener('click', () => {
+      if (!Object.hasOwn(habitatNames, button.dataset.habitat)) return;
+      activeHabitat = button.dataset.habitat;
+      applyHabitat();
+    }));
 
     function regionCard(region) {
       const recent = (region.observations?.recentSpecies || []).slice(0,5).map(b =>
@@ -424,12 +527,12 @@
     }
 
     function addRegionMarker(region) {
-      if (!Number.isFinite(region.lat) || !Number.isFinite(region.lng)) return;
+      if (!map || mapRoot.hidden || !Number.isFinite(region.lat) || !Number.isFinite(region.lng)) return;
       const marker = L.marker([region.lat, region.lng]).addTo(map);
       marker.bindPopup(`<strong>${esc(region.name)}</strong><br>${esc(region.morning?.label || '')}<br><a href="#region-${esc(region.id)}">Compare this region</a>`);
       marker.on('click', () => {
         const el = document.getElementById(`region-${region.id}`);
-        if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+        if (el) el.scrollIntoView({ behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center' });
       });
       markers.set(region.id, marker);
     }
@@ -451,8 +554,10 @@
       document.getElementById('pulseHeadline').textContent = pulse.headline || 'Michigan migration setup';
       document.getElementById('pulseDetail').textContent = pulse.detail || '';
 
-      regionGrid.innerHTML = (data.regions || []).map(regionCard).join('') || '<div class="error-box">Regional data is temporarily unavailable. Open the Michigan BirdCast dashboard for radar conditions.</div>';
-      (data.regions || []).forEach(addRegionMarker);
+      loadedRegions = Array.isArray(data.regions) ? data.regions : [];
+      regionalResponseReceived = true;
+      loadedRegions.forEach(addRegionMarker);
+      applyHabitat();
 
       const groupNotes = {
         'Waterfowl':'Scan open water, bays, marshes, and large inland lakes.',
@@ -505,6 +610,9 @@
         document.getElementById('updatedAt').textContent = 'Use BirdCast and eBird links while the Michigan layer refreshes';
         document.getElementById('pulseHeadline').textContent = 'Open BirdCast for the current migration picture';
         document.getElementById('pulseDetail').textContent = 'The Michigan decision layer could not refresh. BirdCast remains available for official migration radar and forecasts.';
+        document.getElementById('habitatResultTitle').textContent = 'Live corridor recommendations unavailable';
+        document.getElementById('habitatResultDetail').textContent = 'The source links remain useful, but no current weather-based field recommendation can be made.';
+        document.getElementById('habitatShortlist').innerHTML = '';
         regionGrid.innerHTML = '<div class="error-box">Regional recommendations are temporarily unavailable. <a href="https://dashboard.birdcast.info/region/US-MI" target="_blank" rel="noopener">Open the Michigan BirdCast dashboard.</a></div>';
         groupGrid.innerHTML = '<div class="error-box">Seasonal groups are temporarily unavailable.</div>';
         notableList.innerHTML = '<div class="error-box">Recent notable sightings are temporarily unavailable.</div>';
