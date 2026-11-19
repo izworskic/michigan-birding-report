@@ -441,11 +441,23 @@
     };
     let activeHabitat = 'all';
     let loadedRegions = [];
+    let regionalResponseReceived = false;
     function applyHabitat() {
       const filtered = loadedRegions.filter(region => activeHabitat === 'all' || (region.habitatLenses || []).includes(activeHabitat));
       habitatButtons.forEach(button => {
         button.setAttribute('aria-pressed', String(button.dataset.habitat === activeHabitat));
       });
+      if (!regionalResponseReceived) {
+        document.getElementById('habitatResultTitle').textContent = 'Checking Michigan habitat reports';
+        document.getElementById('habitatResultDetail').textContent = 'Your habitat preference is set. The weather and bird-report layer is still loading.';
+        return;
+      }
+      if (!loadedRegions.length) {
+        document.getElementById('habitatResultTitle').textContent = 'No regional reports available';
+        document.getElementById('habitatResultDetail').textContent = 'Use the official BirdCast dashboard and public park sources instead of an unsupported regional call.';
+        regionGrid.innerHTML = '<div class="error-box">The regional report list is empty. <a href="https://dashboard.birdcast.info/region/US-MI">Check BirdCast.</a></div>';
+        return;
+      }
       document.getElementById('habitatResultTitle').textContent = activeHabitat === 'all'
         ? `${filtered.length} Michigan corridors to compare`
         : `${filtered.length} corridors with ${habitatNames[activeHabitat].toLowerCase()} habitat`;
@@ -543,6 +555,7 @@
       document.getElementById('pulseDetail').textContent = pulse.detail || '';
 
       loadedRegions = Array.isArray(data.regions) ? data.regions : [];
+      regionalResponseReceived = true;
       loadedRegions.forEach(addRegionMarker);
       applyHabitat();
 
